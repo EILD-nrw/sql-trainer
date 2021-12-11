@@ -1,5 +1,6 @@
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       colors: {
@@ -8,6 +9,9 @@ module.exports = {
         'th-violet': '#b43092'
       }
     }
+  },
+  variants: {
+    extend: {}
   },
   plugins: []
 }
