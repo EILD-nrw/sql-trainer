@@ -5,7 +5,12 @@ import React, { useEffect, useState } from 'react'
 import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm" 
 import initSqlJs, { Database } from 'sql.js'
 
-export default function TaskPage () {
+interface Props {
+  schema: string
+  difficulty: string
+}
+
+export default function TaskPage ({ schema, difficulty }: Props) {
   // Create Database
   const [db, setDb] = useState<Database>()
   useEffect(() => {
@@ -26,7 +31,7 @@ export default function TaskPage () {
 
   return (
     <div>
-
+      {schema} {difficulty}
     </div>
   )
 }
