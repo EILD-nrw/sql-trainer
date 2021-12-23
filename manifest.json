@@ -1,0 +1,14 @@
+{
+  "short_name": "SQL-Trainer",
+  "name": "EILD.nrw SQL-Trainer",
+  "icons": [
+    {
+      "src": "/edb_icon.png",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
