@@ -1,6 +1,6 @@
 ![EILD-Logo](src/img/eild_header_logo.png)
 
-# SQL/Trainer
+# SQL-Trainer
 
 Dieser SQL-Trainer ist eine Lernanwendung für verschiedene SQL-Statements in Datenbanken. Die Anwendung wurde ursprünglich von der [Technischen Hochschule Köln](https://www.th-koeln.de/) im Rahmen der Online-Lernplattform [EDB](https://edb2.gm.th-koeln.de/index) entwickelt und wurde nun als Teil des EILD.nrw Projektes weiterentwickelt und als Open-Source Anwendung veröffentlicht.
 
