@@ -10,7 +10,7 @@ export default function Home () {
         SQL-Trainer!
       </p>
 
-      <Link to="/">
+      <Link to="/sqltrainer/selection">
         <PrimaryButton>Weiter</PrimaryButton>
       </Link>
     </div>
