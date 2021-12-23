@@ -6,6 +6,7 @@ import Editor from '@monaco-editor/react'
 import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm" 
 import initSqlJs, { Database } from 'sql.js'
 import DetailsElement from '../UI/DetailsElement'
+import Table from '../UI/Table'
 
 interface Props {
   schema: string
@@ -44,7 +45,8 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   /*
     Output
   */
-  const output = ''
+  // eslint-disable-next-line
+  const [output, setOutput] = useState([])
 
   return (
     <div className='space-y-4'>
@@ -53,12 +55,14 @@ export default function TaskPage ({ schema, difficulty }: Props) {
       <DetailsElement title='Editor'>
         <Editor height='250px' language='sql' theme='vs-dark' value={code} onChange={handleEditorChange} options={{ minimap: { enabled: false } }} />
       </DetailsElement>
-      {
-        output &&
-        <DetailsElement title='Ausgabe' startsOpen={false}>
-          {output}
-        </DetailsElement>
-      }
+      <DetailsElement title='Ausgabe' startsOpen={false}>
+      <div className='border-l border-r border-b rounded-b-lg border-gray-600 p-2'>
+        {output.length > 0
+          ? <Table tableData={output} />
+          : 'Keine Elemente wurden ausgewählt.'
+        }
+      </div>
+      </DetailsElement>
     </div>
   )
 }
