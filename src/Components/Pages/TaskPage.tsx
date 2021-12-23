@@ -55,7 +55,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
       <DetailsElement title='Editor'>
         <Editor height='250px' language='sql' theme='vs-dark' value={code} onChange={handleEditorChange} options={{ minimap: { enabled: false } }} />
       </DetailsElement>
-      <DetailsElement title='Ausgabe' startsOpen={false}>
+      <DetailsElement title='Ausgabe'>
       <div className='border-l border-r border-b rounded-b-lg border-gray-600 p-2'>
         {output.length > 0
           ? <Table tableData={output} />
