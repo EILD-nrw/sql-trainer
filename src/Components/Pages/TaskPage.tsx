@@ -14,19 +14,19 @@ interface Props {
 }
 
 export default function TaskPage ({ schema, difficulty }: Props) {
+  const [db, setDb] = useState<Database>()
+  const [code, setCode] = useState('')
+  // eslint-disable-next-line
+  const [output, setOutput] = useState([])
+
   /*
     Database
   */
-  const [db, setDb] = useState<Database>()
   useEffect(() => {
     async function initDB () {
-      // sql.js needs to fetch its wasm file, so we cannot immediately instantiate the database
-      // without any configuration, initSqlJs will fetch the wasm files directly from the same path as the js
-      // see ../craco.config.js
       try {
         const SQL = await initSqlJs({ locateFile: () => sqlWasm })
         setDb(new SQL.Database())
-        console.log(db?.exec('SELECT 1;'))
       } catch (err) {
         console.log(err)
       }
@@ -37,7 +37,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   /*
     Editor
   */
-  const [code, setCode] = useState('')
+
   function handleEditorChange (value: string | undefined) {
     if (value) setCode(value)
   }
@@ -45,8 +45,6 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   /*
     Output
   */
-  // eslint-disable-next-line
-  const [output, setOutput] = useState([])
 
   return (
     <div className='space-y-4'>
