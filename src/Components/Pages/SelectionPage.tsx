@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function SelectionPage ({ schema, setSchema, difficulty, setDifficulty }: Props) {
-  const schemaOptions = ['Busse', 'Fahrrad', 'Theater', 'Reisen', 'Fußball', 'Welt']
+  const schemaOptions = ['Busse', 'Fahrrad', 'Theater', 'Reisen', 'Fußball']
   const difficultyOptions = ['Leicht', 'Mittel', 'Schwer']
 
   return (
