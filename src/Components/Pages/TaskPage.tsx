@@ -26,8 +26,9 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   useEffect(() => {
     async function initDB (): Promise<void> {
       try {
+        const dbFile = await fetch('./db/theater.sqlite').then(res => res.arrayBuffer())
         const SQL = await initSqlJs({ locateFile: () => sqlWasm })
-        setDb(new SQL.Database())
+        setDb(new SQL.Database(new Uint8Array(dbFile)))
       } catch (err) {
         console.log(err)
       }
@@ -38,7 +39,6 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   /*
     Editor
   */
-
   function handleEditorChange (value: string | undefined): void {
     if (value) setCode(value)
   }
