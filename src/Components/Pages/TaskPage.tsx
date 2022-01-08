@@ -9,6 +9,7 @@ import DetailsElement from '../UI/DetailsElement'
 import Table from '../UI/Table'
 
 import tasks from '../../Tasks'
+import { Task } from '../../Types/Task'
 
 interface Props {
   schema: string
@@ -20,8 +21,16 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   const [code, setCode] = useState('')
   const [queryData, setQueryData] = useState<QueryExecResult[]>([])
   const [error, setError] = useState('')
+  const [selectedTask, setSelectedTask] = useState<Task>()
+  const [taskSolved, setTaskSolved] = useState(false)
 
-  const selectedTask = tasks[1]
+  const taskPool = tasks.filter(task => task.difficulty === difficulty && task.schema === schema)
+
+  useEffect(() => {
+    const newTask = taskPool[Math.floor(Math.random() * taskPool.length)]
+    if (!newTask) return
+    setSelectedTask(newTask)
+  }, [])
 
   /*
     Database
@@ -113,7 +122,9 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   return (
     <div className='space-y-4'>
       <h1 className='text-2xl font-semibold'>Trainer</h1>
-      <p className='font-semibold whitespace-pre-line'>{selectedTask.text}</p>
+      { selectedTask &&
+        <p className='font-semibold whitespace-pre-line'>{selectedTask.text}</p>
+      }
       <DetailsElement title='Editor'>
         <div className='border-l border-r border-b rounded-b-lg border-gray-600 p-2 space-y-2'>
           <Editor height='250px' language='sql' theme='vs-dark' value={code} onChange={handleEditorChange} options={{ minimap: { enabled: false } }} />
@@ -133,6 +144,9 @@ export default function TaskPage ({ schema, difficulty }: Props) {
         }
       </div>
       </DetailsElement>
+      {taskSolved &&
+        <p>Richtig!</p>
+      }
     </div>
   )
 }
