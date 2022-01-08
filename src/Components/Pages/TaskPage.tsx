@@ -83,13 +83,20 @@ export default function TaskPage ({ schema, difficulty }: Props) {
     return true
   }
 
+  function evaluateQuery (queryResult: QueryExecResult) {
+    if (!db || !selectedTask) return
+    const solution = db.exec(selectedTask.solutionQuery)
+    if (compareQueryResults(queryResult, solution[0])) {
+      setTaskSolved(true)
+    }
+  }
+
   function executeCode (): void {
     if (!db) return
     try {
       const execResults = db.exec(code)
-      const solution = db.exec(selectedTask.solutionQuery)
-      console.log(compareQueryResults(execResults[0], solution[0]))
       setQueryData(execResults)
+      evaluateQuery(execResults[0])
       setError('')
     } catch (err) {
       setError(err as string)
