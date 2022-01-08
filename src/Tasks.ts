@@ -3,8 +3,8 @@ export default [
     id: '79',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'Welches Teil (Ausgabe: OTeil, Bezeichnung, Typ) benötigt in der Stückliste (Struktur-Tabelle) die Silberfarbe mit der TNr = 3?  Listen Sie diejenigen Teile auf, die dieses Teil (TNr = 3) direkt oder indirekt in der zweiten Stufe verwenden!',
-    solutionQuery: 'SELECT  s.oteil, t.bezeichnung, t.typ \r\nFROM    struktur s, teile t\r\n WHERE   t.tnr   = s.oteil\r\n AND     s.uteil = 3\r\n UNION\r\n SELECT  ober.oteil, t.bezeichnung, t.typ\r\n FROM    struktur ober, struktur unter, teile t\r\n WHERE   t.tnr       = ober.oteil\r\n AND     unter.uteil = ober.oteil\r\n AND     unter.uteil = 3',
+    text: 'Welches Teil (Ausgabe: OTeil, Bezeichnung, Typ) benötigt in der Stückliste (Struktur-Tabelle) die Silberfarbe mit der TNr = 3? Listen Sie diejenigen Teile auf, die dieses Teil (TNr = 3) direkt oder indirekt in der zweiten Stufe verwenden!',
+    solutionQuery: 'SELECT s.oteil, t.bezeichnung, t.typ FROM struktur s, teile t WHERE t.tnr = s.oteil AND s.uteil = 3 UNION SELECT ober.oteil, t.bezeichnung, t.typ FROM struktur ober, struktur unter, teile t WHERE t.tnr = ober.oteil AND unter.uteil = ober.oteil AND unter.uteil = 3',
     selectType: '11'
   },
   {
@@ -12,15 +12,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Gibt es Teile (Ausgabe: Teilenummer, Bezeichnung, Typ, Mindestbestand, Summe der Lagerbestände), deren Bestände in der Lagerbestandstabelle, summiert über alle Lager, den Mindestbestand aus der Tabelle Teile unterschreitet?',
-    solutionQuery: 'SELECT t.tnr, t.bezeichnung, t.typ,\r\n            t.mindestbestand,\r\n            SUM(b.bestand) Bestandssumme \r\nFROM        teile t, lagerbestand b\r\n WHERE       t.tnr = b.tnr\r\n GROUP BY    t.tnr, t.bezeichnung, t.typ, t.mindestbestand \r\nHAVING      SUM(b.bestand) > (SELECT  mindestbestand\r\n FROM    teile t2\r\n WHERE   t2.tnr = t.tnr)',
+    solutionQuery: 'SELECT t.tnr, t.bezeichnung, t.typ, t.mindestbestand, SUM(b.bestand) Bestandssumme FROM teile t, lagerbestand b WHERE t.tnr = b.tnr GROUP BY t.tnr, t.bezeichnung, t.typ, t.mindestbestand HAVING SUM(b.bestand) > (SELECT mindestbestand FROM teile t2 WHERE t2.tnr = t.tnr)',
     selectType: '8'
   },
   {
     id: '81',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'Welche Vertriebsangestellten (Nachname, Vorname) mit einem Gehalt größer dem maximalen Gehalt der Gehaltsklasse 4  (Tabelle geh_klassen) stammen aus Gummersbach und haben schon einmal Angebote geschrieben?',
-    solutionQuery: "SELECT    nachname, vorname  \r\nFROM      angestellte ang, abteilungen abt  \r\nWHERE     ang.abt_nr = abt.abt_nr  AND ang.ort='Gummesbach' \r\nAND       ang_nr     \r\nIN   (SELECT ang_nr                             \r\nFROM   auftraege                             \r\nWHERE  UPPER(auftrags_typ) = 'ANGEBOT')  \r\nAND       gehalt     >    (SELECT max_gehalt                             \r\nFROM   geh_klassen                             \r\nWHERE  geh_klasse = 4)",
+    text: 'Welche Vertriebsangestellten (Nachname, Vorname) mit einem Gehalt größer dem maximalen Gehalt der Gehaltsklasse 4 (Tabelle geh_klassen) stammen aus Gummersbach und haben schon einmal Angebote geschrieben?',
+    solutionQuery: "SELECT nachname, vorname FROM angestellte ang, abteilungen abt WHERE ang.abt_nr = abt.abt_nr AND ang.ort='Gummesbach' AND ang_nr IN (SELECT ang_nr FROM auftraege WHERE UPPER(auftrags_typ) = 'ANGEBOT') AND gehalt > (SELECT max_gehalt FROM geh_klassen WHERE geh_klasse = 4)",
     selectType: '8'
   },
   {
@@ -28,7 +28,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Welche Angestellten (Nach-, Vorname, Beruf, Gehalt, Gehaltsklasse) verdienen mehr als der Durchschnitt aller Gehälter? Anzeige aufsteigend sortiert nach Berufen und absteigend nach den Gehaltsklassen und den Gehältern.',
-    solutionQuery: 'SELECT  ang.nachname , ang.vorname,   ang.beruf, ang.gehalt, geh.geh_klasse  FROM angestellte ang, geh_klassen geh  WHERE ang.gehalt BETWEEN geh.min_gehalt AND geh.max_gehalt  AND ang.gehalt > (SELECT  AVG(d.gehalt)  FROM    angestellte d)  ORDER BY  ang.beruf ASC, geh.geh_klasse DESC, ang.gehalt DESC',
+    solutionQuery: 'SELECT ang.nachname , ang.vorname, ang.beruf, ang.gehalt, geh.geh_klasse FROM angestellte ang, geh_klassen geh WHERE ang.gehalt BETWEEN geh.min_gehalt AND geh.max_gehalt AND ang.gehalt > (SELECT AVG(d.gehalt) FROM angestellte d) ORDER BY ang.beruf ASC, geh.geh_klasse DESC, ang.gehalt DESC',
     selectType: '5'
   },
   {
@@ -36,7 +36,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Ermitteln Sie alle Orte (keine Duplikate), in denen Kunden oder Angestellte wohnen oder beides!',
-    solutionQuery: 'SELECT  DISTINCT  Ort  FROM Kunden \r\nUNION  \r\nSELECT  DISTINCT  ort  FROM Angestellte',
+    solutionQuery: 'SELECT DISTINCT Ort FROM Kunden UNION SELECT DISTINCT ort FROM Angestellte',
     selectType: '11'
   },
   {
@@ -52,7 +52,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '1',
     text: 'In wievielen Lägern wird das Fahrrad mit der TNr = 1 gelagert?',
-    solutionQuery: 'SELECT count(*) FROM lagerbestand WHERE  TNR = 1',
+    solutionQuery: 'SELECT count(*) FROM lagerbestand WHERE TNR = 1',
     selectType: '12'
   },
   {
@@ -60,7 +60,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Geben Sie die Lagernummer (LANR) und den durchschnittlichen Bestand derjenigen Lager aus, deren durchschnittlich gelagerter Bestand mindesten 50 Einheiten beträgt!',
-    solutionQuery: 'SELECT lanr, avg(bestand) FROM lagerbestand group BY lanr having avg(bestand) > 50  ',
+    solutionQuery: 'SELECT lanr, avg(bestand) FROM lagerbestand group BY lanr having avg(bestand) > 50 ',
     selectType: '3'
   },
   {
@@ -68,7 +68,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Listen Sie bitte Nachname, Vorname, Gehalt und Abteilungsname der Informatiker auf, die in Köln beschäftigt sind! Geben Sie Nachname, Vorname Gehalt und Abteilungsnamen aus!',
-    solutionQuery: "SELECT A.Nachname, A.Vorname, A.Gehalt, AB.Name  FROM Angestellte A, Abteilungen AB  WHERE A.Abt_nr = AB.Abt_nr  AND AB.Ort = 'Köln'  AND A.Beruf = 'Informatiker'",
+    solutionQuery: "SELECT A.Nachname, A.Vorname, A.Gehalt, AB.Name FROM Angestellte A, Abteilungen AB WHERE A.Abt_nr = AB.Abt_nr AND AB.Ort = 'Köln' AND A.Beruf = 'Informatiker'",
     selectType: '4'
   },
   {
@@ -76,7 +76,7 @@ export default [
     schema: 'theater',
     difficulty: '1',
     text: 'Welche Schauspieler (Name, Wohnort) haben mindestes einmal im Faust mitgespielt?',
-    solutionQuery: "SELECT Name, Wohnort  FROM Schauspieler, Rolle, stellt_dar  WHERE Schauspieler.PNr = stellt_dar.PNr  AND stellt_dar.Figur = Rolle.Figur  AND Rolle.Titel = 'Faust'  ",
+    solutionQuery: "SELECT Name, Wohnort FROM Schauspieler, Rolle, stellt_dar WHERE Schauspieler.PNr = stellt_dar.PNr AND stellt_dar.Figur = Rolle.Figur AND Rolle.Titel = 'Faust' ",
     selectType: '4'
   },
   {
@@ -84,7 +84,7 @@ export default [
     schema: 'theater',
     difficulty: '1',
     text: 'Welche Schauspieler ( Name, Wohnort) haben in Dramen von Schiller mitgespielt?',
-    solutionQuery: "SELECT Name, Wohnort  FROM Schauspieler, Rolle, stellt_dar, Drama  WHERE Schauspieler.PNr = stellt_dar.PNr  AND Drama.Titel = Rolle.Titel  AND stellt_dar.Figur = Rolle.Figur  AND Drama.Autor = 'Schiller'  ",
+    solutionQuery: "SELECT Name, Wohnort FROM Schauspieler, Rolle, stellt_dar, Drama WHERE Schauspieler.PNr = stellt_dar.PNr AND Drama.Titel = Rolle.Titel AND stellt_dar.Figur = Rolle.Figur AND Drama.Autor = 'Schiller' ",
     selectType: '4'
   },
   {
@@ -92,7 +92,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Welche Kunden aus Köln werden von Angestellten aus Gummersbach betreut? Geben Sie die Kun_Nr und den Nachnamen aus!',
-    solutionQuery: "SELECT K.Kun_nr , K.Nachname  FROM Kunden k, Auftraege A , Angestellte AG  WHERE K.Kun_Nr = A.Kun_Nr AND A.Ang_Nr = AG.Ang_NR  AND K.Ort = 'Köln' AND AG.Ort = 'Gummersbach'",
+    solutionQuery: "SELECT K.Kun_nr , K.Nachname FROM Kunden k, Auftraege A , Angestellte AG WHERE K.Kun_Nr = A.Kun_Nr AND A.Ang_Nr = AG.Ang_NR AND K.Ort = 'Köln' AND AG.Ort = 'Gummersbach'",
     selectType: '4'
   },
   {
@@ -108,7 +108,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Welche Angestellten (Ang_Nr, Nachname, Vorname) haben einen Nachamen der mit W beginnt und kein e enthält?',
-    solutionQuery: "SELECT Ang_Nr, Nachname, Vorname  FROM Angestellte  WHERE Nachname LIKE 'W%'  AND Nachname NOT LIKE '%e%'",
+    solutionQuery: "SELECT Ang_Nr, Nachname, Vorname FROM Angestellte WHERE Nachname LIKE 'W%' AND Nachname NOT LIKE '%e%'",
     selectType: '13'
   },
   {
@@ -124,15 +124,15 @@ export default [
     schema: 'reisen',
     difficulty: '1',
     text: 'Nennen Sie alle aus Spanien erfassten Städte! Geben Sie den Stadtnamen (Spalte: Stadtname) aus!',
-    solutionQuery: "select stadtname from Stadt  where land = 'Spanien'",
+    solutionQuery: "select stadtname from Stadt where land = 'Spanien'",
     selectType: '1'
   },
   {
     id: '14',
     schema: 'reisen',
     difficulty: '1',
-    text: 'Nennen Sie Name, Vorname und Adresse aller Kunden,  die ein Hotel gebucht haben, welches über mehr Einzelzimmer als Doppelzimmer verfügt!',
-    solutionQuery: 'select kunde.name, kunde.vorname, kunde.adresse  from kunde, hotel, buchung  where hotel.anzahlez > hotel.anzahldz and hotel.stadtname = buchung.stadtname  and buchung.kundennr = kunde.kundennr',
+    text: 'Nennen Sie Name, Vorname und Adresse aller Kunden, die ein Hotel gebucht haben, welches über mehr Einzelzimmer als Doppelzimmer verfügt!',
+    solutionQuery: 'select kunde.name, kunde.vorname, kunde.adresse from kunde, hotel, buchung where hotel.anzahlez > hotel.anzahldz and hotel.stadtname = buchung.stadtname and buchung.kundennr = kunde.kundennr',
     selectType: '4'
   },
   {
@@ -140,7 +140,7 @@ export default [
     schema: 'reisen',
     difficulty: '2',
     text: 'Nennen Sie alle Hotels und die Städte, in denen sie liegen, für die keine Buchung vorliegt!',
-    solutionQuery: 'select hotelname, hotel.stadtname  from hotel, stadt  where hotel.stadtname = stadt.stadtname  and hotel.hotelname not in  (select hotelname  from buchung)',
+    solutionQuery: 'select hotelname, hotel.stadtname from hotel, stadt where hotel.stadtname = stadt.stadtname and hotel.hotelname not in (select hotelname from buchung)',
     selectType: '5'
   },
   {
@@ -164,7 +164,7 @@ export default [
     schema: 'theater',
     difficulty: '1',
     text: 'Welche Schauspieler (Name, Wohnort) haben mindestes einmal im Faust mitgespielt?',
-    solutionQuery: "SELECT Name, Wohnort  FROM Schauspieler, Rolle, stellt_dar  WHERE Schauspieler.PNr = stellt_dar.PNr  AND stellt_dar.Figur = Rolle.Figur  AND Rolle.Titel = 'Faust' ",
+    solutionQuery: "SELECT Name, Wohnort FROM Schauspieler, Rolle, stellt_dar WHERE Schauspieler.PNr = stellt_dar.PNr AND stellt_dar.Figur = Rolle.Figur AND Rolle.Titel = 'Faust' ",
     selectType: '4'
   },
   {
@@ -172,22 +172,22 @@ export default [
     schema: 'theater',
     difficulty: '2',
     text: 'Welche Schauspieler (Name, Wohnort) haben in Dramen von Schiller mitgespielt?',
-    solutionQuery: "select name, wohnort\r\nfrom schauspieler, rolle, stellt_dar, drama\r\nwhere schauspieler.pnr = stellt_dar.pnr\r\nand drama.titel = rolle.titel\r\nand stellt_dar.figur = rolle.figur\r\nand drama.autor = 'Schiller'",
+    solutionQuery: "select name, wohnortfrom schauspieler, rolle, stellt_dar, dramawhere schauspieler.pnr = stellt_dar.pnrand drama.titel = rolle.titeland stellt_dar.figur = rolle.figurand drama.autor = 'Schiller'",
     selectType: '4'
   },
   {
     id: '23',
     schema: 'reisen',
     difficulty: '2',
-    text: 'Nennen Sie die Namen der Städte, in denen es ein 5-Sterne-Hotel gibt und in denen eine Buchung vorliegt.\r\nUnterdrücken Sie Duplikate!',
-    solutionQuery: 'select distinct stadtname from buchung\r\nwhere stadtname in (select stadtname\r\n from hotel where klasse = 5)',
+    text: 'Nennen Sie die Namen der Städte, in denen es ein 5-Sterne-Hotel gibt und in denen eine Buchung vorliegt.Unterdrücken Sie Duplikate!',
+    solutionQuery: 'select distinct stadtname from buchungwhere stadtname in (select stadtname from hotel where klasse = 5)',
     selectType: '5'
   },
   {
     id: '24',
     schema: 'theater',
     difficulty: '1',
-    text: "Welche Schauspieler (Name, Wohnort) haben bei in Weimar uraufgeführten Dramen an ihrem Wohnort als Figur vom Typ 'Held' mitgespielt?\r\nUnterdrücken Sie Duplikate!",
+    text: "Welche Schauspieler (Name, Wohnort) haben bei in Weimar uraufgeführten Dramen an ihrem Wohnort als Figur vom Typ 'Held' mitgespielt?Unterdrücken Sie Duplikate!",
     solutionQuery: "select distinct schauspieler.name,schauspieler.wohnort from schauspieler, rolle, stellt_dar, drama where schauspieler.pnr = stellt_dar.pnr and drama.titel = rolle.titel and stellt_dar.figur = rolle.figur and rolle.typ = 'Held' and drama.Ort_urauffuehrung = 'Weimar'",
     selectType: '4'
   },
@@ -196,7 +196,7 @@ export default [
     schema: 'theater',
     difficulty: '2',
     text: 'Welcher Dichter (Name, Wohnort) hat in einem seiner eigenen Stücke mitgespielt?',
-    solutionQuery: 'select name, wohnort  from schauspieler, rolle, stellt_dar, drama, dichter  where schauspieler.pnr = stellt_dar.pnr  and drama.titel = rolle.titel  and stellt_dar.figur = rolle.figur  and schauspieler.name = dichter.autor',
+    solutionQuery: 'select name, wohnort from schauspieler, rolle, stellt_dar, drama, dichter where schauspieler.pnr = stellt_dar.pnr and drama.titel = rolle.titel and stellt_dar.figur = rolle.figur and schauspieler.name = dichter.autor',
     selectType: '4'
   },
   {
@@ -204,7 +204,7 @@ export default [
     schema: 'theater',
     difficulty: '2',
     text: 'Welche Schauspieler (Name, Wohnort) waren bei den Sommerfestspielen in Salzburg 1999 länger als zwei Monate engagiert?',
-    solutionQuery: "select schauspieler.name, schauspieler.wohnort  from schauspieler, spielzeit, engament, theater  where schauspieler.pnr = engament.pnr  and theater.name = engament.name  and theater.ort = 'Salzburg'  and engament.saison_jahr = TO_DATE('01.08.1999', 'DD.MM.YYYY')  and engament.dauer > 2",
+    solutionQuery: "select schauspieler.name, schauspieler.wohnort from schauspieler, spielzeit, engament, theater where schauspieler.pnr = engament.pnr and theater.name = engament.name and theater.ort = 'Salzburg' and engament.saison_jahr = TO_DATE('01.08.1999', 'DD.MM.YYYY') and engament.dauer > 2",
     selectType: '4'
   },
   {
@@ -212,7 +212,7 @@ export default [
     schema: 'theater',
     difficulty: '2',
     text: 'Welche Schauspieler (Name, Wohnort) haben nie gespielt?',
-    solutionQuery: 'select name, wohnort  from schauspieler  where pnr not in      (select pnr from stellt_dar)',
+    solutionQuery: 'select name, wohnort from schauspieler where pnr not in (select pnr from stellt_dar)',
     selectType: '5'
   },
   {
@@ -220,7 +220,7 @@ export default [
     schema: 'reisen',
     difficulty: '3',
     text: 'Bestimmen Sie alle Hotels in Italien, für die keine Buchung vorliegt und geben Sie Name und Klasse dieser Hotels aus, sortiert nach Name!',
-    solutionQuery: "select hotelname, klasse from hotel, stadt where hotel.stadtname = stadt.stadtname and stadt.land = 'Italien' and (hotel.hotelname, hotel.stadtname) not in (select hotelname, stadtname from buchung)  order by hotel.hotelname",
+    solutionQuery: "select hotelname, klasse from hotel, stadt where hotel.stadtname = stadt.stadtname and stadt.land = 'Italien' and (hotel.hotelname, hotel.stadtname) not in (select hotelname, stadtname from buchung) order by hotel.hotelname",
     selectType: '5'
   },
   {
@@ -228,7 +228,7 @@ export default [
     schema: 'theater',
     difficulty: '3',
     text: 'Welche Schauspieler (Name, Wohnort) haben Faust oder Wallenstein gespielt?',
-    solutionQuery: "select name, wohnort  from schauspieler, rolle, stellt_dar  where schauspieler.pnr = stellt_dar.pnr  and stellt_dar.figur = rolle.figur  and (rolle.figur = 'Faust' or rolle.figur = 'Wallenstein')",
+    solutionQuery: "select name, wohnort from schauspieler, rolle, stellt_dar where schauspieler.pnr = stellt_dar.pnr and stellt_dar.figur = rolle.figur and (rolle.figur = 'Faust' or rolle.figur = 'Wallenstein')",
     selectType: '4'
   },
   {
@@ -236,7 +236,7 @@ export default [
     schema: 'theater',
     difficulty: '3',
     text: 'Welche Schauspieler (Name, Wohnort) haben nur die Rollen Faust oder Wallenstein, d.h. keine anderen Rollen gespielt? Unterdrücken Sie Duplicate!',
-    solutionQuery: "select distinct name, wohnort  from schauspieler, rolle, stellt_dar  where schauspieler.pnr = stellt_dar.pnr  and stellt_dar.figur = rolle.figur  and (rolle.figur = 'Faust' or rolle.figur = 'Wallenstein') and schauspieler.pnr not in (select schauspieler.pnr from schauspieler, rolle, stellt_dar where schauspieler.pnr = stellt_dar.pnr and stellt_dar.figur = rolle.figur and stellt_dar.figur <> 'Faust' and stellt_dar.figur <> 'Wallenstein')",
+    solutionQuery: "select distinct name, wohnort from schauspieler, rolle, stellt_dar where schauspieler.pnr = stellt_dar.pnr and stellt_dar.figur = rolle.figur and (rolle.figur = 'Faust' or rolle.figur = 'Wallenstein') and schauspieler.pnr not in (select schauspieler.pnr from schauspieler, rolle, stellt_dar where schauspieler.pnr = stellt_dar.pnr and stellt_dar.figur = rolle.figur and stellt_dar.figur <> 'Faust' and stellt_dar.figur <> 'Wallenstein')",
     selectType: '8'
   },
   {
@@ -244,7 +244,7 @@ export default [
     schema: 'theater',
     difficulty: '3',
     text: 'Welche Schauspieler (Name, Wohnort) haben alle Rollen gespielt?',
-    solutionQuery: 'select name, wohnort from schauspieler, stellt_dar   where schauspieler.pnr = stellt_dar.pnr    group by name, wohnort  having count(schauspieler.pnr) = (select count(*) from Rolle)',
+    solutionQuery: 'select name, wohnort from schauspieler, stellt_dar where schauspieler.pnr = stellt_dar.pnr group by name, wohnort having count(schauspieler.pnr) = (select count(*) from Rolle)',
     selectType: '9'
   },
   {
@@ -252,7 +252,7 @@ export default [
     schema: 'reisen',
     difficulty: '3',
     text: 'Bestimmen Sie die Namen der Hotels in Paris, bei denen ein Einzelzimmer mindestens 10% weniger kostet als der Durchschnitt aller Hotels in Paris!',
-    solutionQuery: "select hotelname from hotel where stadtname = 'Paris' and 10/9 * preisez <= any (select avg (preisez) from hotel\r\n where stadtname = 'Paris')",
+    solutionQuery: "select hotelname from hotel where stadtname = 'Paris' and 10/9 * preisez <= any (select avg (preisez) from hotel where stadtname = 'Paris')",
     selectType: '5'
   },
   {
@@ -260,7 +260,7 @@ export default [
     schema: 'theater',
     difficulty: '3',
     text: "Welche Schauspieler (Name, Wohnort) haben alle Narrenrollen ( Typ = 'Narr') am Schillertheater gespielt?",
-    solutionQuery: "select name, wohnort  from schauspieler  where not exists  (select schauspieler.pnr, figur from stellt_dar, schauspieler, engament  where stellt_dar.pnr = schauspieler.pnr  and schauspieler.pnr = engament.pnr  and engament.name = 'Schillertheater NRW' and not exists  (select figur from rolle  where typ = 'Narr'))",
+    solutionQuery: "select name, wohnort from schauspieler where not exists (select schauspieler.pnr, figur from stellt_dar, schauspieler, engament where stellt_dar.pnr = schauspieler.pnr and schauspieler.pnr = engament.pnr and engament.name = 'Schillertheater NRW' and not exists (select figur from rolle where typ = 'Narr'))",
     selectType: '9'
   },
   {
@@ -276,7 +276,7 @@ export default [
     schema: 'reisen',
     difficulty: '3',
     text: 'Bestimmen Sie aus allen vorliegenden Buchungen die folgenden Daten: der Name des Hotels, die Stadt, in der es liegt, die Buchungsnummer und die Zahl der gebuchten Zimmer. Gruppieren Sie nach dem Namen des Hotels. Es sollen dabei nur solche Hotels aufgeführt werden, für die mindestens 100 Zimmer gebucht sind. Sortieren Sie das Ergebnis dann nach dem Namen des Hotels',
-    solutionQuery: 'select hotelname, stadtname, buchungsnr, (gebuchteez + gebuchtedz)\r\nfrom buchung where (hotelname, stadtname, gebuchteez, gebuchtedz) in (select hotelname, stadtname, gebuchteez, gebuchtedz from buchung\r\ngroup by hotelname, stadtname, gebuchteez, gebuchtedz having (gebuchteez + gebuchtedz) >=100)\r\norder by stadtname, hotelname, buchungsnr',
+    solutionQuery: 'select hotelname, stadtname, buchungsnr, (gebuchteez + gebuchtedz)from buchung where (hotelname, stadtname, gebuchteez, gebuchtedz) in (select hotelname, stadtname, gebuchteez, gebuchtedz from buchunggroup by hotelname, stadtname, gebuchteez, gebuchtedz having (gebuchteez + gebuchtedz) >=100)order by stadtname, hotelname, buchungsnr',
     selectType: '5'
   },
   {
@@ -292,7 +292,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Von welchen Teilen sind mehr als 10 Einheiten im Bestand aller Lager? (Tabelle : Lagerbestand). Geben Sie diese Teile mit den Attributen TNR, BEZEICHNUNG und der Summe des Bestandes über alle Lager aus !',
-    solutionQuery: 'SELECT  Teile.TNR , BEZEICHNUNG, SUM(Lagerbestand.BESTAND)   FROM Teile, lagerbestand   WHERE Teile.TNR = Lagerbestand.TNR  GROUP BY Teile.TNR, Teile.Bezeichnung  HAVING SUM(Lagerbestand.bestand) >= 10',
+    solutionQuery: 'SELECT Teile.TNR , BEZEICHNUNG, SUM(Lagerbestand.BESTAND) FROM Teile, lagerbestand WHERE Teile.TNR = Lagerbestand.TNR GROUP BY Teile.TNR, Teile.Bezeichnung HAVING SUM(Lagerbestand.bestand) >= 10',
     selectType: '3'
   },
   {
@@ -300,7 +300,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '1',
     text: 'Auf welchen Lagern liegt ein Bestand des Rades mit der TNr = 1? Geben Sie die LANR aus!',
-    solutionQuery: 'SELECT LANR FROM Lagerbestand  WHERE TNR = 1',
+    solutionQuery: 'SELECT LANR FROM Lagerbestand WHERE TNR = 1',
     selectType: '1'
   },
   {
@@ -308,7 +308,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '1',
     text: 'Welche Teile haben, summiert über alle Lager, einen Bestand von mehr als 200 Einheiten ? Geben Sie die TNR aus!',
-    solutionQuery: 'SELECT TNR FROM lagerbestand  GROUP BY TNR   HAVING SUM(bestand) >= 200  ',
+    solutionQuery: 'SELECT TNR FROM lagerbestand GROUP BY TNR HAVING SUM(bestand) >= 200 ',
     selectType: '3'
   },
   {
@@ -316,7 +316,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Gibt es Teile, deren Bestand, summiert über alle Lager, den aus der Tabelle Teile unterschreitet ?',
-    solutionQuery: 'SELECT Teile.TNR \r\nFROM lagerbestand, Teile\t\r\nWHERE  Teile.TNR = lagerbestand.TNR\r\n GROUP BY Teile.TNR, Mindestbestand\r\n HAVING SUM(Teile.Bestand) <= Mindestbestand\r\n',
+    solutionQuery: 'SELECT Teile.TNR FROM lagerbestand, Teile\tWHERE Teile.TNR = lagerbestand.TNR GROUP BY Teile.TNR, Mindestbestand HAVING SUM(Teile.Bestand) <= Mindestbestand',
     selectType: '3'
   },
   {
@@ -324,7 +324,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: "In welchem Lager werden die meisten Artikel (Typ = 'Artikel') gelagert? Geben Sie die LANR aus!",
-    solutionQuery: "SELECT LANR FROM Teile, Lagerbestand  \r\nWHERE  Teile.tNr = lagerbestand.TNR  AND Teile.Typ = 'Artikel'  GROUP BY LANR  HAVING SUM(Lagerbestand.bestand) >= ALL  (SELECT SUM(Lagerbestand.Bestand)  FROM Teile , lagerbestand  WHERE  Teile.tNr = lagerbestand.TNR  AND Teile.Typ = 'Artikel'  GROUP BY LANR)",
+    solutionQuery: "SELECT LANR FROM Teile, Lagerbestand WHERE Teile.tNr = lagerbestand.TNR AND Teile.Typ = 'Artikel' GROUP BY LANR HAVING SUM(Lagerbestand.bestand) >= ALL (SELECT SUM(Lagerbestand.Bestand) FROM Teile , lagerbestand WHERE Teile.tNr = lagerbestand.TNR AND Teile.Typ = 'Artikel' GROUP BY LANR)",
     selectType: '3'
   },
   {
@@ -340,23 +340,23 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Geben Sie die Lagernummer und den durchschnittlichen Bestand derjenigen Lager aus, deren Durchschnittsbestand höher als 1500 Einheiten ist!',
-    solutionQuery: 'SELECT LANR, avg(bestand) FROM Lagerbestand\r\n GROUP BY LANR\r\n HAVING avg(bestand) >= 1500\r\n',
+    solutionQuery: 'SELECT LANR, avg(bestand) FROM Lagerbestand GROUP BY LANR HAVING avg(bestand) >= 1500',
     selectType: '3'
   },
   {
     id: '47',
     schema: 'fahrrad',
     difficulty: '1',
-    text: 'Welche Angestellten  stammen aus Gummersbach und gehören zur Abteilung Vertrieb ? Geben Sie Ang_nr, Vorname und Nachname aus!',
-    solutionQuery: "SELECT a.ang_nr, a.vorname, a.nachname   FROM angestellte a, abteilungen b  WHERE a.abt_nr = b.abt_nr  AND b.name = 'Vertrieb'  AND a.ort = 'Gummersbach'  ",
+    text: 'Welche Angestellten stammen aus Gummersbach und gehören zur Abteilung Vertrieb ? Geben Sie Ang_nr, Vorname und Nachname aus!',
+    solutionQuery: "SELECT a.ang_nr, a.vorname, a.nachname FROM angestellte a, abteilungen b WHERE a.abt_nr = b.abt_nr AND b.name = 'Vertrieb' AND a.ort = 'Gummersbach' ",
     selectType: '4'
   },
   {
     id: '48',
     schema: 'fahrrad',
     difficulty: '2',
-    text: 'Erzeugen Sie eine nach Gehalt aufsteigend sortierte Liste aller Angestellten mit Nachname, Vorname, Gehalt und der  Gehaltsklasse (Tabellen: geh_klasse, Angestellte)',
-    solutionQuery: 'SELECT Nachname, Vorname, gehalt, geh_klasse   FROM angestellte, geh_klassen   WHERE gehalt BETWEEN min_gehalt AND max_gehalt  ORDER BY gehalt',
+    text: 'Erzeugen Sie eine nach Gehalt aufsteigend sortierte Liste aller Angestellten mit Nachname, Vorname, Gehalt und der Gehaltsklasse (Tabellen: geh_klasse, Angestellte)',
+    solutionQuery: 'SELECT Nachname, Vorname, gehalt, geh_klasse FROM angestellte, geh_klassen WHERE gehalt BETWEEN min_gehalt AND max_gehalt ORDER BY gehalt',
     selectType: '15'
   },
   {
@@ -364,15 +364,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '1',
     text: 'Welche Angestellten verdienen zwischen 50000 und 80000 DM im Jahr? Geben Sie Ang_nr, Nachnamen und Vornamen aus!',
-    solutionQuery: 'SELECT ang_nr, nachname, vorname  FROM angestellte  WHERE gehalt * 12 BETWEEN 50000 AND 80000',
+    solutionQuery: 'SELECT ang_nr, nachname, vorname FROM angestellte WHERE gehalt * 12 BETWEEN 50000 AND 80000',
     selectType: '1'
   },
   {
     id: '50',
     schema: 'fahrrad',
     difficulty: '1',
-    text: "Welche Kunden (Nachname) in der Tabelle Kunden  stehen alphabetisch hinter dem Kunden mit dem Namen 'Mueller' ? ",
-    solutionQuery: "SELECT Nachname  FROM kunden  WHERE Nachname >=  'Mueller'  ORDER BY Nachname  ",
+    text: "Welche Kunden (Nachname) in der Tabelle Kunden stehen alphabetisch hinter dem Kunden mit dem Namen 'Mueller' ? ",
+    solutionQuery: "SELECT Nachname FROM kunden WHERE Nachname >= 'Mueller' ORDER BY Nachname ",
     selectType: '15'
   },
   {
@@ -380,7 +380,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Berechnen Sie das durchschnittliche Gehalt aller Angestellten der gleichen Abteilung! Ausgabe: Abt_nr, abteilungen.name, gehalt',
-    solutionQuery: 'SELECT a1.abt_nr, a2.name , avg(a1.gehalt)   FROM angestellte a1, abteilungen a2  WHERE a1.abt_nr = a2.abt_nr  GROUP BY a1.abt_nr, a2.name  ',
+    solutionQuery: 'SELECT a1.abt_nr, a2.name , avg(a1.gehalt) FROM angestellte a1, abteilungen a2 WHERE a1.abt_nr = a2.abt_nr GROUP BY a1.abt_nr, a2.name ',
     selectType: '2'
   },
   {
@@ -388,23 +388,23 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Welche Angestellten (Ang_nr, Nachname) bearbeiten keine Auftraege? ',
-    solutionQuery: 'SELECT ang_nr, nachname  FROM angestellte    WHERE ang_nr NOT IN  ( SELECT ang_nr FROM  auftraege )  ',
+    solutionQuery: 'SELECT ang_nr, nachname FROM angestellte WHERE ang_nr NOT IN ( SELECT ang_nr FROM auftraege ) ',
     selectType: '5'
   },
   {
     id: '53',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'Welche  Angestellten (Ausgabe: Ang_nr, Gehalt) verdienen mehr als der Durchschnitt aller Gehälter?  ',
-    solutionQuery: 'SELECT ang_nr , gehalt  FROM angestellte  WHERE gehalt >  (SELECT avg(gehalt) FROM angestellte)',
+    text: 'Welche Angestellten (Ausgabe: Ang_nr, Gehalt) verdienen mehr als der Durchschnitt aller Gehälter? ',
+    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte WHERE gehalt > (SELECT avg(gehalt) FROM angestellte)',
     selectType: '5'
   },
   {
     id: '54',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'Welche  Angestellten verdienen mehr als der Durchschnitt aller Gehälter der Angestellten ihrer eigenen Abteilung?',
-    solutionQuery: 'SELECT ang_nr , gehalt  FROM angestellte a  WHERE gehalt >   (SELECT avg(gehalt) FROM angestellte b    WHERE  a.abt_nr = b.abt_nr)  ',
+    text: 'Welche Angestellten verdienen mehr als der Durchschnitt aller Gehälter der Angestellten ihrer eigenen Abteilung?',
+    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte a WHERE gehalt > (SELECT avg(gehalt) FROM angestellte b WHERE a.abt_nr = b.abt_nr) ',
     selectType: '8'
   },
   {
@@ -412,15 +412,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Ermitteln Sie alle Orte, in denen Kunden wohnen oder Angestellte wohnen oder beide! Unterdrücken Sie Duplikate!',
-    solutionQuery: 'SELECT  distinct  ort from kunden  UNION   SELECT  distinct  ort from angestellte',
+    solutionQuery: 'SELECT distinct ort from kunden UNION SELECT distinct ort from angestellte',
     selectType: '11'
   },
   {
     id: '56',
     schema: 'fahrrad',
     difficulty: '3',
-    text: "Ermitteln Sie die TNR und die Bezeichnungen  derjenigen Rohstoffe (teile.typ = 'Material'), die nicht zur Produkterzeugung verwendet werden! Geben Sie diese Bezeichnungen in Großbuchstaben aus!",
-    solutionQuery: "SELECT TNR, UPPER(Bezeichnung)  FROM  teile  WHERE tnr NOT IN ( SELECT UTEIL  FROM struktur)   AND typ = 'Material'  ",
+    text: "Ermitteln Sie die TNR und die Bezeichnungen derjenigen Rohstoffe (teile.typ = 'Material'), die nicht zur Produkterzeugung verwendet werden! Geben Sie diese Bezeichnungen in Großbuchstaben aus!",
+    solutionQuery: "SELECT TNR, UPPER(Bezeichnung) FROM teile WHERE tnr NOT IN ( SELECT UTEIL FROM struktur) AND typ = 'Material' ",
     selectType: '5'
   },
   {
@@ -428,7 +428,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '1',
     text: 'Welche Informatiker verdienen zwischen 50000 und 80000 Euro im Jahr? Die Spalte Gehalt beinhaltet das Monatsgehalt. Geben Sie die Spalten Ang_nr, Nachname, Vorname, Beruf und Gehalt aus!',
-    solutionQuery: "SELECT \r\n     Ang_nr, Nachname, Vorname, Beruf, Gehalt  \r\nFROM angestellte  \r\nWHERE gehalt * 12 BETWEEN 50000 AND 80000  AND BERUF = 'Informatiker'",
+    solutionQuery: "SELECT Ang_nr, Nachname, Vorname, Beruf, Gehalt FROM angestellte WHERE gehalt * 12 BETWEEN 50000 AND 80000 AND BERUF = 'Informatiker'",
     selectType: '1'
   },
   {
@@ -436,7 +436,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '1',
     text: 'Welche Teile (TNR, Bezeichnung) haben als zweiten Buchstaben ein a?',
-    solutionQuery: "SELECT TNR, Bezeichnung  \r\nFROM Teile  \r\nWHERE Bezeichnung like '_a%'",
+    solutionQuery: "SELECT TNR, Bezeichnung FROM Teile WHERE Bezeichnung like '_a%'",
     selectType: '13'
   },
   {
@@ -444,7 +444,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche Spieler (Ausgabe: Nachname, Vorname) sind für Polen im Angriff?',
-    solutionQuery: "SELECT spieler.NACHNAME ,Spieler.VORNAME  FROM    spieler  WHERE spieler.NATIONNAME = 'Polen'   AND spieler.FUNKTION = 'Angriff'  ",
+    solutionQuery: "SELECT spieler.NACHNAME ,Spieler.VORNAME FROM spieler WHERE spieler.NATIONNAME = 'Polen' AND spieler.FUNKTION = 'Angriff' ",
     selectType: '1'
   },
   {
@@ -452,7 +452,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Wie heißt der Trainer (Ausgabe: Trainername) der australischen Mannschaft?',
-    solutionQuery: "SELECT  nation.TRAINERNAME   FROM  Nation   WHERE nation.NATIONNAME = 'Australien'",
+    solutionQuery: "SELECT nation.TRAINERNAME FROM Nation WHERE nation.NATIONNAME = 'Australien'",
     selectType: '1'
   },
   {
@@ -460,7 +460,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche Spieler (Ausgabe: Nachname, Vorname) sind für Costa Rica im Angriff?',
-    solutionQuery: "SELECT spieler.NACHNAME , Spieler.VORNAME  FROM spieler  WHERE spieler.NATIONNAME = 'Costa Rica'   AND spieler.Funktion= 'Angriff'  ",
+    solutionQuery: "SELECT spieler.NACHNAME , Spieler.VORNAME FROM spieler WHERE spieler.NATIONNAME = 'Costa Rica' AND spieler.Funktion= 'Angriff' ",
     selectType: '1'
   },
   {
@@ -468,7 +468,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche Spieler (alle Spalten) sind Torhueter?',
-    solutionQuery: "SELECT * FROM Spieler WHERE  Funktion= 'Torhueter'",
+    solutionQuery: "SELECT * FROM Spieler WHERE Funktion= 'Torhueter'",
     selectType: '1'
   },
   {
@@ -476,7 +476,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche Spieler (alle Spalten) spielen im Mittelfeld?',
-    solutionQuery: "SELECT * FROM  Spieler WHERE Funktion = 'Mittelfeld'",
+    solutionQuery: "SELECT * FROM Spieler WHERE Funktion = 'Mittelfeld'",
     selectType: '1'
   },
   {
@@ -484,7 +484,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Welche Spieler (Ausgabe: Nachname) haben im ersten Spiel (Eröffnungsspiel, Spiel_id = 1) ein Tor geschossen? Geben Sie jeden Nachnamen nur einmal aus!',
-    solutionQuery: "SELECT DISTINCT Nachname  FROM Spieler, Tore, Spiele    WHERE Spieler.Spieler_ID = Tore.Spieler_ID AND Tore.Spiel_ID = Spiele.Spiel_ID  AND Spiele.Spiel_ID = '1'",
+    solutionQuery: "SELECT DISTINCT Nachname FROM Spieler, Tore, Spiele WHERE Spieler.Spieler_ID = Tore.Spieler_ID AND Tore.Spiel_ID = Spiele.Spiel_ID AND Spiele.Spiel_ID = '1'",
     selectType: '4'
   },
   {
@@ -492,7 +492,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: "Welcher Trainer (Ausgabe: Nation.TrainerName, Spieler.Vorname, Spieler.Nachname, Nation.Nationname) trainiert den Spieler mit der Spieler_ID '55' und wie heißt dieser Spieler?",
-    solutionQuery: 'SELECT  Nation.TrainerName, Spieler.Vorname, Spieler.Nachname, Nation.NATIONNAME  FROM Spieler, Nation  WHERE Spieler.NationName = Nation.NationName  AND Spieler.Spieler_ID = 55  ',
+    solutionQuery: 'SELECT Nation.TrainerName, Spieler.Vorname, Spieler.Nachname, Nation.NATIONNAME FROM Spieler, Nation WHERE Spieler.NationName = Nation.NationName AND Spieler.Spieler_ID = 55 ',
     selectType: '4'
   },
   {
@@ -500,15 +500,15 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Wie viele Tore schoss der Spieler "Miroslav Klose"?',
-    solutionQuery: "SELECT  count(*) FROM tore WHERE  tore.spieler_id=(SELECT  spieler_id FROM  spieler WHERE  nachname='Klose')",
+    solutionQuery: "SELECT count(*) FROM tore WHERE tore.spieler_id=(SELECT spieler_id FROM spieler WHERE nachname='Klose')",
     selectType: '5'
   },
   {
     id: '100',
     schema: 'fussball',
     difficulty: '3',
-    text: 'Welcher Spieler (Ausgabe:  Nachname, Nationname, Anzahl_Tore) hat die meisten Tore geschossen?',
-    solutionQuery: 'SELECT   Spieler.NACHNAME, Spieler.NATIONNAME, COUNT(*)    FROM   spieler, Tore     WHERE  spieler.SPIELER_ID = Tore.SPIELER_ID     GROUP BY Spieler.NACHNAME, Spieler.NATIONNAME      HAVING COUNT(*) >= all      (SELECT COUNT(*)  FROM   spieler, Tore     WHERE spieler.SPIELER_ID = Tore.SPIELER_ID     GROUP BY Spieler.NACHNAME, Spieler.NATIONNAME)',
+    text: 'Welcher Spieler (Ausgabe: Nachname, Nationname, Anzahl_Tore) hat die meisten Tore geschossen?',
+    solutionQuery: 'SELECT Spieler.NACHNAME, Spieler.NATIONNAME, COUNT(*) FROM spieler, Tore WHERE spieler.SPIELER_ID = Tore.SPIELER_ID GROUP BY Spieler.NACHNAME, Spieler.NATIONNAME HAVING COUNT(*) >= all (SELECT COUNT(*) FROM spieler, Tore WHERE spieler.SPIELER_ID = Tore.SPIELER_ID GROUP BY Spieler.NACHNAME, Spieler.NATIONNAME)',
     selectType: '8'
   },
   {
@@ -532,7 +532,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Wie hoch ist die Summe aller Gehälter der Spieler aus Polen?',
-    solutionQuery: "SELECT Sum(Spieler.GEHALT_IN_EURO)  FROM Spieler  WHERE Spieler.NATIONNAME = 'Polen'",
+    solutionQuery: "SELECT Sum(Spieler.GEHALT_IN_EURO) FROM Spieler WHERE Spieler.NATIONNAME = 'Polen'",
     selectType: '12'
   },
   {
@@ -547,7 +547,7 @@ export default [
     id: '105',
     schema: 'fussball',
     difficulty: '3',
-    text: "An welchen Spielen (Spieltag, Termin)  hat der Spieler 'Klose' ein Tor geschossen?",
+    text: "An welchen Spielen (Spieltag, Termin) hat der Spieler 'Klose' ein Tor geschossen?",
     solutionQuery: "SELECT Spiele.SPIELTAG, Spiele.TERMIN FROM Spiele, Tore, Spieler WHERE Spiele.SPIEL_ID = Tore.SPIEL_ID AND Tore.SPIELER_ID = Spieler.SPIELER_ID AND Spieler.NACHNAME = 'Klose'",
     selectType: '4'
   },
@@ -564,7 +564,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche Spiele (alle Spalten) gingen 0:0 aus?',
-    solutionQuery: "SELECT * FROM Spiele   WHERE Ergebnis = '0:0'",
+    solutionQuery: "SELECT * FROM Spiele WHERE Ergebnis = '0:0'",
     selectType: '1'
   },
   {
@@ -572,7 +572,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'An welchen Spielen (alle Spalten) nahm Polen teil?',
-    solutionQuery: "SELECT * FROM Spiele WHERE Spiele.MANNSCHAFT_1 = 'Polen'  OR Spiele.MANNSCHAFT_2 = 'Polen'",
+    solutionQuery: "SELECT * FROM Spiele WHERE Spiele.MANNSCHAFT_1 = 'Polen' OR Spiele.MANNSCHAFT_2 = 'Polen'",
     selectType: '1'
   },
   {
@@ -580,7 +580,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche Spiele (alle Spalten) fanden am 10.06.2006 statt?',
-    solutionQuery: "SELECT * FROM Spiele   WHERE Spiele.TERMIN = TO_DATE('10.06.2006', 'DD.MM.YYYY')",
+    solutionQuery: "SELECT * FROM Spiele WHERE Spiele.TERMIN = TO_DATE('10.06.2006', 'DD.MM.YYYY')",
     selectType: '14'
   },
   {
@@ -588,7 +588,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Welche Spiele (alle Spalten) fanden vor dem 19.06.2006 statt?',
-    solutionQuery: "SELECT * FROM Spiele   WHERE Spiele.TERMIN < \r\nTO_DATE('19.06.2006', 'DD.MM.YYYY')",
+    solutionQuery: "SELECT * FROM Spiele WHERE Spiele.TERMIN < TO_DATE('19.06.2006', 'DD.MM.YYYY')",
     selectType: '14'
   },
   {
@@ -596,7 +596,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Wie heißt der Torhueter (Vorname, Nachname) von Costa Rica?',
-    solutionQuery: "SELECT Vorname, Nachname  FROM Spieler WHERE NATIONNAME = 'Costa Rica'  AND Funktion ='Torhueter'",
+    solutionQuery: "SELECT Vorname, Nachname FROM Spieler WHERE NATIONNAME = 'Costa Rica' AND Funktion ='Torhueter'",
     selectType: '1'
   },
   {
@@ -604,7 +604,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche Spiele (alle Spalten) fanden in Berlin statt?',
-    solutionQuery: "SELECT * FROM Spiele  WHERE Spiele.AUSFUEHRUNGSORT = 'Berlin'",
+    solutionQuery: "SELECT * FROM Spiele WHERE Spiele.AUSFUEHRUNGSORT = 'Berlin'",
     selectType: '1'
   },
   {
@@ -612,7 +612,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche (alle Spalten) Mannschaften gehören zur Gruppe H?',
-    solutionQuery: "SELECT * FROM  nation WHERE Nation.GRUPPE = 'H'",
+    solutionQuery: "SELECT * FROM nation WHERE Nation.GRUPPE = 'H'",
     selectType: '1'
   },
   {
@@ -628,7 +628,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Welche Bauteile (Spalten: TNR, BEZEICHNUNG) sind im Mountainbike, Rocky Mountain Element Race Typ 1, TNr = 1 enthalten? (Auflösung über eine Stufe)!',
-    solutionQuery: 'SELECT t.TNR, t.BEZEICHNUNG \r\nFROM Teile t, Struktur s\r\n WHERE t.TNR = s.UTEIL\r\n AND s.OTEIL = 1\r\n',
+    solutionQuery: 'SELECT t.TNR, t.BEZEICHNUNG FROM Teile t, Struktur s WHERE t.TNR = s.UTEIL AND s.OTEIL = 1',
     selectType: '4'
   },
   {
@@ -636,7 +636,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'iIn welchen Teilen findet die Nabe Inferno (TNr = 42) Verwendung? (Auflösung über eine Stufe, Ausgabe der Spalten TNR und Bezeichnung.!',
-    solutionQuery: 'SELECT t.TNR, T.Bezeichnung \r\nFROM Teile t, Struktur s\r\n WHERE t.TNR = s.OTEIL \r\nAND s.UTeil = 42',
+    solutionQuery: 'SELECT t.TNR, T.Bezeichnung FROM Teile t, Struktur s WHERE t.TNR = s.OTEIL AND s.UTeil = 42',
     selectType: '4'
   },
   {
@@ -644,7 +644,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Für welche Artikel (Tabelle: Artikel) gibt es keine Unterteile in der Strukturtabelle? Zeigen Sie die Teilenummer, die Bezeichnung sowie Verkaufspreis und Jahresumsatz an.',
-    solutionQuery: 'SELECT TNr, Bezeichnung, Verkaufspreis, Jahresumsatz FROM   artikel  WHERE  TNr  NOT IN (SELECT OTeil            FROM   Struktur)  ',
+    solutionQuery: 'SELECT TNr, Bezeichnung, Verkaufspreis, Jahresumsatz FROM artikel WHERE TNr NOT IN (SELECT OTeil FROM Struktur) ',
     selectType: '5'
   },
   {
@@ -660,7 +660,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Welche Artikel (Ausgabe : TNR) sind nicht auf Lager?',
-    solutionQuery: "SELECT t1.TNR FROM Teile t1\r\nWHERE t1.Typ = 'Artikel' AND NOT EXISTS (SELECT l.TNR FROM Lagerbestand l\r\nWHERE t1.TNR = l.TNr )\r\n",
+    solutionQuery: "SELECT t1.TNR FROM Teile t1WHERE t1.Typ = 'Artikel' AND NOT EXISTS (SELECT l.TNR FROM Lagerbestand lWHERE t1.TNR = l.TNr )",
     selectType: '8'
   },
   {
@@ -668,7 +668,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Welche Artikel (Ausgabe: TNr) sind auf allen Lagern vorhanden?',
-    solutionQuery: "SELECT t1.TNR FROM Teile t1  WHERE t1.Typ = 'Artikel' AND NOT EXISTS (SELECT l.TNR FROM Lagerbestand l                                                                    WHERE t1.TNR = l.TNr  AND NOT EXISTS                                                                    (SELECT l2.LANR FROM LAGER l2                                                                     WHERE  l2.LANR = L.LANR))",
+    solutionQuery: "SELECT t1.TNR FROM Teile t1 WHERE t1.Typ = 'Artikel' AND NOT EXISTS (SELECT l.TNR FROM Lagerbestand l  WHERE t1.TNR = l.TNr AND NOT EXISTS  (SELECT l2.LANR FROM LAGER l2  WHERE l2.LANR = L.LANR))",
     selectType: '9'
   },
   {
@@ -676,7 +676,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Welche Spiele (alle Spalten) aus der Gruppe H gingen 2:2 aus?',
-    solutionQuery: "SELECT * FROM Spiele,  nation  WHERE Nation.GRUPPE = 'H'  AND nation.NATIONNAME = Spiele.MANNSCHAFT_1  AND Spiele.ERGEBNIS = '2:2'",
+    solutionQuery: "SELECT * FROM Spiele, nation WHERE Nation.GRUPPE = 'H' AND nation.NATIONNAME = Spiele.MANNSCHAFT_1 AND Spiele.ERGEBNIS = '2:2'",
     selectType: '4'
   },
   {
@@ -684,7 +684,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Spiele (alle Spalten) der Gruppe B gingen unentschieden aus?',
-    solutionQuery: "SELECT * FROM Spiele,  nation    WHERE Nation.GRUPPE = 'B'  AND nation.NATIONNAME = Spiele.MANNSCHAFT_1    AND (SUBSTR(Spiele.ERGEBNIS, 1,1) = SUBSTR(Spiele.ERGEBNIS, 3,1))",
+    solutionQuery: "SELECT * FROM Spiele, nation WHERE Nation.GRUPPE = 'B' AND nation.NATIONNAME = Spiele.MANNSCHAFT_1 AND (SUBSTR(Spiele.ERGEBNIS, 1,1) = SUBSTR(Spiele.ERGEBNIS, 3,1))",
     selectType: '4'
   },
   {
@@ -700,7 +700,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'In welchen Stadien (Spiele.AUSFUEHRUNGSORT) hat Deutschland nicht gespielt? Geben Sie die Stadien nur einmal aus!',
-    solutionQuery: "SELECT DISTINCT  spiele.AUSFUEHRUNGSORT FROM  spiele    WHERE spiele.AUSFUEHRUNGSORT NOT IN  (SELECT spiele.AUSFUEHRUNGSORT   FROM Spiele     WHERE spiele.MANNSCHAFT_1 = 'Deutschland'   OR spiele.MANNSCHAFT_2= 'Deutschland'  GROUP BY spiele.AUSFUEHRUNGSORT)",
+    solutionQuery: "SELECT DISTINCT spiele.AUSFUEHRUNGSORT FROM spiele WHERE spiele.AUSFUEHRUNGSORT NOT IN (SELECT spiele.AUSFUEHRUNGSORT FROM Spiele WHERE spiele.MANNSCHAFT_1 = 'Deutschland' OR spiele.MANNSCHAFT_2= 'Deutschland' GROUP BY spiele.AUSFUEHRUNGSORT)",
     selectType: '5'
   },
   {
@@ -708,7 +708,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Wieviele Stadien (distinct Spiele.AUSFUEHRUNGSORT) gibt es, an denen Weltmeisterschaftsturniere stattfinden?',
-    solutionQuery: 'SELECT COUNT  (distinct spiele.AUSFUEHRUNGSORT) FROM  spiele',
+    solutionQuery: 'SELECT COUNT (distinct spiele.AUSFUEHRUNGSORT) FROM spiele',
     selectType: '12'
   },
   {
@@ -716,7 +716,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'In welchen Stadien (Ausgabe: spiele.ausfuehrungsort) spielt die Nationalmannschaft von England in der Vorrunde?',
-    solutionQuery: "SELECT spiele.AUSFUEHRUNGSORT   FROM Spiele  WHERE (spiele.MANNSCHAFT_1 = 'England'  OR spiele.MANNSCHAFT_2 = 'England')  AND spiele.TYP = 'Vorrunde' ",
+    solutionQuery: "SELECT spiele.AUSFUEHRUNGSORT FROM Spiele WHERE (spiele.MANNSCHAFT_1 = 'England' OR spiele.MANNSCHAFT_2 = 'England') AND spiele.TYP = 'Vorrunde' ",
     selectType: '1'
   },
   {
@@ -724,7 +724,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Spiele hat Ecuador gewonnen? Geben Sie die Spiel_ID, die Mannschaften und das Ergebnis aus. Dabei können Sie davon ausgehen, dass keine zweistelligen Ergebnisse (mehr als 10 Tore für eine Mannschaft) vorliegen!',
-    solutionQuery: "SELECT spiele.SPIEL_ID, spiele.MANNSCHAFT_1, spiele.MANNSCHAFT_2,  spiele.ERGEBNIS  FROM spiele  \r\nWHERE spiele.MANNSCHAFT_1 = 'Ecuador'   AND SUBSTR(spiele.ergebnis, 1, 1)> SUBSTR(spiele.ergebnis, 3, 1)  \r\nUNION  SELECT spiele.SPIEL_ID, spiele.MANNSCHAFT_1, spiele.MANNSCHAFT_2,  spiele.ERGEBNIS  FROM spiele  WHERE spiele.MANNSCHAFT_2 = 'Ecuador'   AND SUBSTR(spiele.ergebnis, 1, 1)< SUBSTR(spiele.ergebnis, 3, 1)",
+    solutionQuery: "SELECT spiele.SPIEL_ID, spiele.MANNSCHAFT_1, spiele.MANNSCHAFT_2, spiele.ERGEBNIS FROM spiele WHERE spiele.MANNSCHAFT_1 = 'Ecuador' AND SUBSTR(spiele.ergebnis, 1, 1)> SUBSTR(spiele.ergebnis, 3, 1) UNION SELECT spiele.SPIEL_ID, spiele.MANNSCHAFT_1, spiele.MANNSCHAFT_2, spiele.ERGEBNIS FROM spiele WHERE spiele.MANNSCHAFT_2 = 'Ecuador' AND SUBSTR(spiele.ergebnis, 1, 1)< SUBSTR(spiele.ergebnis, 3, 1)",
     selectType: '11'
   },
   {
@@ -732,7 +732,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Mannschaft (Ausgabe: Mannschaft, SUM(Tore)) hat in der Vorrunde die meisten Tore geschossen? Geben Sie alle Mannschaften aus, mit der Summe aller Tore und sortieren Sie die Ausgabe absteigend nach der Summe über alle Tore!',
-    solutionQuery: "SELECT mannschaft, sum (tore)  FROM  (SELECT mannschaft_1 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_1     UNION  SELECT mannschaft_2 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_2 )  GROUP BY Mannschaft  order by SUM(Tore) desc  ",
+    solutionQuery: "SELECT mannschaft, sum (tore) FROM (SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft order by SUM(Tore) desc ",
     selectType: '8'
   },
   {
@@ -740,7 +740,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Mannschaft hat die meisten Tore in der Vorrunde geschossen?',
-    solutionQuery: "SELECT mannschaft, sum (tore) \r\nFROM \r\n(SELECT mannschaft_1 as mannschaft, \r\nSUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore \r\nFROM spiele \r\nWHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 \r\nUNION \r\nSELECT mannschaft_2 as mannschaft, \r\nSUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore\r\nFROM spiele \r\nWHERE Typ = 'Vorrunde'\r\n GROUP BY Mannschaft_2 ) \r\nGROUP BY Mannschaft\r\n having SUM(TORE) >=ALL (\r\nSELECT sum (tore) \r\nFROM\r\n(SELECT mannschaft_1 as mannschaft, \r\nSUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore\r\n FROM spiele\r\n WHERE Typ = 'Vorrunde'\r\n GROUP BY Mannschaft_1 \r\nUNION\r\n SELECT mannschaft_2 as mannschaft, \r\nSUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore \r\nFROM spiele\r\n WHERE Typ = 'Vorrunde' \r\nGROUP BY Mannschaft_2 )\r\n GROUP BY Mannschaft\r\n)",
+    solutionQuery: "SELECT mannschaft, sum (tore) FROM (SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as toreFROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft having SUM(TORE) >=ALL (SELECT sum (tore) FROM(SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft)",
     selectType: '11'
   },
   {
@@ -748,7 +748,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Mannschaft (Ausgabe: Mannschaft, SUM(Tore)) hat die meisten Tore in der Vorrunde kassiert?',
-    solutionQuery: "SELECT mannschaft, sum (tore)   FROM  (SELECT mannschaft_1 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_1   UNION  SELECT mannschaft_2 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_2 )  GROUP BY Mannschaft  having SUM(TORE) >=ALL (  SELECT sum (tore)   FROM  (SELECT mannschaft_1 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_1   UNION  SELECT mannschaft_2 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_2 )  GROUP BY Mannschaft  )      ",
+    solutionQuery: "SELECT mannschaft, sum (tore) FROM (SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft having SUM(TORE) >=ALL ( SELECT sum (tore) FROM (SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft ) ",
     selectType: '3'
   },
   {
@@ -764,7 +764,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Mannschaft hat in der Vorrunde die meisten Tore kassiert? Geben Sie alle Mannschaften aus, mit der Summe alle Tore und sortieren Sie die Ausgabe absteigend nach der Summe über alle Tore!',
-    solutionQuery: "SELECT mannschaft, sum (tore)  \r\nFROM  (SELECT mannschaft_1 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_1     UNION  SELECT mannschaft_2 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_2 )  GROUP BY Mannschaft  order by SUM(Tore) desc",
+    solutionQuery: "SELECT mannschaft, sum (tore) FROM (SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft order by SUM(Tore) desc",
     selectType: '11'
   },
   {
@@ -772,15 +772,15 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Spiele (alle Spalten) gingen unentschieden aus? ',
-    solutionQuery: 'SELECT * FROM Spiele,  nation  \r\nWHERE nation.NATIONNAME = Spiele.MANNSCHAFT_1  \r\nAND (SUBSTR(Spiele.ERGEBNIS, 1,1) = SUBSTR(Spiele.ERGEBNIS, 3,1))',
+    solutionQuery: 'SELECT * FROM Spiele, nation WHERE nation.NATIONNAME = Spiele.MANNSCHAFT_1 AND (SUBSTR(Spiele.ERGEBNIS, 1,1) = SUBSTR(Spiele.ERGEBNIS, 3,1))',
     selectType: '4'
   },
   {
     id: '57',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'Ermitteln Sie die Summe über alle Lieferungen je Rohstoff für alle Lieferanten!  ',
-    solutionQuery: 'SELECT  t.tnr, sum(l1.menge), l2.name, l2.lief_nr  FROM teile t, lieferungen l1, lieferanten l2  WHERE   t.tnr = l1.TNR  AND        l1.lief_nr = l2.lief_nr  GROUP by t.tnr, l2.lief_nr, l2.name  ',
+    text: 'Ermitteln Sie die Summe über alle Lieferungen je Rohstoff für alle Lieferanten! ',
+    solutionQuery: 'SELECT t.tnr, sum(l1.menge), l2.name, l2.lief_nr FROM teile t, lieferungen l1, lieferanten l2 WHERE t.tnr = l1.TNR AND l1.lief_nr = l2.lief_nr GROUP by t.tnr, l2.lief_nr, l2.name ',
     selectType: '2'
   },
   {
@@ -788,15 +788,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Wieviele Angestellte (Ang_nr, Nachname) sind zwischen dem 1.1.1990 und dem 1.1.1997 eingestellt worden?',
-    solutionQuery: "SELECT ang_nr, nachname, eintrittsdatum   FROM angestellte  WHERE eintrittsdatum BETWEEN   TO_DATE('01.01.1990', 'DD.MM.YYYY') AND   to_date('01.01.1997', 'DD.MM.YYYY')  ",
+    solutionQuery: "SELECT ang_nr, nachname, eintrittsdatum FROM angestellte WHERE eintrittsdatum BETWEEN TO_DATE('01.01.1990', 'DD.MM.YYYY') AND to_date('01.01.1997', 'DD.MM.YYYY') ",
     selectType: '14'
   },
   {
     id: '59',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'In welchen Abteilungen (Abt_nr, Name)  sind alle Berufe vertreten?',
-    solutionQuery: 'SELECT A1.Abt_Nr, A1.Name  FROM Abteilungen A1  WHERE NOT EXISTS ( SELECT * FROM Angestellte A2  WHERE NOT EXISTS (  SELECT * FROM Angestellte A3  WHERE a2.Beruf = a3.Beruf AND a1.Abt_NR = a2.Abt_nr))',
+    text: 'In welchen Abteilungen (Abt_nr, Name) sind alle Berufe vertreten?',
+    solutionQuery: 'SELECT A1.Abt_Nr, A1.Name FROM Abteilungen A1 WHERE NOT EXISTS ( SELECT * FROM Angestellte A2 WHERE NOT EXISTS ( SELECT * FROM Angestellte A3 WHERE a2.Beruf = a3.Beruf AND a1.Abt_NR = a2.Abt_nr))',
     selectType: '9'
   },
   {
@@ -804,15 +804,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Bestimmen Sie die Angestellten (Nachname, Vorname) aus der Abteilung mit Abt_Nr =2, die mehr als 5000 DM verdienen!',
-    solutionQuery: 'SELECT Nachname, Vorname  FROM Angestellte  WHERE Abt_Nr = 2 AND Gehalt > 5000',
+    solutionQuery: 'SELECT Nachname, Vorname FROM Angestellte WHERE Abt_Nr = 2 AND Gehalt > 5000',
     selectType: '1'
   },
   {
     id: '61',
     schema: 'fahrrad',
     difficulty: '2',
-    text: 'Bestimmen Sie alle Mountainbike-Fahrräder, \r\ndie weniger als 3000 DM kosten oder einen Jahresumsatz  von weniger als 200 Stück hatten! Geben Sie alle Spalten aus der Tabelle Artikel aus!',
-    solutionQuery: "SELECT * FROM Artikel  WHERE Artikel_Typ = 'Mountainbike'  AND (Jahresumsatz < 200 OR Verkaufspreis < 3000)",
+    text: 'Bestimmen Sie alle Mountainbike-Fahrräder, die weniger als 3000 DM kosten oder einen Jahresumsatz von weniger als 200 Stück hatten! Geben Sie alle Spalten aus der Tabelle Artikel aus!',
+    solutionQuery: "SELECT * FROM Artikel WHERE Artikel_Typ = 'Mountainbike' AND (Jahresumsatz < 200 OR Verkaufspreis < 3000)",
     selectType: '1'
   },
   {
@@ -828,15 +828,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '1',
     text: 'Welchen Namen hat die Abteilung mit der Abteilungsnummer Abt_Nr = 2?',
-    solutionQuery: 'SELECT Name FROM Abteilungen \r\nWHERE Abt_Nr = 2',
+    solutionQuery: 'SELECT Name FROM Abteilungen WHERE Abt_Nr = 2',
     selectType: '1'
   },
   {
     id: '64',
     schema: 'fahrrad',
     difficulty: '2',
-    text: "Welche Artikel (Typ = 'Artikel') liegen im Hauptlager und haben einen Bestand > 0?  Geben Sie TNr und Bezeichnung aus!",
-    solutionQuery: "SELECT t.TNr, t.Bezeichnung  FROM Teile t, Lagerbestand la , Lager l  WHERE t.TNr = la.TNr  AND la.LANr = l.LaNr  AND l.Bezeichnung = 'Hauptlager'  AND t.Typ = 'Artikel'  AND t.Bestand > 0",
+    text: "Welche Artikel (Typ = 'Artikel') liegen im Hauptlager und haben einen Bestand > 0? Geben Sie TNr und Bezeichnung aus!",
+    solutionQuery: "SELECT t.TNr, t.Bezeichnung FROM Teile t, Lagerbestand la , Lager l WHERE t.TNr = la.TNr AND la.LANr = l.LaNr AND l.Bezeichnung = 'Hauptlager' AND t.Typ = 'Artikel' AND t.Bestand > 0",
     selectType: '4'
   },
   {
@@ -844,7 +844,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Welche Materialien werden von Lieferanten aus Dortmund geliefert? Geben Sie TNr und Bezeichnung aus!',
-    solutionQuery: "SELECT t.TNr, t.bezeichnung  FROM Teile t, Lieferprogramme l1, Lieferanten l2  WHERE t.TNr = l1.TNr  AND l1.Lief_Nr = l2.Lief_Nr  AND l2.Ort = 'Dortmund'",
+    solutionQuery: "SELECT t.TNr, t.bezeichnung FROM Teile t, Lieferprogramme l1, Lieferanten l2 WHERE t.TNr = l1.TNr AND l1.Lief_Nr = l2.Lief_Nr AND l2.Ort = 'Dortmund'",
     selectType: '4'
   },
   {
@@ -852,7 +852,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Welche Angestellten haben einen Vornamen, der als zweiten Buchstaben ein u hat?',
-    solutionQuery: "SELECT Vorname  \r\nFROM Angestellte  \r\nWHERE Vorname LIKE '_u%'",
+    solutionQuery: "SELECT Vorname FROM Angestellte WHERE Vorname LIKE '_u%'",
     selectType: '13'
   },
   {
@@ -860,7 +860,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Welche Kunden aus Köln werden von Angestellten aus Gummersbach betreut? Geben Sie die Kun_Nr und den Nachnamen aus!',
-    solutionQuery: "SELECT K.Kun_nr , K.Nachname  FROM Kunden k, Auftraege A , Angestellte AG  WHERE K.Kun_Nr = A.Kun_Nr AND A.Ang_Nr = AG.Ang_NR  AND K.Ort = 'Köln' AND AG.Ort = 'Gummersbach'",
+    solutionQuery: "SELECT K.Kun_nr , K.Nachname FROM Kunden k, Auftraege A , Angestellte AG WHERE K.Kun_Nr = A.Kun_Nr AND A.Ang_Nr = AG.Ang_NR AND K.Ort = 'Köln' AND AG.Ort = 'Gummersbach'",
     selectType: '4'
   },
   {
@@ -868,7 +868,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Welche Kunden haben Artikel bestellt, die nicht auf Lager sind?',
-    solutionQuery: 'SELECT K.Kun_nr , K.Nachname\r\nFROM Kunden k, Auftraege A, Auftragspositionen AU\r\nWHERE K.Kun_Nr = A.Kun_NR\r\nAND a.AuftragsNR = Au.AuftragsNr\r\nAND AU.TNR NOT IN (SELECT TNR FROM Lagerbestand wherem TNR is not NULL)',
+    solutionQuery: 'SELECT K.Kun_nr , K.NachnameFROM Kunden k, Auftraege A, Auftragspositionen AUWHERE K.Kun_Nr = A.Kun_NRAND a.AuftragsNR = Au.AuftragsNrAND AU.TNR NOT IN (SELECT TNR FROM Lagerbestand wherem TNR is not NULL)',
     selectType: '5'
   },
   {
@@ -876,7 +876,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Listen Sie bitte Nachname, Vorname und Gehalt und Abteilungsname der Informatiker auf, die in Köln beschäftigt sind!',
-    solutionQuery: "SELECT a.Nachname, a.Vorname, a.gehalt FROM Angestellte a, Abteilungen ab  WHERE a.Abt_nr = ab.Abt_nr  AND ab.Ort = 'Köln'  AND a.Beruf = 'Informatiker'",
+    solutionQuery: "SELECT a.Nachname, a.Vorname, a.gehalt FROM Angestellte a, Abteilungen ab WHERE a.Abt_nr = ab.Abt_nr AND ab.Ort = 'Köln' AND a.Beruf = 'Informatiker'",
     selectType: '4'
   },
   {
@@ -884,15 +884,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '1',
     text: 'Finde die Abteilungsnummern von Abteilungen in Dortmund, in denen es Angestellten gibt, die weniger als 2000 verdienen!',
-    solutionQuery: "SELECT A.Abt_NR  FROM Angestellte A, Abteilungen AB  WHERE AB.Abt_NR = a.Abt_NR  AND AB.Ort = 'Dortmund'  AND a.Gehalt < 2000",
+    solutionQuery: "SELECT A.Abt_NR FROM Angestellte A, Abteilungen AB WHERE AB.Abt_NR = a.Abt_NR AND AB.Ort = 'Dortmund' AND a.Gehalt < 2000",
     selectType: '4'
   },
   {
     id: '72',
     schema: 'fahrrad',
     difficulty: '2',
-    text: 'Finde die Ang_nr, Nachnamen und den Vornamen der Angestellten, die den gleichen Beruf und das gleiche Gehalt wie der Angestellte Ilse  Brunn haben!',
-    solutionQuery: "SELECT A.Ang_NR, A.Nachname, A.Vorname  FROM Angestellte A, Angestellte B  WHERE b.Beruf = a.Beruf  AND a.Gehalt = b.Gehalt  AND b.Nachname = 'Brunn'  AND B.Vorname = 'Ilse'",
+    text: 'Finde die Ang_nr, Nachnamen und den Vornamen der Angestellten, die den gleichen Beruf und das gleiche Gehalt wie der Angestellte Ilse Brunn haben!',
+    solutionQuery: "SELECT A.Ang_NR, A.Nachname, A.Vorname FROM Angestellte A, Angestellte B WHERE b.Beruf = a.Beruf AND a.Gehalt = b.Gehalt AND b.Nachname = 'Brunn' AND B.Vorname = 'Ilse'",
     selectType: '6'
   },
   {
@@ -900,7 +900,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '1',
     text: 'Wieviele Frauen arbeiten bei der Fahrradfirma Byce&Co? ',
-    solutionQuery: "SELECT COUNT(*) FROM angestellte GROUP BY  geschlecht  HAVING Geschlecht = 'w'",
+    solutionQuery: "SELECT COUNT(*) FROM angestellte GROUP BY geschlecht HAVING Geschlecht = 'w'",
     selectType: '3'
   },
   {
@@ -915,8 +915,8 @@ export default [
     id: '75',
     schema: 'fahrrad',
     difficulty: '3',
-    text: "Welche Teile haben eine Bezeichnung, die mit dem Buchstaben 'g' anfängt oder ein 'a' als zweiten Buchstaben hat? In beiden Fällen darf als letzter Buchstabe kein 't' auftreten. (Groß- und Kleinschreibung spielt bei der Suche keine Rolle.)  Arbeiten Sie mit SELECT * ....",
-    solutionQuery: "SELECT  *  FROM    teile  WHERE   (UPPER(bezeichnung) LIKE 'G%'          OR UPPER(bezeichnung) LIKE '_A%')  AND     UPPER(bezeichnung) NOT LIKE '%T'",
+    text: "Welche Teile haben eine Bezeichnung, die mit dem Buchstaben 'g' anfängt oder ein 'a' als zweiten Buchstaben hat? In beiden Fällen darf als letzter Buchstabe kein 't' auftreten. (Groß- und Kleinschreibung spielt bei der Suche keine Rolle.) Arbeiten Sie mit SELECT * ....",
+    solutionQuery: "SELECT * FROM teile WHERE (UPPER(bezeichnung) LIKE 'G%' OR UPPER(bezeichnung) LIKE '_A%') AND UPPER(bezeichnung) NOT LIKE '%T'",
     selectType: '13'
   },
   {
@@ -924,15 +924,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Geben Sie eine Liste über alle Artikel aus, mit den Attributen TNr, Bezeichnung und Verkaufspreis, wobei die Preise um 10 % erhöht werden ! Sortieren Sie die Liste absteigend nach den Preisen und bei gleichem Preis noch mal alphabetisch aufsteigend nach der Bezeichnung !',
-    solutionQuery: 'SELECT TNr, bezeichnung, verkaufspreis*1.10 FROM  artikel  ORDER BY  verkaufspreis DESC, bezeichnung ASC',
+    solutionQuery: 'SELECT TNr, bezeichnung, verkaufspreis*1.10 FROM artikel ORDER BY verkaufspreis DESC, bezeichnung ASC',
     selectType: '15'
   },
   {
     id: '77',
     schema: 'fahrrad',
     difficulty: '1',
-    text: "Welche Teile haben eine Bezeichnung, die mit dem Buchstaben 'g' anfängt oder ein 'a' als zweiten Buchstaben hat. In beiden Fällen darf als letzter Buchstabe kein 't' auftreten? (Groß- und Kleinschreibung spielt bei der Suche keine Rolle.)  Arbeiten Sie mit SELECT * ...",
-    solutionQuery: "SELECT  *  FROM teile  \r\nWHERE ( UPPER(bezeichnung) LIKE 'G%' OR UPPER(bezeichnung) LIKE '_A%')  \r\nAND UPPER(bezeichnung) NOT LIKE '%T'",
+    text: "Welche Teile haben eine Bezeichnung, die mit dem Buchstaben 'g' anfängt oder ein 'a' als zweiten Buchstaben hat. In beiden Fällen darf als letzter Buchstabe kein 't' auftreten? (Groß- und Kleinschreibung spielt bei der Suche keine Rolle.) Arbeiten Sie mit SELECT * ...",
+    solutionQuery: "SELECT * FROM teile WHERE ( UPPER(bezeichnung) LIKE 'G%' OR UPPER(bezeichnung) LIKE '_A%') AND UPPER(bezeichnung) NOT LIKE '%T'",
     selectType: '13'
   },
   {
@@ -940,7 +940,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Von welchen Teilen mit einem Einkaufspreis von 100 EUR und mehr sind mehr als 1000 Einheiten im Bestand aller Lager zusammen? (Tabelle : Lagerbestand). Geben Sie diese Teile mit den Attributen TNR, BEZEICHNUNG und der Summe des Bestandes über alle Lager aus!',
-    solutionQuery: 'SELECT    t.tnr, t.bezeichnung,   SUM(l.bestand) Bestandssumme  FROM      teile t, lagerbestand l  WHERE     t.tnr = l.tnr  AND       t.einkaufspreis >= 100  GROUP BY  t.tnr, t.bezeichnung  HAVING    SUM(l.bestand) > 1000',
+    solutionQuery: 'SELECT t.tnr, t.bezeichnung, SUM(l.bestand) Bestandssumme FROM teile t, lagerbestand l WHERE t.tnr = l.tnr AND t.einkaufspreis >= 100 GROUP BY t.tnr, t.bezeichnung HAVING SUM(l.bestand) > 1000',
     selectType: '3'
   },
   {
@@ -1171,8 +1171,8 @@ export default [
     id: '218',
     schema: 'busse',
     difficulty: '3',
-    text: 'Welche Busfahrer (mita_id) haben keinen Führerschein und fahren nur auf Linien, die eine Beschränkung "Nur an Schultagen" (Tabelle: beschraenkungen, Spalte: Text)  besitzen? Unterdrücken Sie Duplicate!',
-    solutionQuery: "SELECT DISTINCT b.mita_id  FROM busfahrer b, einsatzplan e, fahrten f, linie l, linie_beschraenkungen lb, beschraenkungen be WHERE b.mita_id = e.mita_id AND e.fahrt_id = f.fahrt_id AND f.linien_id = l.linien_id AND lb.linien_id = l.linien_id AND be.beschr_id = lb.beschr_id AND be.text ='Nur an Schultagen' AND b.mita_id NOT IN (SELECT mita_id FROM besitzt_fuehrerschein)",
+    text: 'Welche Busfahrer (mita_id) haben keinen Führerschein und fahren nur auf Linien, die eine Beschränkung "Nur an Schultagen" (Tabelle: beschraenkungen, Spalte: Text) besitzen? Unterdrücken Sie Duplicate!',
+    solutionQuery: "SELECT DISTINCT b.mita_id FROM busfahrer b, einsatzplan e, fahrten f, linie l, linie_beschraenkungen lb, beschraenkungen be WHERE b.mita_id = e.mita_id AND e.fahrt_id = f.fahrt_id AND f.linien_id = l.linien_id AND lb.linien_id = l.linien_id AND be.beschr_id = lb.beschr_id AND be.text ='Nur an Schultagen' AND b.mita_id NOT IN (SELECT mita_id FROM besitzt_fuehrerschein)",
     selectType: '8'
   },
   {
@@ -1188,15 +1188,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Geben Sie eine Liste aus, über alle Teile mit TNr, Bezeichnung und den Lagern, auf denen die Teile gelagert sind!',
-    solutionQuery: 'SELECT Teile.TNR, Bezeichnung,  LANR \r\nFROM Teile, Lagerbestand\r\n WHERE   Teile.Tnr = Lagerbestand.Tnr\r\n',
+    solutionQuery: 'SELECT Teile.TNR, Bezeichnung, LANR FROM Teile, Lagerbestand WHERE Teile.Tnr = Lagerbestand.Tnr',
     selectType: '4'
   },
   {
     id: '46',
     schema: 'fahrrad',
     difficulty: '3',
-    text: "Geben Sie eine Liste aus, über alle Teile mit TNr, Bezeichnung und den Lagern, auf denen die Teile gelagert sind  sowie diejenigen Teile, für die kein Lagerbestand vorliegt mit dem Eintrag '0' bei der Lagernummer !",
-    solutionQuery: 'SELECT Teile. TNR, Bezeichnung, LANR FROM Teile, Lagerbestand  WHERE   Teile.Tnr = Lagerbestand.Tnr  UNION  SELECT TNR, Bezeichnung, 0  FROM Teile  WHERE   TNR NOT IN    \r\n(SELECT TNr FROM Lagerbestand)',
+    text: "Geben Sie eine Liste aus, über alle Teile mit TNr, Bezeichnung und den Lagern, auf denen die Teile gelagert sind sowie diejenigen Teile, für die kein Lagerbestand vorliegt mit dem Eintrag '0' bei der Lagernummer !",
+    solutionQuery: 'SELECT Teile. TNR, Bezeichnung, LANR FROM Teile, Lagerbestand WHERE Teile.Tnr = Lagerbestand.Tnr UNION SELECT TNR, Bezeichnung, 0 FROM Teile WHERE TNR NOT IN (SELECT TNr FROM Lagerbestand)',
     selectType: '11'
   },
   {
@@ -1212,7 +1212,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Mannschaft hat alle Spiele in der Vorrunde gewonnen?',
-    solutionQuery: "SELECT spiele.MANNSCHAFT_1 as Mannschaft  FROM spiele  WHERE Mannschaft_1 NOT IN  (SELECT mannschaft_1 FROM spiele   WHERE substr(Ergebnis, 1,1) <= SUBSTR(Ergebnis, 3,1))  AND Typ = 'Vorrunde'    MINUS  SELECT spiele.MANNSCHAFT_2 as Mannschaft  FROM spiele  WHERE Mannschaft_2 not IN  (SELECT mannschaft_2 FROM spiele   WHERE substr(Ergebnis, 1,1) <= SUBSTR(Ergebnis, 3,1))  AND Typ = 'Vorrunde'",
+    solutionQuery: "SELECT spiele.MANNSCHAFT_1 as Mannschaft FROM spiele WHERE Mannschaft_1 NOT IN (SELECT mannschaft_1 FROM spiele WHERE substr(Ergebnis, 1,1) <= SUBSTR(Ergebnis, 3,1)) AND Typ = 'Vorrunde' MINUS SELECT spiele.MANNSCHAFT_2 as Mannschaft FROM spiele WHERE Mannschaft_2 not IN (SELECT mannschaft_2 FROM spiele WHERE substr(Ergebnis, 1,1) <= SUBSTR(Ergebnis, 3,1)) AND Typ = 'Vorrunde'",
     selectType: '8'
   },
   {
@@ -1228,7 +1228,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche Spieler (Vorname, Nachname) spielen für Paraguay?',
-    solutionQuery: "SELECT spieler.VORNAME, spieler.NACHNAME FROM  spieler  WHERE spieler.NATIONNAME  =  'Paraguay'",
+    solutionQuery: "SELECT spieler.VORNAME, spieler.NACHNAME FROM spieler WHERE spieler.NATIONNAME = 'Paraguay'",
     selectType: '1'
   },
   {
@@ -1251,7 +1251,7 @@ export default [
     id: '172',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'Geben Sie für jeden Artikel den Namen und den Gesamtumsatz (Verkaufspreis*Anzahl as gesamtumsatz) aus und  sortieren Sie absteigend nach dem Gesamtumsatz!',
+    text: 'Geben Sie für jeden Artikel den Namen und den Gesamtumsatz (Verkaufspreis*Anzahl as gesamtumsatz) aus und sortieren Sie absteigend nach dem Gesamtumsatz!',
     solutionQuery: 'select bezeichnung, verkaufspreis*jahresumsatz as gesamtumsatz from artikel order by gesamtumsatz desc',
     selectType: '15'
   },
@@ -1299,7 +1299,7 @@ export default [
     id: '178',
     schema: 'theater',
     difficulty: '2',
-    text: 'Welcher Schauspieler (name, figur) stellt welche Figur dar?  Sortieren Sie absteigend nach dem Namen der Figur!',
+    text: 'Welcher Schauspieler (name, figur) stellt welche Figur dar? Sortieren Sie absteigend nach dem Namen der Figur!',
     solutionQuery: 'select s.name, d.figur from stellt_dar d, schauspieler s where d.pnr=s.pnr order by figur asc',
     selectType: '4'
   },
@@ -1315,7 +1315,7 @@ export default [
     id: '180',
     schema: 'theater',
     difficulty: '3',
-    text: 'Geben Sie alle Figuren aus, deren Drama im Mai uraufgeführt wurde. (Ausgabe r.figur, r.titel)\r\n',
+    text: 'Geben Sie alle Figuren aus, deren Drama im Mai uraufgeführt wurde. (Ausgabe r.figur, r.titel)',
     solutionQuery: "select r.figur, r.titel from drama d, rolle r where r.titel=d.titel and to_char(jahr_urauffuehrung, 'MON')='MAY'",
     selectType: '14'
   },
@@ -1412,7 +1412,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Welche Nationen haben in der Vorrunde gespielt?',
-    solutionQuery: "SELECT Nationname FROM   Nation WHERE  Nationname IN (SELECT Mannschaft_1 FROM   Spiele WHERE  Typ = 'Vorrunde'  UNION SELECT Mannschaft_2 FROM Spiele WHERE  Typ = 'Vorrunde')",
+    solutionQuery: "SELECT Nationname FROM Nation WHERE Nationname IN (SELECT Mannschaft_1 FROM Spiele WHERE Typ = 'Vorrunde' UNION SELECT Mannschaft_2 FROM Spiele WHERE Typ = 'Vorrunde')",
     selectType: '11'
   },
   {
@@ -1420,7 +1420,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Nationen haben nur (!) in der Vorrunde gespielt?',
-    solutionQuery: "SELECT Nationname \r\nFROM   Nation\r\nWHERE  Nationname IN (SELECT DISTINCT Mannschaft_1 \r\n                          FROM   Spiele\r\n                          WHERE  Typ = 'Vorrunde'\r\n                          UNION  \r\n                          SELECT DISTINCT Mannschaft_2 \r\n                          FROM   Spiele\r\n                          WHERE  Typ = 'Vorrunde')\r\nAND   Nationname NOT IN (SELECT DISTINCT Mannschaft_1 \r\n                          FROM   Spiele\r\n                          WHERE  Typ != 'Vorrunde'\r\n                          UNION  \r\n                          SELECT DISTINCT Mannschaft_2 \r\n                          FROM   Spiele\r\n                          WHERE  Typ != 'Vorrunde')",
+    solutionQuery: "SELECT Nationname FROM NationWHERE Nationname IN (SELECT DISTINCT Mannschaft_1 FROM Spiele WHERE Typ = 'Vorrunde' UNION SELECT DISTINCT Mannschaft_2 FROM Spiele WHERE Typ = 'Vorrunde')AND Nationname NOT IN (SELECT DISTINCT Mannschaft_1 FROM Spiele WHERE Typ != 'Vorrunde' UNION SELECT DISTINCT Mannschaft_2 FROM Spiele WHERE Typ != 'Vorrunde')",
     selectType: '11'
   },
   {
@@ -1428,7 +1428,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Listen Sie die Gruppen auf mit der Anzahl an Toren, die während der Vorrunde geschossen wurden!',
-    solutionQuery: 'SELECT n.Gruppe, COUNT(*)\r\n FROM   Nation n, Spiele s, Tore t\r\n WHERE  n.Nationname = s.mannschaft_1 \r\n  AND  s.Spiel_Id   = t.Spiel_Id\r\n  AND  s.Typ  \r\ngroup by n.gruppe',
+    solutionQuery: 'SELECT n.Gruppe, COUNT(*) FROM Nation n, Spiele s, Tore t WHERE n.Nationname = s.mannschaft_1 AND s.Spiel_Id = t.Spiel_Id AND s.Typ group by n.gruppe',
     selectType: '2'
   },
   {
@@ -1436,7 +1436,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Wie viele Zuschauer hat für jede Runde des Turniers (Typ des Spiels) gegeben?',
-    solutionQuery: 'SELECT Typ, SUM(Anzahl_Zuschauer) FROM   Spiele GROUP  BY Typ',
+    solutionQuery: 'SELECT Typ, SUM(Anzahl_Zuschauer) FROM Spiele GROUP BY Typ',
     selectType: '2'
   },
   {
@@ -1444,7 +1444,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'In welchen Ausführungsorten spielte die Nationalmannschaft von Frankreich in der Vorrunde, die bis zum 22.06.2006 ging?',
-    solutionQuery: "SELECT Spiele.AUSFUEHRUNGSORT FROM   spiele WHERE (Mannschaft_1 = 'Frankreich' OR Mannschaft_2 = 'Frankreich')  AND TO_CHAR(termin, 'ddmmrrrr') <= '22062006'",
+    solutionQuery: "SELECT Spiele.AUSFUEHRUNGSORT FROM spiele WHERE (Mannschaft_1 = 'Frankreich' OR Mannschaft_2 = 'Frankreich') AND TO_CHAR(termin, 'ddmmrrrr') <= '22062006'",
     selectType: '14'
   },
   {
@@ -1452,15 +1452,15 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'In welchen Ausführungsorten hat Deutschland gewonnen?',
-    solutionQuery: "SELECT spiele.AUSFUEHRUNGSORT       FROM   spiele         WHERE ( spiele.MANNSCHAFT_1 = 'Deutschland' AND SUBSTR(Spiele.ERGEBNIS, 1,1) > SUBSTR(Spiele.ERGEBNIS, 3,1)  OR    ( spiele.MANNSCHAFT_2 = 'Deutschland') AND SUBSTR(Spiele.ERGEBNIS, 3,1)  > SUBSTR(Spiele.ERGEBNIS, 1,1))",
+    solutionQuery: "SELECT spiele.AUSFUEHRUNGSORT FROM spiele WHERE ( spiele.MANNSCHAFT_1 = 'Deutschland' AND SUBSTR(Spiele.ERGEBNIS, 1,1) > SUBSTR(Spiele.ERGEBNIS, 3,1) OR ( spiele.MANNSCHAFT_2 = 'Deutschland') AND SUBSTR(Spiele.ERGEBNIS, 3,1) > SUBSTR(Spiele.ERGEBNIS, 1,1))",
     selectType: '1'
   },
   {
     id: '160',
     schema: 'fussball',
     difficulty: '1',
-    text: 'Welche Trainer (Ausgabe: Trainername) der Mannschaft_1  haben Spiele in der Stadt Dortmund betreut?',
-    solutionQuery: "SELECT n.trainername FROM   spiele w, nation n WHERE  w.MANNSCHAFT_1 = n.NATIONNAME AND    w.AUSFUEHRUNGSORT = 'Dortmund'",
+    text: 'Welche Trainer (Ausgabe: Trainername) der Mannschaft_1 haben Spiele in der Stadt Dortmund betreut?',
+    solutionQuery: "SELECT n.trainername FROM spiele w, nation n WHERE w.MANNSCHAFT_1 = n.NATIONNAME AND w.AUSFUEHRUNGSORT = 'Dortmund'",
     selectType: '4'
   },
   {
@@ -1468,15 +1468,15 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Welche Trainer (Ausgabe: Trainername, Nationname) der Mannschaft_1 haben nur !!! Spiele in der Stadt Dortmund betreut?',
-    solutionQuery: "SELECT n.trainername FROM   spiele w, nation n WHERE  w.MANNSCHAFT_1 = n.NATIONNAME\nAND w.AUSFUEHRUNGSORT = 'Dortmund' AND  n.TRAINERNAME NOT IN (SELECT n.trainername FROM   spiele w, nation n WHERE  w.MANNSCHAFT_1 = n.NATIONNAME AND    w.AUSFUEHRUNGSORT != 'Dortmund')",
+    solutionQuery: "SELECT n.trainername FROM spiele w, nation n WHERE w.MANNSCHAFT_1 = n.NATIONNAME\nAND w.AUSFUEHRUNGSORT = 'Dortmund' AND n.TRAINERNAME NOT IN (SELECT n.trainername FROM spiele w, nation n WHERE w.MANNSCHAFT_1 = n.NATIONNAME AND w.AUSFUEHRUNGSORT != 'Dortmund')",
     selectType: '8'
   },
   {
     id: '162',
     schema: 'fussball',
     difficulty: '3',
-    text: 'Welche Länder haben in welchen Spielen mehr als 2 Tore geschossen? \r\n(Ausgabe: Nationname, Spiel_id, Ausführunsort, Tore,)\r\nAchtung: Landname und Tore können sowohl die von Mannschaft 1  als auch von Mannschaft 2 sein!',
-    solutionQuery: 'SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT,\r\n       nation.TRAINERNAME, count(*) \r\nFROM   nation, spiele, tore \r\nWHERE  nation.NATIONNAME = spiele.MANNSCHAFT_1 \r\nAND    spiele.SPIEL_ID = tore.SPIEL_ID\r\nGROUP BY  nation.NATIONNAME, nation.TRAINERNAME  ,\r\nspiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT \r\nhaving COUNT(*) > 2 \r\nunion \r\nSELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT,\r\n       nation.TRAINERNAME, count(*)\r\nFROM   nation, spiele, tore\r\n WHERE  nation.NATIONNAME = spiele.MANNSCHAFT_2 \r\nAND    spiele.SPIEL_ID = tore.SPIEL_ID \r\nGROUP BY  nation.NATIONNAME, nation.TRAINERNAME  ,\r\nspiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT\r\n having COUNT(*) > 2',
+    text: 'Welche Länder haben in welchen Spielen mehr als 2 Tore geschossen? (Ausgabe: Nationname, Spiel_id, Ausführunsort, Tore,)Achtung: Landname und Tore können sowohl die von Mannschaft 1 als auch von Mannschaft 2 sein!',
+    solutionQuery: 'SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*) FROM nation, spiele, tore WHERE nation.NATIONNAME = spiele.MANNSCHAFT_1 AND spiele.SPIEL_ID = tore.SPIEL_IDGROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT having COUNT(*) > 2 union SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*)FROM nation, spiele, tore WHERE nation.NATIONNAME = spiele.MANNSCHAFT_2 AND spiele.SPIEL_ID = tore.SPIEL_ID GROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT having COUNT(*) > 2',
     selectType: '11'
   },
   {
@@ -1484,7 +1484,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'In welchen Ausführungsorten wird kein Spiel des Achtelfinals ausgetragen?',
-    solutionQuery: "SELECT Spiele.AUSFUEHRUNGSORT FROM Spiele WHERE Spiele.AUSFUEHRUNGSORT NOT IN  (SELECT Spiele.AUSFUEHRUNGSORT FROm Spiele WHERE TYp = 'Achtelfinale')",
+    solutionQuery: "SELECT Spiele.AUSFUEHRUNGSORT FROM Spiele WHERE Spiele.AUSFUEHRUNGSORT NOT IN (SELECT Spiele.AUSFUEHRUNGSORT FROm Spiele WHERE TYp = 'Achtelfinale')",
     selectType: '5'
   },
   {
@@ -1500,7 +1500,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Welche Länder spielten in allen Ausführungsorten, die mit H beginnen?',
-    solutionQuery: "SELECT nation.NATIONNAME FROM nation WHERe NOT EXISTS ( (SELECT * FROM Spiele s1 WHERE  S1.AUSFUEHRUNGSORT like 'H%' AND NOT EXISTS\n      (SELECT * FROM spiele s2 WHERE  S2.AUSFUEHRUNGSORT like 'H%' AND (s1.mannschaft_1 = nation.NATIONNAME OR   s2.mannschaft_2  = nation.NATIONNAME))))",
+    solutionQuery: "SELECT nation.NATIONNAME FROM nation WHERe NOT EXISTS ( (SELECT * FROM Spiele s1 WHERE S1.AUSFUEHRUNGSORT like 'H%' AND NOT EXISTS\n (SELECT * FROM spiele s2 WHERE S2.AUSFUEHRUNGSORT like 'H%' AND (s1.mannschaft_1 = nation.NATIONNAME OR s2.mannschaft_2 = nation.NATIONNAME))))",
     selectType: '9'
   },
   {
@@ -1508,7 +1508,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Listen Sie alle Spieler des deutschen Teams mit ihrem Trainer auf! (Spalten: NAchname, Vorname, Trainename)',
-    solutionQuery: "SELECT  sp.nachname, sp.vorname, na.trainername  FROM spieler sp, nation na  WHERE sp.nationname='Deutschland'   AND   na.nationname= sp.nationname",
+    solutionQuery: "SELECT sp.nachname, sp.vorname, na.trainername FROM spieler sp, nation na WHERE sp.nationname='Deutschland' AND na.nationname= sp.nationname",
     selectType: '4'
   },
   {
@@ -1516,15 +1516,15 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Wie viele Tore schoss der Spieler "Miroslav Klose"?',
-    solutionQuery: "SELECT  count(*) FROM tore WHERE  tore.spieler_id=(SELECT  spieler_id FROM  spieler WHERE  nachname='Klose')",
+    solutionQuery: "SELECT count(*) FROM tore WHERE tore.spieler_id=(SELECT spieler_id FROM spieler WHERE nachname='Klose')",
     selectType: '5'
   },
   {
     id: '141',
     schema: 'fussball',
     difficulty: '2',
-    text: 'Geben Sie alle Spieler der brasilianischen Mannschaft aus, die kein Tor geschossen haben (zu selektierende Spalten: Spieler_id, Nachname)!  ',
-    solutionQuery: "SELECT  DISTINCT    spieler.spieler_id, spieler.nachname   FROM spieler, tore  WHERE spieler.nationname='Brasilien' AND spieler.spieler_id NOT IN     (SELECT tore.spieler_id FROM tore, spieler WHERE  tore.spieler_id=spieler.spieler_id)  ",
+    text: 'Geben Sie alle Spieler der brasilianischen Mannschaft aus, die kein Tor geschossen haben (zu selektierende Spalten: Spieler_id, Nachname)! ',
+    solutionQuery: "SELECT DISTINCT spieler.spieler_id, spieler.nachname FROM spieler, tore WHERE spieler.nationname='Brasilien' AND spieler.spieler_id NOT IN (SELECT tore.spieler_id FROM tore, spieler WHERE tore.spieler_id=spieler.spieler_id) ",
     selectType: '5'
   },
   {
@@ -1539,16 +1539,16 @@ export default [
     id: '143',
     schema: 'fussball',
     difficulty: '1',
-    text: 'Geben Sie alle Spiele vom Typ Vorrunde aus (alle Spalten)!  ',
-    solutionQuery: "SELECT * FROM  spiele WHERE  typ='Vorrunde'",
+    text: 'Geben Sie alle Spiele vom Typ Vorrunde aus (alle Spalten)! ',
+    solutionQuery: "SELECT * FROM spiele WHERE typ='Vorrunde'",
     selectType: '1'
   },
   {
     id: '144',
     schema: 'fussball',
     difficulty: '2',
-    text: 'Geben Sie alle Spiele aus, welche durch Elfmeterschießen entschieden wurden. (Elfmeter-Tore werden mit der 999 Minute gekennzeichnet!)  (zu selektierende Spalten: spiel_id)',
-    solutionQuery: 'SELECT spiele.spiel_id   FROM  spiele, tore   WHERE  spiele.spiel_id=tore.spiel_id AND tore.minute=999',
+    text: 'Geben Sie alle Spiele aus, welche durch Elfmeterschießen entschieden wurden. (Elfmeter-Tore werden mit der 999 Minute gekennzeichnet!) (zu selektierende Spalten: spiel_id)',
+    solutionQuery: 'SELECT spiele.spiel_id FROM spiele, tore WHERE spiele.spiel_id=tore.spiel_id AND tore.minute=999',
     selectType: '1'
   },
   {
@@ -1563,8 +1563,8 @@ export default [
     id: '146',
     schema: 'fussball',
     difficulty: '1',
-    text: 'Wie viele Euros verdienen alle deutschen Spieler im Jahr insgesamt?  (zu selektierende Spalten: Gehalt_in_Euro)',
-    solutionQuery: "SELECT  SUM(Gehalt_in_Euro)   FROM spieler   WHERE nationname='Deutschland'",
+    text: 'Wie viele Euros verdienen alle deutschen Spieler im Jahr insgesamt? (zu selektierende Spalten: Gehalt_in_Euro)',
+    solutionQuery: "SELECT SUM(Gehalt_in_Euro) FROM spieler WHERE nationname='Deutschland'",
     selectType: '12'
   },
   {
@@ -1572,47 +1572,47 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Geben Sie die Spiele (alle Spalten) aus, die in der Zeit vom 24.06.2006 und dem 5.07.2006 ausgetragen wurden!',
-    solutionQuery: "SELECT  * FROM Spiele   WHERE Termin BETWEEN TO_DATE('24.06.2006', 'DD.MM.YYYY') and \r\nTO_DATE('05.07.2006', 'DD.MM.YYYY')",
+    solutionQuery: "SELECT * FROM Spiele WHERE Termin BETWEEN TO_DATE('24.06.2006', 'DD.MM.YYYY') and TO_DATE('05.07.2006', 'DD.MM.YYYY')",
     selectType: '14'
   },
   {
     id: '148',
     schema: 'fussball',
     difficulty: '3',
-    text: 'Geben Sie alle Spieler aus, die im Spiel Deutschland gegen Argentinien Tore geschossen haben.  (zu selektierende Spalten: Spieler_ID, Nachname, Nationname)  ',
-    solutionQuery: "SELECT DISTINCT  spieler.spieler_id, spieler.nachname, spieler.nationname  FROM  spieler, spiele, tore  WHERE tore.spiel_id=  (SELECT  spiel_id FROM  spiele WHERE  (mannschaft_1='Deutschland' AND mannschaft_2='Argentinien') OR (mannschaft_1='Argentinien' AND mannschaft_2='Deutschland'))   AND spieler.spieler_id=tore.spieler_id",
+    text: 'Geben Sie alle Spieler aus, die im Spiel Deutschland gegen Argentinien Tore geschossen haben. (zu selektierende Spalten: Spieler_ID, Nachname, Nationname) ',
+    solutionQuery: "SELECT DISTINCT spieler.spieler_id, spieler.nachname, spieler.nationname FROM spieler, spiele, tore WHERE tore.spiel_id= (SELECT spiel_id FROM spiele WHERE (mannschaft_1='Deutschland' AND mannschaft_2='Argentinien') OR (mannschaft_1='Argentinien' AND mannschaft_2='Deutschland')) AND spieler.spieler_id=tore.spieler_id",
     selectType: '5'
   },
   {
     id: '149',
     schema: 'fussball',
     difficulty: '2',
-    text: 'Welche Spieler haben in Koeln Tore geschossen? (zu selektierende Spalte: Nachname)  ',
-    solutionQuery: "SELECT spieler.nachname   FROM spieler WHERE spieler_id IN   (SELECT tore.spieler_id   FROM tore, spiele   WHERE tore.spiel_id=spiele.spiel_id AND spiele.ausfuehrungsort='Koeln')",
+    text: 'Welche Spieler haben in Koeln Tore geschossen? (zu selektierende Spalte: Nachname) ',
+    solutionQuery: "SELECT spieler.nachname FROM spieler WHERE spieler_id IN (SELECT tore.spieler_id FROM tore, spiele WHERE tore.spiel_id=spiele.spiel_id AND spiele.ausfuehrungsort='Koeln')",
     selectType: '5'
   },
   {
     id: '150',
     schema: 'fussball',
     difficulty: '2',
-    text: 'Geben Sie alle Spieler aus, die Elfmeter (Torminute = 999) geschossen und dadurch Tore erzielt haben\r\n(zu selektierende Spalten: Nationname, Nachname)! Geben Sie keinen doppelten Tupel aus und sortieren über Nationname, Nachname!',
-    solutionQuery: 'SELECT  spieler.nachname , Spieler.Nationname \r\nFROM  spieler, tore \r\nWHERE  spieler.spieler_id=tore.spieler_id AND tore.minute=999 \r\nGROUP BY  Spieler.Nationname, spieler.nachname , Spieler.Nationname',
+    text: 'Geben Sie alle Spieler aus, die Elfmeter (Torminute = 999) geschossen und dadurch Tore erzielt haben(zu selektierende Spalten: Nationname, Nachname)! Geben Sie keinen doppelten Tupel aus und sortieren über Nationname, Nachname!',
+    solutionQuery: 'SELECT spieler.nachname , Spieler.Nationname FROM spieler, tore WHERE spieler.spieler_id=tore.spieler_id AND tore.minute=999 GROUP BY Spieler.Nationname, spieler.nachname , Spieler.Nationname',
     selectType: '2'
   },
   {
     id: '151',
     schema: 'fussball',
     difficulty: '2',
-    text: 'Welche Mannschaften der Gruppe B schafften es ins Achtelfinale?  (zu selektierende Spalten: Nationname)  ',
-    solutionQuery: "SELECT  nationname FROM  nation WHERE gruppe='B'   AND (nationname IN (SELECT  mannschaft_1 FROM  spiele WHERE typ='Achtelfinale')   OR nationname IN (SELECT mannschaft_2 FROM spiele WHERE  typ='Achtelfinale'))",
+    text: 'Welche Mannschaften der Gruppe B schafften es ins Achtelfinale? (zu selektierende Spalten: Nationname) ',
+    solutionQuery: "SELECT nationname FROM nation WHERE gruppe='B' AND (nationname IN (SELECT mannschaft_1 FROM spiele WHERE typ='Achtelfinale') OR nationname IN (SELECT mannschaft_2 FROM spiele WHERE typ='Achtelfinale'))",
     selectType: '5'
   },
   {
     id: '152',
     schema: 'fussball',
     difficulty: '2',
-    text: 'Geben Sie das durchschnittliche Gehalt aller Spieler aus, die weniger als Oliver Kahn verdienen  (zu selektierende Spalten: Gehalt_in_Euro)!  ',
-    solutionQuery: "SELECT  AVG(gehalt_in_euro)   FROM spieler   WHERE gehalt_in_euro<  (SELECT gehalt_in_euro FROM spieler WHERE nachname='Kahn')",
+    text: 'Geben Sie das durchschnittliche Gehalt aller Spieler aus, die weniger als Oliver Kahn verdienen (zu selektierende Spalten: Gehalt_in_Euro)! ',
+    solutionQuery: "SELECT AVG(gehalt_in_euro) FROM spieler WHERE gehalt_in_euro< (SELECT gehalt_in_euro FROM spieler WHERE nachname='Kahn')",
     selectType: '5'
   },
   {
@@ -1620,7 +1620,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'An welchen Spielen (alle Spalten) nahm England teil?',
-    solutionQuery: "SELECT * FROM  Spiele  WHERE mannschaft_1 = 'England'  OR Mannschaft_2 = 'England'",
+    solutionQuery: "SELECT * FROM Spiele WHERE mannschaft_1 = 'England' OR Mannschaft_2 = 'England'",
     selectType: '1'
   },
   {
@@ -1628,15 +1628,15 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Mannschaft (Ausgabe: Mannschaft) hat kein Tor geschossen?',
-    solutionQuery: 'SELECT spiele.MANNSCHAFT_1 as Manschaft   FROM spiele  WHERE Mannschaft_1 not IN  (SELECT mannschaft_1 FROM spiele   WHERE substr(Ergebnis, 1,1) > 0)    INTERSECT  SELECT spiele.MANNSCHAFT_2 as Manschaft   FROM spiele  WHERE Mannschaft_2 not IN  (SELECT mannschaft_2 FROM spiele   WHERE substr(Ergebnis, 3,1) > 0) ',
+    solutionQuery: 'SELECT spiele.MANNSCHAFT_1 as Manschaft FROM spiele WHERE Mannschaft_1 not IN (SELECT mannschaft_1 FROM spiele WHERE substr(Ergebnis, 1,1) > 0) INTERSECT SELECT spiele.MANNSCHAFT_2 as Manschaft FROM spiele WHERE Mannschaft_2 not IN (SELECT mannschaft_2 FROM spiele WHERE substr(Ergebnis, 3,1) > 0) ',
     selectType: '5'
   },
   {
     id: '166',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'Welche  Angestellten (Ausgabe: Ang_nr, Gehalt) verdienen mehr als der Durchschnitt aller Gehälter der Angestellten  jeder einzelnen Abteilung?',
-    solutionQuery: 'SELECT ang_nr , gehalt  FROM angestellte   WHERE gehalt > all  (SELECT avg(gehalt) FROM angestellte  Group by abt_nr)  ',
+    text: 'Welche Angestellten (Ausgabe: Ang_nr, Gehalt) verdienen mehr als der Durchschnitt aller Gehälter der Angestellten jeder einzelnen Abteilung?',
+    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte WHERE gehalt > all (SELECT avg(gehalt) FROM angestellte Group by abt_nr) ',
     selectType: '5'
   },
   {
@@ -1644,15 +1644,15 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Welche Angestellten verdienen mehr als das durchschnittliche Gehalt irgendeiner Abteilung? Ausgabe: (Ang_nr, Gehalt)',
-    solutionQuery: 'SELECT ang_nr , gehalt  FROM angestellte   WHERE gehalt >   (SELECT avg(avg(gehalt)) FROM angestellte  Group by abt_nr)  ',
+    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte WHERE gehalt > (SELECT avg(avg(gehalt)) FROM angestellte Group by abt_nr) ',
     selectType: '5'
   },
   {
     id: '168',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'Geben Sie alle Angestellten (Ang_nr, Gehalt) aus, die mehr als das durchschnittliche Gehalt aller Abteilungen verdienen,wenn man noch mal den Durchschnitt über die durchschnittlichen Gehälter der Einzelabteilungen bildet!\r\n',
-    solutionQuery: 'SELECT ang_nr , gehalt \r\nFROM angestellte \r\nWHERE gehalt >\r\n(SELECT avg(avg(gehalt)) FROM angestellte  Group by abt_nr)\r\n',
+    text: 'Geben Sie alle Angestellten (Ang_nr, Gehalt) aus, die mehr als das durchschnittliche Gehalt aller Abteilungen verdienen,wenn man noch mal den Durchschnitt über die durchschnittlichen Gehälter der Einzelabteilungen bildet!',
+    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte WHERE gehalt >(SELECT avg(avg(gehalt)) FROM angestellte Group by abt_nr)',
     selectType: '5'
   },
   {
@@ -1660,7 +1660,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Wie viele Punkte hat Ghana in der Vorrunde bekommen?',
-    solutionQuery: "SELECT\r\n((SELECT COUNT(*) * 3 FROM spiele\r\n WHERE mannschaft_1 = 'Ghana'\r\nAND TYP = 'Vorrunde'\r\n AND SUBSTR(ergebnis, 1,1 ) > SUBSTR(ergebnis, 3,1 ) ) +\r\n\r\n(SELECT COUNT(*) * 3 \r\nFROM spiele \r\nWHERE mannschaft_2 = 'Ghana' \r\nAND TYP = 'Vorrunde' \r\nAND SUBSTR(ergebnis, 1,1 ) > SUBSTR(ergebnis, 3,1 )) +\r\n \r\n(SELECT COUNT(*)   FROM spiele\r\n WHERE (mannschaft_2 = 'Ghana' or mannschaft_1 = 'Ghana')\r\nAND TYP = 'Vorrunde'\r\n AND SUBSTR(ergebnis, 1,1 ) = SUBSTR(ergebnis, 3,1 )))\r\n FROM DUAL",
+    solutionQuery: "SELECT((SELECT COUNT(*) * 3 FROM spiele WHERE mannschaft_1 = 'Ghana'AND TYP = 'Vorrunde' AND SUBSTR(ergebnis, 1,1 ) > SUBSTR(ergebnis, 3,1 ) ) +(SELECT COUNT(*) * 3 FROM spiele WHERE mannschaft_2 = 'Ghana' AND TYP = 'Vorrunde' AND SUBSTR(ergebnis, 1,1 ) > SUBSTR(ergebnis, 3,1 )) + (SELECT COUNT(*) FROM spiele WHERE (mannschaft_2 = 'Ghana' or mannschaft_1 = 'Ghana')AND TYP = 'Vorrunde' AND SUBSTR(ergebnis, 1,1 ) = SUBSTR(ergebnis, 3,1 ))) FROM DUAL",
     selectType: '8'
   },
   {
@@ -1668,7 +1668,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Welche Mannschaft hat am 13.06.2006 gespielt? Erzeugen Sie eine Tabelleausgabe mit einer Spalte, in der alle Mannschaften aufgeführt sind.',
-    solutionQuery: "SELECT mannschaft_1 as mannschaft  FROM Spiele  WHERE  spiele.TERMIN = '13-Jun-2006'  UNION   SELECT mannschaft_2 as mannschaft  FROM Spiele  WHERE  spiele.TERMIN = '13-Jun-2006'",
+    solutionQuery: "SELECT mannschaft_1 as mannschaft FROM Spiele WHERE spiele.TERMIN = '13-Jun-2006' UNION SELECT mannschaft_2 as mannschaft FROM Spiele WHERE spiele.TERMIN = '13-Jun-2006'",
     selectType: '11'
   },
   {
@@ -1676,7 +1676,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Welche Spiele (alle Spalten) fanden in einer Stadt statt (Ausführungsort), die mit K anfängt?',
-    solutionQuery: "SELECT * FROM Spiele  WHERE Ausfuehrungsort like 'K%'",
+    solutionQuery: "SELECT * FROM Spiele WHERE Ausfuehrungsort like 'K%'",
     selectType: '13'
   },
   {
@@ -1684,7 +1684,7 @@ export default [
     schema: 'welt',
     difficulty: '1',
     text: 'Wie heißt die Hauptstadt von Ghana?',
-    solutionQuery: "SELECT capital FROM  country WHERE name = 'Ghana'",
+    solutionQuery: "SELECT capital FROM country WHERE name = 'Ghana'",
     selectType: '1'
   },
   {
@@ -1692,7 +1692,7 @@ export default [
     schema: 'welt',
     difficulty: '1',
     text: 'Welche Flüsse (Spalte: name) durchqueren einen See? ',
-    solutionQuery: 'SELECT name FROM  river WHERE lake is not null',
+    solutionQuery: 'SELECT name FROM river WHERE lake is not null',
     selectType: '17'
   },
   {
@@ -1708,7 +1708,7 @@ export default [
     schema: 'welt',
     difficulty: '1',
     text: 'Welche Flüsse münden in ein Meer das mit ‚N‘ anfängt? Geben Sie alle Spalten der Tabelle river aus!',
-    solutionQuery: "SELECT * FROM  river WHERE sea like 'N%'",
+    solutionQuery: "SELECT * FROM river WHERE sea like 'N%'",
     selectType: '13'
   },
   {
@@ -1716,7 +1716,7 @@ export default [
     schema: 'welt',
     difficulty: '1',
     text: 'Welche Städte (city, island) liegen auf einer Insel?',
-    solutionQuery: 'SELECT  City, ISLAND FROM locatedon WHERE ISLAND  is not null AND city is not Null',
+    solutionQuery: 'SELECT City, ISLAND FROM locatedon WHERE ISLAND is not null AND city is not Null',
     selectType: '17'
   },
   {
@@ -1724,7 +1724,7 @@ export default [
     schema: 'welt',
     difficulty: '1',
     text: 'Welche Städte (city, sea) in Tabelle located liegen an einem Meer?',
-    solutionQuery: 'SELECT  City, SEA FROM located WHERE SEA  is not null AND city is not Null',
+    solutionQuery: 'SELECT City, SEA FROM located WHERE SEA is not null AND city is not Null',
     selectType: '17'
   },
   {
@@ -1732,7 +1732,7 @@ export default [
     schema: 'welt',
     difficulty: '1',
     text: 'Welche Länder (DISTINCT country) haben einen GDP >= 300000?',
-    solutionQuery: 'SELECT  DISTINCT COUNTRY FROM   economy WHERE   GDP >= 300000 AND GDP IS NOT NULL',
+    solutionQuery: 'SELECT DISTINCT COUNTRY FROM economy WHERE GDP >= 300000 AND GDP IS NOT NULL',
     selectType: '1'
   },
   {
@@ -1740,7 +1740,7 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'Welche Länder grenzen an Deutschland? Sortieren Sie diese Länder aufsteigend nach der Grenzlänge! (country1, country2, length)',
-    solutionQuery: "SELECT   country1, country2, LENGTH FROM   borders, country WHERE   country1 = 'D' AND (country.country = country1) OR (country2 = 'D' AND country. country = country2) ORDER BY   LENGTH",
+    solutionQuery: "SELECT country1, country2, LENGTH FROM borders, country WHERE country1 = 'D' AND (country.country = country1) OR (country2 = 'D' AND country. country = country2) ORDER BY LENGTH",
     selectType: '4'
   },
   {
@@ -1748,7 +1748,7 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'In welchem Land (country, name, population) leben die meisten Menschen?',
-    solutionQuery: 'SELECT country, Name, population FROM  country WHERE  population >= ALL (  SELECT   population from country)',
+    solutionQuery: 'SELECT country, Name, population FROM country WHERE population >= ALL ( SELECT population from country)',
     selectType: '5'
   },
   {
@@ -1756,7 +1756,7 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'Welche Länder (alle Spalten) haben keinen See-Zugang zu einem der Weltmeere?',
-    solutionQuery: 'SELECT   * FROM    COUNTRY WHERE   country NOT IN (SELECT   COUNTRY FROM GEO_SEA)',
+    solutionQuery: 'SELECT * FROM COUNTRY WHERE country NOT IN (SELECT COUNTRY FROM GEO_SEA)',
     selectType: '5'
   },
   {
@@ -1764,7 +1764,7 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'Geben Sie die Namen aller Organisationen an (DISTINCT organization, name), in denen Länder mit einem Bruttoinlandsprodukt (BIP) von weniger als 30000 $ pro Person Mitglied sind (das BIP eines Landes ist als “GDP” in der Tabelle “Economy” zu finden)',
-    solutionQuery: 'SELECT   DISTINCT i.ORGANIZATION, o.Name FROM   isMember i, Organization o WHERE   EXISTS (SELECT   * FROM   Economy e WHERE   GDP <= 30000 AND I.ORGANIZATION = E.COUNTRY) AND I.ORGANIZATION = o.ABBREVIATION',
+    solutionQuery: 'SELECT DISTINCT i.ORGANIZATION, o.Name FROM isMember i, Organization o WHERE EXISTS (SELECT * FROM Economy e WHERE GDP <= 30000 AND I.ORGANIZATION = E.COUNTRY) AND I.ORGANIZATION = o.ABBREVIATION',
     selectType: '8'
   },
   {
@@ -1772,7 +1772,7 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'Geben Sie alle Flüsse mit ihren Anrainerstaaten (Staaten, die die Flüsse durchqueren) aus.(river, country, name (name von COUNTRY, NICHT RIVER))',
-    solutionQuery: 'SELECT g.RIVER, g.COUNTRY , c.name FROM  geo_river g, country c WHERE g.country = c.country GROUP BY g.RIVER, g.COUNTRY , c.name ORDER BY g.river, g.country',
+    solutionQuery: 'SELECT g.RIVER, g.COUNTRY , c.name FROM geo_river g, country c WHERE g.country = c.country GROUP BY g.RIVER, g.COUNTRY , c.name ORDER BY g.river, g.country',
     selectType: '2'
   },
   {
@@ -1796,15 +1796,15 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'Welcher Staat (country, name, continent, percentage) gehört mehr als einem Kontinent an?',
-    solutionQuery: 'SELECT c.Country, c.Name, e.Continent, e.Percentage FROM Country c, encompasses e WHERE     c. Country = e.country AND c.COUNTRY IN (     SELECT COUNTRY FROM encompasses GROUP BY COUNTRY HAVING COUNT (*) > 1)',
+    solutionQuery: 'SELECT c.Country, c.Name, e.Continent, e.Percentage FROM Country c, encompasses e WHERE c. Country = e.country AND c.COUNTRY IN ( SELECT COUNTRY FROM encompasses GROUP BY COUNTRY HAVING COUNT (*) > 1)',
     selectType: '5'
   },
   {
     id: '235',
     schema: 'welt',
     difficulty: '3',
-    text: 'In welchen Ländern (country, name, language) der Welt werden mehr als zwei  Sprachen gesprochen?',
-    solutionQuery: 'SELECT c.country, c.Name, l.language FROM   COUNTRY c, Language l WHERE  c.COUNTRY = l.country AND  c.COUNTRY IN (     SELECT country FROM language GROUP BY country HAVING COUNT (*) > 1) ORDER BY   country',
+    text: 'In welchen Ländern (country, name, language) der Welt werden mehr als zwei Sprachen gesprochen?',
+    solutionQuery: 'SELECT c.country, c.Name, l.language FROM COUNTRY c, Language l WHERE c.COUNTRY = l.country AND c.COUNTRY IN ( SELECT country FROM language GROUP BY country HAVING COUNT (*) > 1) ORDER BY country',
     selectType: '5'
   },
   {
@@ -1812,7 +1812,7 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'In der Datenbank werden in den Relationen Country und Province Informationen über Einwohner redundant gehalten. Ermitteln Sie mit entsprechenden Anfragen die inkonsistenten Paare. Als inkonsistent werden dabei Abweichungen größer als 10% des Absolutwertes betrachtet. (country, sum(province.population), country.population)',
-    solutionQuery: 'SELECT   p.country, SUM (p.population), c.population FROM      province p, country c WHERE    c.country = p.country GROUP BY   p.country, c.population HAVING ABS ( (SUM (p.population) - c.population)) / c.population > 0.1',
+    solutionQuery: 'SELECT p.country, SUM (p.population), c.population FROM province p, country c WHERE c.country = p.country GROUP BY p.country, c.population HAVING ABS ( (SUM (p.population) - c.population)) / c.population > 0.1',
     selectType: '2'
   },
   {
@@ -1820,15 +1820,15 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'Berechnen Sie die absoluten Zahlen der Anhänger jeder Religion der Weltbevölkerung sowie den prozentualen Anteil der Anhänger jeder Religion an der Weltbevölkerung (religion, (KALKULATION ABSOLUTE ANZAHL) as amount, (KALKULATION RELATIVE PROZENTZAHL) as percentage)',
-    solutionQuery: 'SELECT   r.religion, SUM (TRUNC (r.percentage * c.population)), ROUND(SUM (TRUNC (r.percentage * c.population)) / (SELECT   SUM (c2.population) FROM   country c2), 1) AS percentage FROM   country c, religion r WHERE   r.country = c.country GROUP BY   r.religion ORDER BY   percentage DESC',
+    solutionQuery: 'SELECT r.religion, SUM (TRUNC (r.percentage * c.population)), ROUND(SUM (TRUNC (r.percentage * c.population)) / (SELECT SUM (c2.population) FROM country c2), 1) AS percentage FROM country c, religion r WHERE r.country = c.country GROUP BY r.religion ORDER BY percentage DESC',
     selectType: '4'
   },
   {
     id: '238',
     schema: 'welt',
     difficulty: '3',
-    text: 'Geben Sie die Abkürzungen  aller Organisationen aus, in denen alle Länder mit einem Bruttoinlandsprodukt (BIP, englisch GDP) von mehr als 300000 $ pro Person Mitglied sind (diese Operation wird als relationale Division bezeichnet). (COUNT AS amount, Organization.abbreviation, Organization.name)',
-    solutionQuery: 'SELECT   COUNT (DISTINCT e.COUNTRY) AS anzahl, o.abbreviation, O.NAME FROM   economy e, Organization o, ismember i WHERE       O.ABBREVIATION = i.Organization AND I.COUNTRY = E.COUNTRY AND e.gdp >= 300000 GROUP BY   o.abbreviation, O.NAME HAVING   COUNT (DISTINCT e.COUNTRY) >= ALL (  SELECT   COUNT (DISTINCT e.COUNTRY) FROM   economy e, ismember i WHERE   I.COUNTRY = E.COUNTRY AND e.gdp >= 300000 GROUP BY   i.Organization)',
+    text: 'Geben Sie die Abkürzungen aller Organisationen aus, in denen alle Länder mit einem Bruttoinlandsprodukt (BIP, englisch GDP) von mehr als 300000 $ pro Person Mitglied sind (diese Operation wird als relationale Division bezeichnet). (COUNT AS amount, Organization.abbreviation, Organization.name)',
+    solutionQuery: 'SELECT COUNT (DISTINCT e.COUNTRY) AS anzahl, o.abbreviation, O.NAME FROM economy e, Organization o, ismember i WHERE O.ABBREVIATION = i.Organization AND I.COUNTRY = E.COUNTRY AND e.gdp >= 300000 GROUP BY o.abbreviation, O.NAME HAVING COUNT (DISTINCT e.COUNTRY) >= ALL ( SELECT COUNT (DISTINCT e.COUNTRY) FROM economy e, ismember i WHERE I.COUNTRY = E.COUNTRY AND e.gdp >= 300000 GROUP BY i.Organization)',
     selectType: '9'
   },
   {
@@ -1836,7 +1836,7 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'Welcher Fluss hat die meisten Anrainerstaaten? (COUNT (COUNTRY), RIVER)',
-    solutionQuery: 'SELECT   COUNT (COUNTRY), RIVER FROM     (SELECT river, country FROM geo_river group by river, country) d GROUP BY   RIVER HAVING   COUNT (COUNTRY) >= ALL ( SELECT   COUNT (COUNTRY) FROM ( SELECT  river, country FROM geo_river group by river, country) d1 GROUP BY   RIVER) GROUP BY   RIVER)',
+    solutionQuery: 'SELECT COUNT (COUNTRY), RIVER FROM (SELECT river, country FROM geo_river group by river, country) d GROUP BY RIVER HAVING COUNT (COUNTRY) >= ALL ( SELECT COUNT (COUNTRY) FROM ( SELECT river, country FROM geo_river group by river, country) d1 GROUP BY RIVER) GROUP BY RIVER)',
     selectType: '3'
   },
   {
@@ -1924,23 +1924,23 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Wie ist die maximale Stücklistentiefe des Artikel 60?',
-    solutionQuery: 'SELECT \tMAX (LEVEL)\r\nFROM \tStruktur\r\nSTART WITH OTeil = 60\r\nCONNECT BY PRIOR UTeil = OTeil',
+    solutionQuery: 'SELECT \tMAX (LEVEL)FROM \tStrukturSTART WITH OTeil = 60CONNECT BY PRIOR UTeil = OTeil',
     selectType: '16'
   },
   {
     id: '1003',
     schema: 'fahrrad',
     difficulty: '2',
-    text: 'Welche Teile sind im Artikel 60 insgesamt enthalten?\r\nGeben Sie aus der Tabelle Struktur OTeil und Uteil aus!',
-    solutionQuery: 'SELECT \tOTeil, UTeil\r\nFROM \tStruktur\r\nSTART \tWITH OTeil = 60\r\nCONNECT BY PRIOR UTeil = OTeil;',
+    text: 'Welche Teile sind im Artikel 60 insgesamt enthalten?Geben Sie aus der Tabelle Struktur OTeil und Uteil aus!',
+    solutionQuery: 'SELECT \tOTeil, UTeilFROM \tStrukturSTART \tWITH OTeil = 60CONNECT BY PRIOR UTeil = OTeil;',
     selectType: '16'
   },
   {
     id: '1005',
     schema: 'fahrrad',
     difficulty: '3',
-    text: 'In welchen Teilen wird das Material mit der TNR 3 verwendet? Geben Sie OTeil, UTeil  unddas Level aus!',
-    solutionQuery: 'SELECT \tOTeil, UTeil, LEVEL\r\nFROM \tStruktur\r\nSTART \tWITH UTeil = 3\r\nCONNECT BY PRIOR OTeil = UTeil;',
+    text: 'In welchen Teilen wird das Material mit der TNR 3 verwendet? Geben Sie OTeil, UTeil unddas Level aus!',
+    solutionQuery: 'SELECT \tOTeil, UTeil, LEVELFROM \tStrukturSTART \tWITH UTeil = 3CONNECT BY PRIOR OTeil = UTeil;',
     selectType: '16'
   },
   {
@@ -1948,7 +1948,7 @@ export default [
     schema: 'welt',
     difficulty: '1',
     text: 'Welche Sprachen (Language) werden in der Schweiz gesprochen?',
-    solutionQuery: "SELECT Language.Language\r\n  FROM Language\r\n WHERE Language.country = 'CH'",
+    solutionQuery: "SELECT Language.Language FROM Language WHERE Language.country = 'CH'",
     selectType: '1'
   },
   {
@@ -1956,7 +1956,7 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'Bestimmen Sie alle Länder (Spalten Country, Name), in denen eine Sprache gesprochen wird, die auch in der Schweiz gesprochen wird! Unterdrücken Sie Duplicate!',
-    solutionQuery: "SELECT l2.COUNTRY, C.NAME\r\n  FROM Language l1, Language l2, COUNTRY c\r\n WHERE     L1.LANGUAGE = L2.LANGUAGE\r\n       AND C.COUNTRY = L2.COUNTRY\r\n       AND L1.COUNTRY = 'CH'\r\ngroup by l2.country, c.name",
+    solutionQuery: "SELECT l2.COUNTRY, C.NAME FROM Language l1, Language l2, COUNTRY c WHERE L1.LANGUAGE = L2.LANGUAGE AND C.COUNTRY = L2.COUNTRY AND L1.COUNTRY = 'CH'group by l2.country, c.name",
     selectType: '6'
   },
   {
@@ -1964,15 +1964,15 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'Bestimmen Sie alle Länder mit ihren Sprachen (Spalten Country, Name, Language), in denen eine Sprache gesprochen wird, die nicht in der Schweiz gesprochen wird!',
-    solutionQuery: "SELECT l2.COUNTRY, C.NAME, L2.LANGUAGE\r\n  FROM Language l2, COUNTRY c\r\n WHERE     L2.LANGUAGE NOT IN (SELECT Language\r\n                                 FROM language\r\n                                WHERE country = 'CH')\r\n       AND C.COUNTRY = L2.COUNTRY",
+    solutionQuery: "SELECT l2.COUNTRY, C.NAME, L2.LANGUAGE FROM Language l2, COUNTRY c WHERE L2.LANGUAGE NOT IN (SELECT Language FROM language WHERE country = 'CH') AND C.COUNTRY = L2.COUNTRY",
     selectType: '5'
   },
   {
     id: '1132',
     schema: 'welt',
     difficulty: '3',
-    text: 'Bestimmen Sie alle Länder (Spalten Country, Name, Language), in denen nur eine Sprache gesprochen wird, die auch in der Schweiz gesprochen wird,  (also keine andere Sprache, als die Sprachen aus der Schweiz)!',
-    solutionQuery: "SELECT l2.COUNTRY, C.NAME, L2.LANGUAGE\r\n  FROM Language l1, Language l2, COUNTRY c \r\n WHERE     L1.LANGUAGE = L2.LANGUAGE\r\n       AND C.COUNTRY = L2.COUNTRY\r\n       AND L1.COUNTRY = 'CH'\r\nMINUS\r\nSELECT l2.COUNTRY, C.NAME, L2.LANGUAGE\r\n  FROM Language l2, COUNTRY c\r\n WHERE     L2.LANGUAGE NOT IN (SELECT Language\r\n                                 FROM language\r\n                                WHERE country = 'CH')\r\n       AND C.COUNTRY = L2.COUNTRY",
+    text: 'Bestimmen Sie alle Länder (Spalten Country, Name, Language), in denen nur eine Sprache gesprochen wird, die auch in der Schweiz gesprochen wird, (also keine andere Sprache, als die Sprachen aus der Schweiz)!',
+    solutionQuery: "SELECT l2.COUNTRY, C.NAME, L2.LANGUAGE FROM Language l1, Language l2, COUNTRY c WHERE L1.LANGUAGE = L2.LANGUAGE AND C.COUNTRY = L2.COUNTRY AND L1.COUNTRY = 'CH'MINUSSELECT l2.COUNTRY, C.NAME, L2.LANGUAGE FROM Language l2, COUNTRY c WHERE L2.LANGUAGE NOT IN (SELECT Language FROM language WHERE country = 'CH') AND C.COUNTRY = L2.COUNTRY",
     selectType: '11'
   },
   {
@@ -1980,7 +1980,7 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'Bestimmen Sie alle Länder (country), in denen alle Sprachen gesprochen werden, die auch in der Schweiz gesprochen werden!',
-    solutionQuery: "SELECT l1.country\r\n  FROM language l1\r\n WHERE NOT EXISTS\r\n              (SELECT *\r\n                 FROM LANGUAGE l2\r\n                WHERE NOT EXISTS\r\n                             (SELECT *\r\n                                FROM LANGUAGE l3\r\n                               WHERE     l3.COUNTRY = 'CH'\r\n                                     AND l1.lANGUAGE = l2.lANGUAGE\r\n                                     AND l2.country = l3.country))",
+    solutionQuery: "SELECT l1.country FROM language l1 WHERE NOT EXISTS (SELECT * FROM LANGUAGE l2 WHERE NOT EXISTS (SELECT * FROM LANGUAGE l3 WHERE l3.COUNTRY = 'CH' AND l1.lANGUAGE = l2.lANGUAGE AND l2.country = l3.country))",
     selectType: '9'
   },
   {
@@ -1988,7 +1988,7 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'Bestimmen Sie alle Abkürzungen (Abbreviation) und Namen der Organisationen, die auf jedem Kontinent mindestens ein Mitgliedsland haben! Unterdrücken Sie Duplicate!',
-    solutionQuery: 'SELECT distinct abbreviation, name\r\n  FROM organization o\r\n WHERE NOT EXISTS\r\n              (SELECT *\r\n                 FROM continent c\r\n                WHERE NOT EXISTS\r\n                             (SELECT *\r\n                                FROM ismember i, encompasses e\r\n                               WHERE     i.country = e.country\r\n                                     AND i.abbreviation = o.abbreviation\r\n                                     AND e.continent = c.continent))',
+    solutionQuery: 'SELECT distinct abbreviation, name FROM organization o WHERE NOT EXISTS (SELECT * FROM continent c WHERE NOT EXISTS (SELECT * FROM ismember i, encompasses e WHERE i.country = e.country AND i.abbreviation = o.abbreviation AND e.continent = c.continent))',
     selectType: '9'
   },
   {
@@ -1996,15 +1996,15 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'Welche Länder haben einen geringeren Anteil ihrer Fläche in Asien als die Türkei (country in tabelle encombasses)? Unterdrücken Sie doppelte Werte!',
-    solutionQuery: "SELECT DISTINCT country, percentage\r\n  FROM encompasses\r\n WHERE     continent = 'Asia'\r\n       AND percentage < (SELECT percentage\r\n                           FROM encompasses\r\n                          WHERE country = 'TR' AND \r\n                              continent = 'Asia');",
+    solutionQuery: "SELECT DISTINCT country, percentage FROM encompasses WHERE continent = 'Asia' AND percentage < (SELECT percentage FROM encompasses WHERE country = 'TR' AND continent = 'Asia');",
     selectType: '5'
   },
   {
     id: '1141',
     schema: 'welt',
     difficulty: '3',
-    text: 'Welche Länder sind in allen Organisationen Mitglied, in denen auch Deutschland ist (Tabelle isMember und Spalte Country)?\r\nUnterdrücken Sie Duplicate!',
-    solutionQuery: "SELECT DISTINCT country\r\n  FROM ismember M\r\n WHERE NOT EXISTS\r\n          (SELECT DISTINCT abbreviation\r\n               FROM ismember\r\n              WHERE     country = 'D'\r\n                    AND NOT EXISTS\r\n                           (SELECT DISTINCT abbreviation\r\n                              FROM isMEMBER\r\n                             WHERE country = M.country))",
+    text: 'Welche Länder sind in allen Organisationen Mitglied, in denen auch Deutschland ist (Tabelle isMember und Spalte Country)?Unterdrücken Sie Duplicate!',
+    solutionQuery: "SELECT DISTINCT country FROM ismember M WHERE NOT EXISTS (SELECT DISTINCT abbreviation FROM ismember WHERE country = 'D' AND NOT EXISTS (SELECT DISTINCT abbreviation FROM isMEMBER WHERE country = M.country))",
     selectType: '9'
   },
   {
@@ -2012,7 +2012,7 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'Geben Sie alle Länder Europas (Spalten: country, Name, abbreviation, continent) mit ihren Organisationen aus, auch diejenigen Länder, die in keiner Organisation sind!',
-    solutionQuery: "SELECT encompasses.COUNTRY,\r\n       country.name,\r\n       ismember.abbreviation,\r\n       encompasses.continent\r\n  FROM encompasses\r\n       LEFT OUTER JOIN ismember\r\n          ON encompasses.country = ismember.country\r\n       LEFT OUTER JOIN COUNTRY\r\n          ON country.country = encompasses.country\r\n WHERE encompasses.continent = 'Europe'",
+    solutionQuery: "SELECT encompasses.COUNTRY, country.name, ismember.abbreviation, encompasses.continent FROM encompasses LEFT OUTER JOIN ismember ON encompasses.country = ismember.country LEFT OUTER JOIN COUNTRY ON country.country = encompasses.country WHERE encompasses.continent = 'Europe'",
     selectType: '7'
   },
   {
@@ -2020,15 +2020,15 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Welche Trainer (Ausgabe: Trainername, Nationname) der Mannschaft_1 haben nur (!) Spiele in der Stadt Dortmund betreut?',
-    solutionQuery: "SELECT n.trainername FROM   spiele w, nation n \r\nWHERE  w.MANNSCHAFT_1 = n.NATIONNAME\r\nAND w.AUSFUEHRUNGSORT = 'Dortmund' AND  n.TRAINERNAME NOT IN (SELECT n.trainername FROM   spiele w, nation n WHERE  w.MANNSCHAFT_1 = n.NATIONNAME AND    w.AUSFUEHRUNGSORT != 'Dortmund')",
+    solutionQuery: "SELECT n.trainername FROM spiele w, nation n WHERE w.MANNSCHAFT_1 = n.NATIONNAMEAND w.AUSFUEHRUNGSORT = 'Dortmund' AND n.TRAINERNAME NOT IN (SELECT n.trainername FROM spiele w, nation n WHERE w.MANNSCHAFT_1 = n.NATIONNAME AND w.AUSFUEHRUNGSORT != 'Dortmund')",
     selectType: '8'
   },
   {
     id: '1112',
     schema: 'fussball',
     difficulty: '3',
-    text: 'Welche Nationen haben in welchen Spielen mehr als 2 Tore geschossen? \r\n(Ausgabe: Nationname, Spiel_id, Ausfuehrunsort, Tore,)\r\nAchtung: Nationname und Tore können sowohl die von Mannschaft 1  als auch von Mannschaft 2 sein!',
-    solutionQuery: 'SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT,\r\n       nation.TRAINERNAME, count(*)\r\nFROM   nation, spiele, tore\r\nWHERE  nation.NATIONNAME = spiele.MANNSCHAFT_1 \r\nAND    spiele.SPIEL_ID = tore.SPIEL_ID\r\nGROUP BY  nation.NATIONNAME, nation.TRAINERNAME  ,\r\nspiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT\r\nhaving COUNT(*) > 2\r\nunion \r\nSELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT,\r\n       nation.TRAINERNAME, count(*)\r\nFROM   nation, spiele, tore\r\nWHERE  nation.NATIONNAME = spiele.MANNSCHAFT_2 \r\nAND    spiele.SPIEL_ID = tore.SPIEL_ID\r\nGROUP BY  nation.NATIONNAME, nation.TRAINERNAME  ,\r\nspiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT\r\nhaving COUNT(*) > 2',
+    text: 'Welche Nationen haben in welchen Spielen mehr als 2 Tore geschossen? (Ausgabe: Nationname, Spiel_id, Ausfuehrunsort, Tore,)Achtung: Nationname und Tore können sowohl die von Mannschaft 1 als auch von Mannschaft 2 sein!',
+    solutionQuery: 'SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*)FROM nation, spiele, toreWHERE nation.NATIONNAME = spiele.MANNSCHAFT_1 AND spiele.SPIEL_ID = tore.SPIEL_IDGROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORThaving COUNT(*) > 2union SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*)FROM nation, spiele, toreWHERE nation.NATIONNAME = spiele.MANNSCHAFT_2 AND spiele.SPIEL_ID = tore.SPIEL_IDGROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORThaving COUNT(*) > 2',
     selectType: '3'
   },
   {
@@ -2036,7 +2036,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Listen Sie alle Spieler des deutschen Teams mit ihrem Trainer auf! (Spalten: Nachname, Vorname, Trainername)',
-    solutionQuery: "SELECT  sp.nachname, sp.vorname, na.trainername  \r\nFROM spieler sp, nation na  \r\nWHERE sp.nationname='Deutschland'   AND   na.nationname= sp.nationname",
+    solutionQuery: "SELECT sp.nachname, sp.vorname, na.trainername FROM spieler sp, nation na WHERE sp.nationname='Deutschland' AND na.nationname= sp.nationname",
     selectType: '4'
   },
   {
@@ -2044,7 +2044,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Welche Angestellten verdienen mehr als das durchschnittliche Gehalt irgendeiner Abteilung? Ausgabe: (Ang_nr, Gehalt)?',
-    solutionQuery: 'SELECT ang_nr , gehalt  FROM angestellte   \r\nWHERE gehalt >   \r\n   (SELECT avg(avg(gehalt)) FROM angestellte  Group by abt_nr)',
+    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte WHERE gehalt > (SELECT avg(avg(gehalt)) FROM angestellte Group by abt_nr)',
     selectType: '5'
   },
   {
@@ -2052,7 +2052,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '3',
     text: 'Geben Sie alle Angestellten (Ang_nr, Gehalt) aus, die mehr als das durchschnittliche Gehalt aller Abteilungen verdienen,wenn man noch mal den Durchschnitt über die durchschnittlichen Gehälter der Einzelabteilungen bildet!',
-    solutionQuery: 'SELECT ang_nr , gehalt\r\nFROM angestellte \r\nWHERE gehalt >\r\n(SELECT avg(avg(gehalt)) FROM angestellte  Group by abt_nr)',
+    solutionQuery: 'SELECT ang_nr , gehaltFROM angestellte WHERE gehalt >(SELECT avg(avg(gehalt)) FROM angestellte Group by abt_nr)',
     selectType: '5'
   },
   {
@@ -2060,7 +2060,7 @@ export default [
     schema: 'reisen',
     difficulty: '3',
     text: 'Bestimmen Sie die Namen aller Hotels in Paris, bei denen ein Einzelzimmer mindestens 10% weniger kostet als der Durchschnitt aller Hotels in Paris!',
-    solutionQuery: "select hotelname from hotel \r\nwhere stadtname = 'Paris' and 10/9 * preisez <= any \r\n          (select avg (preisez) from hotel\r\n           where stadtname = 'Paris')",
+    solutionQuery: "select hotelname from hotel where stadtname = 'Paris' and 10/9 * preisez <= any (select avg (preisez) from hotel where stadtname = 'Paris')",
     selectType: '5'
   },
   {
@@ -2068,7 +2068,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'Welche Spieler (Ausgabe: Nationname, Nachname, Anzahl_Tore) haben Tore geschossen? Geben Sie die Spieler sortiert über Nationname und Nachnamen aus.',
-    solutionQuery: 'SELECT Spieler.Nachname, Spieler.Nationname, COUNT(*)  \r\nFROM spieler, Tore    \r\nWHERE spieler.SPIELER_ID = Tore.SPIELER_ID  \r\nGROUP BY Nationname, Nachname',
+    solutionQuery: 'SELECT Spieler.Nachname, Spieler.Nationname, COUNT(*) FROM spieler, Tore WHERE spieler.SPIELER_ID = Tore.SPIELER_ID GROUP BY Nationname, Nachname',
     selectType: '2'
   },
   {
@@ -2092,7 +2092,7 @@ export default [
     schema: 'fussball',
     difficulty: '3',
     text: 'In welchen Stadien (Spiele.Ausfuehrungsort) hat Deutschland nicht gespielt? Unterdrücken Sie Duplicate!',
-    solutionQuery: "SELECT DISTINCT  spiele.AUSFUEHRUNGSORT \r\nFROM  spiele    \r\nWHERE spiele.AUSFUEHRUNGSORT NOT IN  \r\n    (SELECT spiele.AUSFUEHRUNGSORT   FROM Spiele     \r\n      WHERE spiele.MANNSCHAFT_1 = 'Deutschland'   OR  \r\n          spiele.MANNSCHAFT_2= 'Deutschland'  \r\n      GROUP BY spiele.AUSFUEHRUNGSORT)",
+    solutionQuery: "SELECT DISTINCT spiele.AUSFUEHRUNGSORT FROM spiele WHERE spiele.AUSFUEHRUNGSORT NOT IN (SELECT spiele.AUSFUEHRUNGSORT FROM Spiele WHERE spiele.MANNSCHAFT_1 = 'Deutschland' OR spiele.MANNSCHAFT_2= 'Deutschland' GROUP BY spiele.AUSFUEHRUNGSORT)",
     selectType: '5'
   },
   {
@@ -2100,7 +2100,7 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'Wie viele Stadien (Spiele.Ausfuehrungsort) gibt es, an denen Weltmeisterschaftsturniere stattfinden?',
-    solutionQuery: 'SELECT COUNT  (distinct spiele.AUSFUEHRUNGSORT) FROM  spiele',
+    solutionQuery: 'SELECT COUNT (distinct spiele.AUSFUEHRUNGSORT) FROM spiele',
     selectType: '12'
   },
   {
@@ -2108,15 +2108,15 @@ export default [
     schema: 'fussball',
     difficulty: '2',
     text: 'In welchen Stadien (Ausgabe: Spiele.Ausfuehrungsort) spielt die Nationalmannschaft von England in der Vorrunde?',
-    solutionQuery: "SELECT spiele.AUSFUEHRUNGSORT   FROM Spiele  \r\nWHERE (spiele.MANNSCHAFT_1 = 'England'  OR spiele.MANNSCHAFT_2 = 'England')  AND spiele.TYP = 'Vorrunde'",
+    solutionQuery: "SELECT spiele.AUSFUEHRUNGSORT FROM Spiele WHERE (spiele.MANNSCHAFT_1 = 'England' OR spiele.MANNSCHAFT_2 = 'England') AND spiele.TYP = 'Vorrunde'",
     selectType: '1'
   },
   {
     id: '1123',
-    schema: '  fussball',
+    schema: ' fussball',
     difficulty: '3',
     text: 'Ermitteln Sie die Summe über alle Lieferungen je Rohstoff für alle Lieferanten!',
-    solutionQuery: 'SELECT  t.tnr, sum(l1.menge), l2.name, l2.lief_nr  \r\nFROM teile t, lieferungen l1, lieferanten l2  \r\nWHERE   t.tnr = l1.TNR  \r\nAND        l1.lief_nr = l2.lief_nr  \r\nGROUP by t.tnr, l2.lief_nr, l2.name',
+    solutionQuery: 'SELECT t.tnr, sum(l1.menge), l2.name, l2.lief_nr FROM teile t, lieferungen l1, lieferanten l2 WHERE t.tnr = l1.TNR AND l1.lief_nr = l2.lief_nr GROUP by t.tnr, l2.lief_nr, l2.name',
     selectType: '2'
   },
   {
@@ -2124,7 +2124,7 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'Geben Sie die größte Stadt Finnland aus (Spalten: city, population)!',
-    solutionQuery: "SELECT city , population from city where country = 'SF'\r\nand population >= (SELECT MAX(POPULATION) from CITY where  country = 'SF')",
+    solutionQuery: "SELECT city , population from city where country = 'SF'and population >= (SELECT MAX(POPULATION) from CITY where country = 'SF')",
     selectType: '5'
   },
   {
@@ -2132,7 +2132,7 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'Geben Sie die drei größten Städte Finnlands aus! (Spalten: city, population in Tabelle City)',
-    solutionQuery: "SELECT city , population \r\nfrom (SELECT CITY,  POPULATION from city \r\nwhere country = 'SF'\r\norder by population desc)\r\nwhere ROWNUM <= 3",
+    solutionQuery: "SELECT city , population from (SELECT CITY, POPULATION from city where country = 'SF'order by population desc)where ROWNUM <= 3",
     selectType: '5'
   },
   {
@@ -2140,7 +2140,7 @@ export default [
     schema: 'reisen',
     difficulty: '3',
     text: 'Bestimmen Sie alle Hotels in Italien, für die keine Buchung vorliegt und geben Sie Name und Klasse dieser Hotels aus, sortiert nach Name',
-    solutionQuery: "select hotelname, klasse from hotel, stadt where hotel.stadtname = stadt.stadtname and stadt.land = 'Italien' and (hotel.hotelname, hotel.stadtname) not in (select hotelname, stadtname from buchung)  order by hotel.hotelname",
+    solutionQuery: "select hotelname, klasse from hotel, stadt where hotel.stadtname = stadt.stadtname and stadt.land = 'Italien' and (hotel.hotelname, hotel.stadtname) not in (select hotelname, stadtname from buchung) order by hotel.hotelname",
     selectType: '5'
   },
   {
@@ -2156,7 +2156,7 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'Welche Seen liegen in Bayern (Spalte lake in der Tabelle lake)',
-    solutionQuery: "SELECT lake.lake FROM lake, GEO_LAKE\r\nwhere country = 'D' and province = 'Bayern'\r\nand lake.lake = GEO_LAKE.lake",
+    solutionQuery: "SELECT lake.lake FROM lake, GEO_LAKEwhere country = 'D' and province = 'Bayern'and lake.lake = GEO_LAKE.lake",
     selectType: '<NULL>'
   },
   {
@@ -2164,7 +2164,7 @@ export default [
     schema: 'welt',
     difficulty: '3',
     text: 'Bestimmen Sie alle Länder (Spalten Country, Name), in denen nur Sprachen gesprochen werden, die in der Schweiz nicht gesprochen werden! Unterdrücken Sie Duplicate!',
-    solutionQuery: "SELECT DISTINCT l2.COUNTRY, C.NAME\r\n  FROM Language l2, COUNTRY c\r\n WHERE     L2.LANGUAGE NOT IN (SELECT Language\r\n                                 FROM language\r\n                                WHERE country = 'CH')\r\n       AND C.COUNTRY = L2.COUNTRY\r\nMINUS\r\nSELECT l2.COUNTRY, C.NAME\r\n  FROM Language l1, Language l2, COUNTRY c\r\n WHERE     L1.LANGUAGE = L2.LANGUAGE\r\n       AND C.COUNTRY = L2.COUNTRY\r\n       AND L1.COUNTRY = 'CH'",
+    solutionQuery: "SELECT DISTINCT l2.COUNTRY, C.NAME FROM Language l2, COUNTRY c WHERE L2.LANGUAGE NOT IN (SELECT Language FROM language WHERE country = 'CH') AND C.COUNTRY = L2.COUNTRYMINUSSELECT l2.COUNTRY, C.NAME FROM Language l1, Language l2, COUNTRY c WHERE L1.LANGUAGE = L2.LANGUAGE AND C.COUNTRY = L2.COUNTRY AND L1.COUNTRY = 'CH'",
     selectType: '11'
   },
   {
@@ -2172,7 +2172,7 @@ export default [
     schema: 'welt',
     difficulty: '1',
     text: 'Welche Städte (City, longitude, latitude) liegen zwischen dem 40. und dem 50. Breitengrad (latitude)?',
-    solutionQuery: 'SELECT CITY, longitude, latitude\r\n  FROM CITY\r\n WHERE LATITUDE BETWEEN 40 and 50',
+    solutionQuery: 'SELECT CITY, longitude, latitude FROM CITY WHERE LATITUDE BETWEEN 40 and 50',
     selectType: '1'
   },
   {
@@ -2180,7 +2180,7 @@ export default [
     schema: 'welt',
     difficulty: '1',
     text: 'Welche Hauptstädte sind zugleich Sitz von Organisationen?',
-    solutionQuery: 'SELECT capital from COUNTRY\r\nintersect \r\nSELECT CITY FROM organization',
+    solutionQuery: 'SELECT capital from COUNTRYintersect SELECT CITY FROM organization',
     selectType: '11'
   },
   {
@@ -2188,15 +2188,15 @@ export default [
     schema: 'welt',
     difficulty: '2',
     text: 'Welche Länder (Spalten: Country, namen) liegen in Europa und in Asien?',
-    solutionQuery: "SELECT COUNTRY, name\r\n  FROM COUNTRY NATURAL JOIN encompasses\r\n WHERE continent = 'Asia'\r\nINTERSECT\r\nSELECT COUNTRY, name\r\n  FROM COUNTRY NATURAL JOIN encompasses\r\n WHERE continent = 'Europe'",
+    solutionQuery: "SELECT COUNTRY, name FROM COUNTRY NATURAL JOIN encompasses WHERE continent = 'Asia'INTERSECTSELECT COUNTRY, name FROM COUNTRY NATURAL JOIN encompasses WHERE continent = 'Europe'",
     selectType: '11'
   },
   {
     id: '1140',
     schema: 'welt',
     difficulty: '1',
-    text: 'Welche Länder (Spalte COUNTRY in Tabelle ismember und Tabelle  COUNTRY) sind in keiner Organisation?',
-    solutionQuery: 'SELECT  country\r\n  FROM COUNTRY\r\n  MINUS \r\nSELECT COUNTRY  from ISMEMBER\r\nGROUP  BY COUNTRY',
+    text: 'Welche Länder (Spalte COUNTRY in Tabelle ismember und Tabelle COUNTRY) sind in keiner Organisation?',
+    solutionQuery: 'SELECT country FROM COUNTRY MINUS SELECT COUNTRY from ISMEMBERGROUP BY COUNTRY',
     selectType: '11'
   },
   {
@@ -2212,7 +2212,7 @@ export default [
     schema: 'fahrrad',
     difficulty: '2',
     text: 'Wieviele Angestellte (Ang_nr, Nachname) sind zwischen dem 1.1.1990 und dem 1.1.1997 eingestellt worden?',
-    solutionQuery: "SELECT ang_nr, nachname, eintrittsdatum   FROM angestellte  WHERE eintrittsdatum BETWEEN   TO_DATE('01.01.1990', 'DD.MM.YYYY') AND   to_date('01.01.1997', 'DD.MM.YYYY')",
+    solutionQuery: "SELECT ang_nr, nachname, eintrittsdatum FROM angestellte WHERE eintrittsdatum BETWEEN TO_DATE('01.01.1990', 'DD.MM.YYYY') AND to_date('01.01.1997', 'DD.MM.YYYY')",
     selectType: '14'
   },
   {
@@ -2220,7 +2220,7 @@ export default [
     schema: 'fussball',
     difficulty: '1',
     text: 'Wie heißt der Trainer (Ausgabe: Trainername) der australischen Mannschaft?',
-    solutionQuery: "SELECT  nation.TRAINERNAME   FROM  Nation   WHERE nation.NATIONNAME = 'Australien'",
+    solutionQuery: "SELECT nation.TRAINERNAME FROM Nation WHERE nation.NATIONNAME = 'Australien'",
     selectType: '1'
   }
 ]
