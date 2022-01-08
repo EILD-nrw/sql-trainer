@@ -8,6 +8,8 @@ import initSqlJs, { Database, QueryExecResult } from 'sql.js'
 import DetailsElement from '../UI/DetailsElement'
 import Table from '../UI/Table'
 
+import tasks from '../../Tasks'
+
 interface Props {
   schema: string
   difficulty: string
@@ -16,9 +18,10 @@ interface Props {
 export default function TaskPage ({ schema, difficulty }: Props) {
   const [db, setDb] = useState<Database>()
   const [code, setCode] = useState('')
-  // eslint-disable-next-line
   const [queryData, setQueryData] = useState<QueryExecResult[]>([])
   const [error, setError] = useState('')
+
+  const selectedTask = tasks[0]
 
   /*
     Database
@@ -64,7 +67,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   return (
     <div className='space-y-4'>
       <h1 className='text-2xl font-semibold'>Trainer</h1>
-      <p className='font-semibold'>Welche Schauspieler ( Name, Wohnort) haben in Dramen von Schiller mitgespielt?</p>
+      <p className='font-semibold whitespace-pre-line'>{selectedTask.text}</p>
       <DetailsElement title='Editor'>
         <div className='border-l border-r border-b rounded-b-lg border-gray-600 p-2 space-y-2'>
           <Editor height='250px' language='sql' theme='vs-dark' value={code} onChange={handleEditorChange} options={{ minimap: { enabled: false } }} />
