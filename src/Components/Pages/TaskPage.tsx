@@ -4,7 +4,7 @@ import Editor from '@monaco-editor/react'
 // @ts-ignore
 // eslint-disable-next-line
 import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm" 
-import initSqlJs, { Database, QueryExecResult } from 'sql.js'
+import initSqlJs, { Database, QueryExecResult, SqlValue } from 'sql.js'
 import DetailsElement from '../UI/DetailsElement'
 import Table from '../UI/Table'
 
@@ -21,7 +21,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   const [queryData, setQueryData] = useState<QueryExecResult[]>([])
   const [error, setError] = useState('')
 
-  const selectedTask = tasks[0]
+  const selectedTask = tasks[1]
 
   /*
     Database
@@ -46,10 +46,49 @@ export default function TaskPage ({ schema, difficulty }: Props) {
     if (value) setCode(value)
   }
 
+  function compareSqlValueLists (x: SqlValue[], y: SqlValue[]) {
+    // Lists need to have equal lengths
+    if (x.length !== y.length) return false
+
+    // Strings get transformed to lowercase
+    const preparedX = x.map(value => {
+      return typeof value === 'string' ? value.toLowerCase() : value
+    })
+    const preparedY = y.map(value => {
+      return typeof value === 'string' ? value.toLowerCase() : value
+    })
+
+    const sortedX = preparedX.sort()
+    const sortedY = preparedY.sort()
+
+    return sortedX.every((entry, index) => entry === sortedY[index])
+  }
+
+  function compareQueryResults (x: QueryExecResult, y: QueryExecResult) {
+    // Check Column-names
+    if (!compareSqlValueLists(x.columns, y.columns)) return false
+
+    // Check entries columnwise
+    for (const column of x.columns) {
+      const columnIndexX = x.columns.findIndex(xColumn => xColumn === column)
+      const columnIndexY = y.columns.findIndex(yColumn => yColumn === column)
+
+      const columnEntriesX = x.values.map(line => line[columnIndexX])
+      const columnEntriesY = y.values.map(line => line[columnIndexY])
+
+      // Compare Column-values
+      if (!compareSqlValueLists(columnEntriesX, columnEntriesY)) return false
+    }
+
+    return true
+  }
+
   function executeCode (): void {
     if (!db) return
     try {
       const execResults = db.exec(code)
+      const solution = db.exec(selectedTask.solutionQuery)
+      console.log(compareQueryResults(execResults[0], solution[0]))
       setQueryData(execResults)
       setError('')
     } catch (err) {
