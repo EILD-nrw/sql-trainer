@@ -9,12 +9,12 @@ export default function Table ({ tableData }: Props) {
   const { columns, values } = tableData
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto h-80">
       <table className="shadow  w-full">
         <thead>
-          <tr className="border">
+          <tr className="sticky top-0">
             {columns.map(key => {
-              return <th className="bg-gray-100 border text-left px-4 py-2" key={key}>{key}</th>
+              return <th className="bg-gray-200 text-left px-4 py-2" key={key}>{key}</th>
             })}
           </tr>
         </thead>
