@@ -10,6 +10,8 @@ import Table from '../UI/Table'
 
 import tasks from '../../Tasks'
 import { Task } from '../../Types/Task'
+import tables from '../../Tables'
+import TrainerContainer from '../UI/TrainerContainer'
 
 interface Props {
   schema: string
@@ -24,12 +26,25 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   const [selectedTask, setSelectedTask] = useState<Task>()
   const [taskSolved, setTaskSolved] = useState(false)
 
+  /*
+    Init
+  */
   const taskPool = tasks.filter(task => task.difficulty === difficulty && task.schema === schema)
 
-  useEffect(() => {
+  function setNewRandomTask (): void {
     const newTask = taskPool[Math.floor(Math.random() * taskPool.length)]
     if (!newTask) return
     setSelectedTask(newTask)
+
+    // Reset other states
+    setTaskSolved(false)
+    setCode('')
+    setError('')
+    setQueryData([])
+  }
+
+  useEffect(() => {
+    setNewRandomTask()
   }, [])
 
   /*
@@ -125,28 +140,40 @@ export default function TaskPage ({ schema, difficulty }: Props) {
       { selectedTask &&
         <p className='font-semibold whitespace-pre-line'>{selectedTask.text}</p>
       }
-      <DetailsElement title='Editor'>
-        <div className='border-l border-r border-b rounded-b-lg border-gray-600 p-2 space-y-2'>
-          <Editor height='250px' language='sql' theme='vs-dark' value={code} onChange={handleEditorChange} options={{ minimap: { enabled: false } }} />
-          <div className='flex justify-between'>
-            <button className='bg-th-red rounded-md border px-2 py-1 font-semibold text-white' type="button" onClick={executeCode}>Ausführen</button>
-            <button className='bg-th-violet rounded-md border px-2 py-1 font-semibold text-white' type="button" onClick={reset}>Reset</button>
-          </div>
+      <div className='flex flex-row space-x-4'>
+        <div className='flex-grow'>
+          <TrainerContainer title='Editor'>
+            <Editor height='278px' language='sql' theme='vs-dark' value={code} onChange={handleEditorChange} options={{ minimap: { enabled: false } }} />
+            <div className='flex justify-between'>
+              <button className='bg-th-red rounded-md border px-2 py-1 font-semibold text-white' type="button" onClick={executeCode}>Ausführen</button>
+              <button className='bg-th-orange rounded-md border px-2 py-1 font-semibold text-white' type="button" onClick={reset}>Reset</button>
+            </div>
+          </TrainerContainer>
         </div>
-      </DetailsElement>
+        <div className='max-w-sm flex-1'>
+          <TrainerContainer title="Tabellen">
+            <div className='max-h-80 overflow-y-auto'>
+              {/* @ts-ignore */}
+              {tables[schema].map(table => {
+                return <p key={table}>{table}</p>
+              })}
+            </div>
+          </TrainerContainer>
+        </div>
+      </div>
       <DetailsElement title='Ausgabe'>
-      <div className='border-l border-r border-b rounded-b-lg border-gray-600 p-2 space-y-4'>
         { error
           ? <p>{(error || '').toString()}</p>
           : queryData.map((result, index) => {
             return <Table key={index} tableData={result} />
           })
         }
-      </div>
       </DetailsElement>
+      <DetailsElement title='Lösung' startsOpen={false}></DetailsElement>
       {taskSolved &&
         <p>Richtig!</p>
       }
+      <button className='bg-th-violet rounded-md border px-2 py-1 font-semibold text-white float-right' type='button' onClick={setNewRandomTask}>Neue Aufgabe</button>
     </div>
   )
 }
