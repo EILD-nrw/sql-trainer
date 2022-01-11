@@ -5,9 +5,10 @@ import Table from './Table'
 interface Props {
   db: Database
   tableName: string
+  resetLookup: () => void
 }
 
-export default function TableLookupModal ({ db, tableName }: Props) {
+export default function TableLookupModal ({ db, tableName, resetLookup }: Props) {
   const [isVisible, setIsVisible] = useState(false)
   const [currentTabledata, setCurrentTabledata] = useState<QueryExecResult>()
   const [error, setError] = useState('')
@@ -27,6 +28,11 @@ export default function TableLookupModal ({ db, tableName }: Props) {
     }
   }, [tableName])
 
+  function handleModalClosure () {
+    setIsVisible(false)
+    resetLookup()
+  }
+
   return (
     <div
         className={`${
@@ -38,7 +44,7 @@ export default function TableLookupModal ({ db, tableName }: Props) {
             <h1 className="text-lg font-semibold">Inhalt von {tableName}</h1>
             <span
               className="cursor-pointer select-none font-bold text-3xl text-gray-500"
-              onClick={() => setIsVisible(false)}
+              onClick={handleModalClosure}
             >
               &times;
             </span>
@@ -53,7 +59,7 @@ export default function TableLookupModal ({ db, tableName }: Props) {
             <button
               className="bg-th-violet rounded-md px-3 py-1.5 text-white"
               type="button"
-              onClick={() => setIsVisible(false)}
+              onClick={handleModalClosure}
             >
               Schließen
             </button>

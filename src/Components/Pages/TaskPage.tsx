@@ -166,11 +166,11 @@ export default function TaskPage ({ schema, difficulty }: Props) {
           <TrainerContainer title="Tabellen">
             <div className='max-h-80 overflow-y-auto overflow-x-hidden'>
               {tables[schema].map(table => {
-                return <p key={table} onClick={() => setSelectedLookupTable(table)}>{table}</p>
+                return <p key={table} onClick={() => setSelectedLookupTable(table)} >{table}</p>
               })}
             </div>
             { db &&
-            <TableLookupModal db={db} tableName={selectedLookupTable} />
+            <TableLookupModal db={db} tableName={selectedLookupTable} resetLookup={() => setSelectedLookupTable('')} />
             }
           </TrainerContainer>
         </div>
