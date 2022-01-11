@@ -31,7 +31,7 @@ export default function TableLookupModal ({ db, tableName }: Props) {
     <div
         className={`${
           isVisible ? '' : 'hidden'
-        } fixed z-0 left-0 top-0 w-full h-full overflow-auto bg-black bg-opacity-40`}
+        } fixed z-0 left-0 -top-2 w-full h-full overflow-auto bg-black bg-opacity-40`}
       >
         <div className="bg-white mt-6 mx-auto max-w-4xl shadow-2xl text-black p-4">
           <div className="flex flex-row justify-between items-center border-b pb-2">
