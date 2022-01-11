@@ -12,6 +12,7 @@ import tasks from '../../Tasks'
 import { Task } from '../../Types/Task'
 import tables from '../../Tables'
 import TrainerContainer from '../UI/TrainerContainer'
+import TableLookupModal from '../UI/TableLookupModal'
 
 interface Props {
   schema: string
@@ -25,6 +26,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   const [error, setError] = useState('')
   const [selectedTask, setSelectedTask] = useState<Task>()
   const [taskSolved, setTaskSolved] = useState(false)
+  const [selectedLookupTable, setSelectedLookupTable] = useState('')
 
   /*
     Init
@@ -152,12 +154,14 @@ export default function TaskPage ({ schema, difficulty }: Props) {
         </div>
         <div className='max-w-sm flex-1'>
           <TrainerContainer title="Tabellen">
-            <div className='max-h-80 overflow-y-auto'>
-              {/* @ts-ignore */}
+            <div className='max-h-80 overflow-y-auto overflow-x-hidden'>
               {tables[schema].map(table => {
-                return <p key={table}>{table}</p>
+                return <p key={table} onClick={() => setSelectedLookupTable(table)}>{table}</p>
               })}
             </div>
+            { db &&
+            <TableLookupModal db={db} tableName={selectedLookupTable} />
+            }
           </TrainerContainer>
         </div>
       </div>
