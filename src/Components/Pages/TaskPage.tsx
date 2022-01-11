@@ -27,6 +27,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   const [selectedTask, setSelectedTask] = useState<Task>()
   const [taskSolved, setTaskSolved] = useState(false)
   const [selectedLookupTable, setSelectedLookupTable] = useState('')
+  const [solutionTable, setSolutionTable] = useState<QueryExecResult>()
 
   /*
     Init
@@ -55,7 +56,10 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   useEffect(() => {
     async function initDB (): Promise<void> {
       try {
+        // Get SQL File
         const dbFile = await fetch(`./db/${schema}.db`).then(res => res.arrayBuffer())
+
+        // Initialize DB
         const SQL = await initSqlJs({ locateFile: () => sqlWasm })
         setDb(new SQL.Database(new Uint8Array(dbFile)))
       } catch (err) {
@@ -64,6 +68,13 @@ export default function TaskPage ({ schema, difficulty }: Props) {
     }
     initDB()
   }, [])
+
+  useEffect(() => {
+    // Fetch Solution
+    if (!db || !selectedTask) return
+    const solution = db.exec(selectedTask.solutionQuery)
+    setSolutionTable(solution[0])
+  }, [selectedTask, db])
 
   /*
     Editor
@@ -110,9 +121,8 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   }
 
   function evaluateQuery (queryResult: QueryExecResult) {
-    if (!db || !selectedTask) return
-    const solution = db.exec(selectedTask.solutionQuery)
-    if (compareQueryResults(queryResult, solution[0])) {
+    if (!solutionTable) return
+    if (compareQueryResults(queryResult, solutionTable)) {
       setTaskSolved(true)
     }
   }
@@ -173,7 +183,11 @@ export default function TaskPage ({ schema, difficulty }: Props) {
           })
         }
       </DetailsElement>
-      <DetailsElement title='Lösung' startsOpen={false}></DetailsElement>
+      <DetailsElement title='Lösung' startsOpen={false}>
+        { solutionTable &&
+          <Table tableData={solutionTable} />
+        }
+      </DetailsElement>
       {taskSolved &&
         <p>Richtig!</p>
       }
