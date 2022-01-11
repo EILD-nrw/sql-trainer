@@ -16,8 +16,10 @@ export default function DetailsElement ({ children, title, startsOpen = true }: 
 
   return (
     <details open={isOpen}>
-      <summary className={`font-semibold p-2 border ${isOpen ? 'rounded-t-lg' : 'rounded-lg'} bg-gray-400 border-gray-600 select-none cursor-pointer`} onClick={toggleDetails}>{title}</summary>
-      {children}
+      <summary className={`font-semibold p-2 border ${isOpen ? 'rounded-t-lg' : 'rounded-lg'} bg-gray-200 border-gray-600 select-none cursor-pointer`} onClick={toggleDetails}>{title}</summary>
+      <div className='border-l border-r border-b rounded-b-lg border-gray-600 p-2 space-y-2'>
+        {children}
+      </div>
     </details>
   )
 }
