@@ -72,8 +72,12 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   useEffect(() => {
     // Fetch Solution
     if (!db || !selectedTask) return
-    const solution = db.exec(selectedTask.solutionQuery)
-    setSolutionTable(solution[0])
+    try {
+      const solution = db.exec(selectedTask.solutionQuery)
+      setSolutionTable(solution[0])
+    } catch (err) {
+      console.error(err)
+    }
   }, [selectedTask, db])
 
   /*
