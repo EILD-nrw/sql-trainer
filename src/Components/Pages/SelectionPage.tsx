@@ -17,7 +17,7 @@ export default function SelectionPage ({ schema, setSchema, difficulty, setDiffi
   return (
     <div className="flex flex-col space-y-4">
       <h1 className="font-semibold text-2xl">Konfiguration</h1>
-      <p>Bitte wählen Sie ein Datenbankschema und einen Schwierigkeitsgrad aus:</p>
+      <p>Bitte wählen Sie ein <b>Datenbankschema</b> und einen <b>Schwierigkeitsgrad</b> aus:</p>
       <SelectElement title="Schema" options={schemaOptions} selected={schema} setSelected={setSchema} />
       <SelectElement title="Schwierigkeitsgrad" options={difficultyOptions} selected={difficulty} setSelected={setDifficulty} />
       <Link to="/sqltrainer/tasks">
