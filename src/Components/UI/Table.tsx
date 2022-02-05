@@ -21,7 +21,7 @@ export default function Table ({ tableData }: Props) {
         <tbody>
           {values.map((row, index) => {
             return (
-              <tr className={index % 2 === 1 ? 'bg-gray-50' : ''} key={index}>
+              <tr className={index % 2 === 1 ? 'bg-gray-50' : 'bg-white'} key={index}>
                 {row.map((entry, index) => {
                   return <td className="border-b border-l px-4 py-2" key={index}>{entry}</td>
                 })}
