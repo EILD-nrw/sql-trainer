@@ -163,6 +163,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
             <div className='flex justify-between'>
               <button className='bg-th-red rounded-md border px-2 py-1 font-semibold text-white' type="button" onClick={executeCode}>Ausführen</button>
               <button className='bg-th-orange rounded-md border px-2 py-1 font-semibold text-white' type="button" onClick={reset}>Reset</button>
+              <button className='bg-th-violet rounded-md border px-2 py-1 font-semibold text-white float-right' type='button' onClick={setNewRandomTask}>Neue Aufgabe</button>
             </div>
           </TrainerContainer>
         </div>
@@ -179,7 +180,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
           </TrainerContainer>
         </div>
       </div>
-      <DetailsElement title='Ausgabe'>
+      <DetailsElement title='Ausgabe' taskSolved={taskSolved}>
         { error
           ? <p>{(error || '').toString()}</p>
           : queryData.map((result, index) => {
@@ -197,10 +198,6 @@ export default function TaskPage ({ schema, difficulty }: Props) {
           <Table tableData={solutionTable} />
         }
       </DetailsElement>
-      {taskSolved &&
-        <p>Richtig!</p>
-      }
-      <button className='bg-th-violet rounded-md border px-2 py-1 font-semibold text-white float-right' type='button' onClick={setNewRandomTask}>Neue Aufgabe</button>
     </div>
   )
 }
