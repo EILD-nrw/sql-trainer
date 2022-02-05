@@ -188,6 +188,11 @@ export default function TaskPage ({ schema, difficulty }: Props) {
         }
       </DetailsElement>
       <DetailsElement title='Lösung' startsOpen={false}>
+        <h3 className='font-semibold text-lg'>Query</h3>
+        { selectedTask?.solutionQuery &&
+          <p className='px-4 py-1'>{selectedTask.solutionQuery}</p>
+        }
+        <h3 className='font-semibold text-lg'>Output</h3>
         { solutionTable &&
           <Table tableData={solutionTable} />
         }
