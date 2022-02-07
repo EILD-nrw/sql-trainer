@@ -135,6 +135,10 @@ export default function TaskPage ({ schema, difficulty }: Props) {
     if (!db) return
     try {
       const execResults = db.exec(code)
+
+      if (execResults.length === 0) throw Error('No Results!')
+
+      console.log(execResults)
       setQueryData(execResults)
       evaluateQuery(execResults[0])
       setError('')
