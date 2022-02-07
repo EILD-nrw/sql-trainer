@@ -17,7 +17,7 @@ export default function Home () {
         <br/>
         Diese Datenbank versteht den großteil des SQL-Standards, den auch Oracle oder MySQL verwenden, hat aber gewisse Einschränkungen, beispielsweise bei der Verarbeitung von <i>Date</i> Typen.
       </p>
-      <p className="text-lg text-center">
+      <p className="text-lg text-center pb-6">
         Wenn Sie die unterstützten Befehle nachschlagen möchten, stellt <b>SQLite.org</b> eine <b><a href="https://www.sqlite.org/lang.html">entsprechende Übersicht</a></b> bereit.
       </p>
 
