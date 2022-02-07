@@ -786,14 +786,6 @@ const tasks: Task[] = [
     selectType: '2'
   },
   {
-    id: '58',
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text: 'Wieviele Angestellte (Ang_nr, Nachname) sind zwischen dem 1.1.1990 und dem 1.1.1997 eingestellt worden?',
-    solutionQuery: "SELECT ang_nr, nachname, eintrittsdatum FROM angestellte WHERE eintrittsdatum BETWEEN TO_DATE('01.01.1990', 'DD.MM.YYYY') AND to_date('01.01.1997', 'DD.MM.YYYY') ",
-    selectType: '14'
-  },
-  {
     id: '59',
     schema: 'fahrrad',
     difficulty: 'schwer',
@@ -2208,14 +2200,6 @@ const tasks: Task[] = [
     text: 'Welche Teile haben eine Bezeichnung, die mit dem Buchstaben G anfängt? Geben Sie die Bezeichnung aus!',
     solutionQuery: "SELECT Bezeichnung FROM Teile WHERE BEZEICHNUNG LIKE 'G%'",
     selectType: '13'
-  },
-  {
-    id: '1144',
-    schema: 'fahrrad',
-    difficulty: 'mittel',
-    text: 'Wieviele Angestellte (Ang_nr, Nachname) sind zwischen dem 1.1.1990 und dem 1.1.1997 eingestellt worden?',
-    solutionQuery: "SELECT ang_nr, nachname, eintrittsdatum FROM angestellte WHERE eintrittsdatum BETWEEN TO_DATE('01.01.1990', 'DD.MM.YYYY') AND to_date('01.01.1997', 'DD.MM.YYYY')",
-    selectType: '14'
   },
   {
     id: '1145',
