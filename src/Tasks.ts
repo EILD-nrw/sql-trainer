@@ -166,7 +166,7 @@ const tasks: Task[] = [
     schema: 'reisen',
     difficulty: 'mittel',
     text: 'Nennen Sie die Namen der Städte, in denen es ein 5-Sterne-Hotel gibt und in denen eine Buchung vorliegt.Unterdrücken Sie Duplikate!',
-    solutionQuery: 'select distinct stadtname from buchungwhere stadtname in (select stadtname from hotel where klasse = 5)',
+    solutionQuery: 'select distinct stadtname from buchung where stadtname in (select stadtname from hotel where klasse = 5)',
     selectType: '5'
   },
   {
@@ -226,14 +226,6 @@ const tasks: Task[] = [
     selectType: '9'
   },
   {
-    id: '32',
-    schema: 'reisen',
-    difficulty: 'schwer',
-    text: 'Bestimmen Sie die Namen der Hotels in Paris, bei denen ein Einzelzimmer mindestens 10% weniger kostet als der Durchschnitt aller Hotels in Paris!',
-    solutionQuery: "select hotelname from hotel where stadtname = 'Paris' and 10/9 * preisez <= any (select avg (preisez) from hotel where stadtname = 'Paris')",
-    selectType: '5'
-  },
-  {
     id: '33',
     schema: 'theater',
     difficulty: 'schwer',
@@ -254,7 +246,7 @@ const tasks: Task[] = [
     schema: 'reisen',
     difficulty: 'schwer',
     text: 'Bestimmen Sie aus allen vorliegenden Buchungen die folgenden Daten: der Name des Hotels, die Stadt, in der es liegt, die Buchungsnummer und die Zahl der gebuchten Zimmer. Gruppieren Sie nach dem Namen des Hotels. Es sollen dabei nur solche Hotels aufgeführt werden, für die mindestens 100 Zimmer gebucht sind. Sortieren Sie das Ergebnis dann nach dem Namen des Hotels',
-    solutionQuery: 'select hotelname, stadtname, buchungsnr, (gebuchteez + gebuchtedz)from buchung where (hotelname, stadtname, gebuchteez, gebuchtedz) in (select hotelname, stadtname, gebuchteez, gebuchtedz from buchunggroup by hotelname, stadtname, gebuchteez, gebuchtedz having (gebuchteez + gebuchtedz) >=100)order by stadtname, hotelname, buchungsnr',
+    solutionQuery: 'select hotelname, stadtname, buchungsnr, (gebuchteez + gebuchtedz)from buchung where (hotelname, stadtname, gebuchteez, gebuchtedz) in (select hotelname, stadtname, gebuchteez, gebuchtedz from buchung group by hotelname, stadtname, gebuchteez, gebuchtedz having (gebuchteez + gebuchtedz) >=100)order by stadtname, hotelname, buchungsnr',
     selectType: '5'
   },
   {
@@ -778,14 +770,6 @@ const tasks: Task[] = [
     selectType: '4'
   },
   {
-    id: '68',
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text: 'Welche Kunden haben Artikel bestellt, die nicht auf Lager sind?',
-    solutionQuery: 'SELECT K.Kun_nr , K.NachnameFROM Kunden k, Auftraege A, Auftragspositionen AUWHERE K.Kun_Nr = A.Kun_NRAND a.AuftragsNR = Au.AuftragsNrAND AU.TNR NOT IN (SELECT TNR FROM Lagerbestand wherem TNR is not NULL)',
-    selectType: '5'
-  },
-  {
     id: '70',
     schema: 'fahrrad',
     difficulty: 'mittel',
@@ -1182,7 +1166,7 @@ const tasks: Task[] = [
     schema: 'reisen',
     difficulty: 'mittel',
     text: "Wie hoch ist die durchschnittliche Reisezeit beim Abflug von Köln-Bonn Flughafen an (like 'Köln%')",
-    solutionQuery: "select avg(rzeit) from reisezeit where flughafen1 = 'Köln' group by flughafen1",
+    solutionQuery: "select avg(rzeit) from reisezeit where flughafen1 LIKE 'Köln%' group by flughafen1",
     selectType: '2'
   },
   {
@@ -1455,22 +1439,6 @@ const tasks: Task[] = [
     difficulty: 'schwer',
     text: 'Welche Mannschaft (Ausgabe: Mannschaft) hat kein Tor geschossen?',
     solutionQuery: 'SELECT spiele.MANNSCHAFT_1 as Manschaft FROM spiele WHERE Mannschaft_1 not IN (SELECT mannschaft_1 FROM spiele WHERE substr(Ergebnis, 1,1) > 0) INTERSECT SELECT spiele.MANNSCHAFT_2 as Manschaft FROM spiele WHERE Mannschaft_2 not IN (SELECT mannschaft_2 FROM spiele WHERE substr(Ergebnis, 3,1) > 0) ',
-    selectType: '5'
-  },
-  {
-    id: '167',
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text: 'Welche Angestellten verdienen mehr als das durchschnittliche Gehalt irgendeiner Abteilung? Ausgabe: (Ang_nr, Gehalt)',
-    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte WHERE gehalt > (SELECT avg(avg(gehalt)) FROM angestellte Group by abt_nr) ',
-    selectType: '5'
-  },
-  {
-    id: '168',
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text: 'Geben Sie alle Angestellten (Ang_nr, Gehalt) aus, die mehr als das durchschnittliche Gehalt aller Abteilungen verdienen,wenn man noch mal den Durchschnitt über die durchschnittlichen Gehälter der Einzelabteilungen bildet!',
-    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte WHERE gehalt >(SELECT avg(avg(gehalt)) FROM angestellte Group by abt_nr)',
     selectType: '5'
   },
   {
@@ -1800,30 +1768,6 @@ const tasks: Task[] = [
     text: 'Listen Sie alle Spieler des deutschen Teams mit ihrem Trainer auf! (Spalten: Nachname, Vorname, Trainername)',
     solutionQuery: "SELECT sp.nachname, sp.vorname, na.trainername FROM spieler sp, nation na WHERE sp.nationname='Deutschland' AND na.nationname= sp.nationname",
     selectType: '4'
-  },
-  {
-    id: '1114',
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text: 'Welche Angestellten verdienen mehr als das durchschnittliche Gehalt irgendeiner Abteilung? Ausgabe: (Ang_nr, Gehalt)?',
-    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte WHERE gehalt > (SELECT avg(avg(gehalt)) FROM angestellte Group by abt_nr)',
-    selectType: '5'
-  },
-  {
-    id: '1115',
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text: 'Geben Sie alle Angestellten (Ang_nr, Gehalt) aus, die mehr als das durchschnittliche Gehalt aller Abteilungen verdienen,wenn man noch mal den Durchschnitt über die durchschnittlichen Gehälter der Einzelabteilungen bildet!',
-    solutionQuery: 'SELECT ang_nr , gehaltFROM angestellte WHERE gehalt >(SELECT avg(avg(gehalt)) FROM angestellte Group by abt_nr)',
-    selectType: '5'
-  },
-  {
-    id: '1116',
-    schema: 'reisen',
-    difficulty: 'schwer',
-    text: 'Bestimmen Sie die Namen aller Hotels in Paris, bei denen ein Einzelzimmer mindestens 10% weniger kostet als der Durchschnitt aller Hotels in Paris!',
-    solutionQuery: "select hotelname from hotel where stadtname = 'Paris' and 10/9 * preisez <= any (select avg (preisez) from hotel where stadtname = 'Paris')",
-    selectType: '5'
   },
   {
     id: '1117',
