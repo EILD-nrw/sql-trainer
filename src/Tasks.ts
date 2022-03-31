@@ -310,7 +310,7 @@ const tasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'mittel',
     text: 'Gibt es Teile, deren Bestand, summiert über alle Lager, den aus der Tabelle Teile unterschreitet ?',
-    solutionQuery: 'SELECT Teile.TNR FROM lagerbestand, Teile\tWHERE Teile.TNR = lagerbestand.TNR GROUP BY Teile.TNR, Mindestbestand HAVING SUM(Teile.Bestand) <= Mindestbestand',
+    solutionQuery: 'SELECT Teile.TNR FROM lagerbestand, Teile WHERE Teile.TNR = lagerbestand.TNR GROUP BY Teile.TNR, Mindestbestand HAVING SUM(Teile.Bestand) <= Mindestbestand',
     selectType: '3'
   },
   {
@@ -1846,7 +1846,7 @@ const tasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'mittel',
     text: 'Wie ist die maximale Stücklistentiefe des Artikel 60?',
-    solutionQuery: 'SELECT \tMAX (LEVEL)FROM \tStrukturSTART WITH OTeil = 60CONNECT BY PRIOR UTeil = OTeil',
+    solutionQuery: 'SELECT MAX (LEVEL)FROM StrukturSTART WITH OTeil = 60CONNECT BY PRIOR UTeil = OTeil',
     selectType: '16'
   },
   {
@@ -1854,7 +1854,7 @@ const tasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'mittel',
     text: 'Welche Teile sind im Artikel 60 insgesamt enthalten?Geben Sie aus der Tabelle Struktur OTeil und Uteil aus!',
-    solutionQuery: 'SELECT \tOTeil, UTeilFROM \tStrukturSTART \tWITH OTeil = 60CONNECT BY PRIOR UTeil = OTeil;',
+    solutionQuery: 'SELECT OTeil, UTeilFROM StrukturSTART WITH OTeil = 60CONNECT BY PRIOR UTeil = OTeil;',
     selectType: '16'
   },
   {
@@ -1862,7 +1862,7 @@ const tasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'schwer',
     text: 'In welchen Teilen wird das Material mit der TNR 3 verwendet? Geben Sie OTeil, UTeil unddas Level aus!',
-    solutionQuery: 'SELECT \tOTeil, UTeil, LEVELFROM \tStrukturSTART \tWITH UTeil = 3CONNECT BY PRIOR OTeil = UTeil;',
+    solutionQuery: 'SELECT OTeil, UTeil, LEVELFROM StrukturSTART WITH UTeil = 3CONNECT BY PRIOR OTeil = UTeil;',
     selectType: '16'
   },
   {
