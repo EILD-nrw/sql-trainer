@@ -204,14 +204,14 @@
 	"STRASSE" VARCHAR2(50)
    ) ;
 
-Insert into ABTEILUNGEN (ABT_NR,LEITER,NAME,ORT,EMAIL) values ('1','1','Geschaftsfuhrung',' Köln','1.Geschaftsfuhrung');
+Insert into ABTEILUNGEN (ABT_NR,LEITER,NAME,ORT,EMAIL) values ('1','1','Geschaftsfuhrung','Köln','1.Geschaftsfuhrung');
 Insert into ABTEILUNGEN (ABT_NR,LEITER,NAME,ORT,EMAIL) values ('2','2','Produktion','Lindlar','2.Produktion');
 Insert into ABTEILUNGEN (ABT_NR,LEITER,NAME,ORT,EMAIL) values ('3','3','Vertrieb','Dortmund','3.Vertrieb');
 Insert into ABTEILUNGEN (ABT_NR,LEITER,NAME,ORT,EMAIL) values ('4','4','Einkauf','Lindlar','4.Einkauf');
 Insert into ABTEILUNGEN (ABT_NR,LEITER,NAME,ORT,EMAIL) values ('5','5','Arbeitsvorbereitung','Lindlar','5.Arbeitsvorbereitung');
-Insert into ABTEILUNGEN (ABT_NR,LEITER,NAME,ORT,EMAIL) values ('6','6','Datenverarbeitung',' Köln','6.Datenverarbeitung');
+Insert into ABTEILUNGEN (ABT_NR,LEITER,NAME,ORT,EMAIL) values ('6','6','Datenverarbeitung','Köln','6.Datenverarbeitung');
 
-Insert into ANGESTELLTE (ANG_NR,ABT_NR,AUFGABENBESCHREIBUNG,BERUF,NACHNAME,VORNAME,GESCHLECHT,EINTRITTSDATUM,GEHALT,ABZUEGE,ORT,STRASSE,ZEITSTEMPEL) values ('1','1','Manchmal sind die Frauen Chef','Betriebswirt','Muller','Josefine','w','01.02.91','10000','3400',' Köln','Memelerstr.','29.08.03');
+Insert into ANGESTELLTE (ANG_NR,ABT_NR,AUFGABENBESCHREIBUNG,BERUF,NACHNAME,VORNAME,GESCHLECHT,EINTRITTSDATUM,GEHALT,ABZUEGE,ORT,STRASSE,ZEITSTEMPEL) values ('1','1','Manchmal sind die Frauen Chef','Betriebswirt','Muller','Josefine','w','01.02.91','10000','3400','Köln','Memelerstr.','29.08.03');
 Insert into ANGESTELLTE (ANG_NR,ABT_NR,AUFGABENBESCHREIBUNG,BERUF,NACHNAME,VORNAME,GESCHLECHT,EINTRITTSDATUM,GEHALT,ABZUEGE,ORT,STRASSE,ZEITSTEMPEL) values ('2','2','Fehlt noch','Mathematiker','Fama','Hans','m','07.05.91','9000','2300','Gummersbach','Inselweg','29.08.03');
 Insert into ANGESTELLTE (ANG_NR,ABT_NR,AUFGABENBESCHREIBUNG,BERUF,NACHNAME,VORNAME,GESCHLECHT,EINTRITTSDATUM,GEHALT,ABZUEGE,ORT,STRASSE,ZEITSTEMPEL) values ('3','3','Fehlt noch','Betriebswirt','Heck','Iris','w','06.07.88','7500','3000','Gummersbach','Kaiserstr','29.08.03');
 Insert into ANGESTELLTE (ANG_NR,ABT_NR,AUFGABENBESCHREIBUNG,BERUF,NACHNAME,VORNAME,GESCHLECHT,EINTRITTSDATUM,GEHALT,ABZUEGE,ORT,STRASSE,ZEITSTEMPEL) values ('4','4','Fehlt noch','Kaufmann','Schmidt','Otto','m','01.07.95','6500','2000','Leverkusen','Netzestr.','29.08.03');
@@ -278,15 +278,15 @@ Insert into GEH_KLASSEN (GEH_KLASSE,MAX_GEHALT,MIN_GEHALT) values ('4','3999','2
 Insert into GEH_KLASSEN (GEH_KLASSE,MAX_GEHALT,MIN_GEHALT) values ('5','1999','620');
 Insert into GEH_KLASSEN (GEH_KLASSE,MAX_GEHALT,MIN_GEHALT) values ('6','620','0');
 
-Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('1','Tholler','Andreas','m',' Köln','Belaweg','0221/956788','29.08.03');
-Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('2','Falk','Bernhardt','m',' Köln','Auf dem Hugel','0221/2345690','29.08.03');
-Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('3','Muller','Tobias','m',' Köln','Bennstr','0221/5566123','29.08.03');
-Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('4','Franz','Helga','w',' Köln','Bahnhofstr.','0221/5566901','29.08.03');
+Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('1','Tholler','Andreas','m','Köln','Belaweg','0221/956788','29.08.03');
+Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('2','Falk','Bernhardt','m','Köln','Auf dem Hugel','0221/2345690','29.08.03');
+Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('3','Muller','Tobias','m','Köln','Bennstr','0221/5566123','29.08.03');
+Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('4','Franz','Helga','w','Köln','Bahnhofstr.','0221/5566901','29.08.03');
 Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('5','Sundbald','Hannelore','w','Gummersbach','Luisenstr','02261/4588','29.08.03');
 Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('6','Wal','Birgit','w','Gummersbach','Loh','02261/4471','29.08.03');
 Insert into KUNDEN (KUN_NR,NACHNAME,VORNAME,GESCHLECHT,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('7','Tisch','Hartmut','m','Gladbeck','Agathastr.','02271/75613','29.08.03');
 
-Insert into LAGER (LANR,BEZEICHNUNG,ORT,STRASSE) values ('1','Hauptlager',' Köln','Eibenweg');
+Insert into LAGER (LANR,BEZEICHNUNG,ORT,STRASSE) values ('1','Hauptlager','Köln','Eibenweg');
 Insert into LAGER (LANR,BEZEICHNUNG,ORT,STRASSE) values ('2','Nebenlager','Gummersbach','Am Sandberg');
 Insert into LAGER (LANR,BEZEICHNUNG,ORT,STRASSE) values ('3','Verladelager','Dortmund','Hansastr.');
 
@@ -306,8 +306,8 @@ Insert into LAGERBESTAND (LANR,TNR,BESTAND,ZEITSTEMPEL) values ('3','61','1000',
 Insert into LAGERBESTAND (LANR,TNR,BESTAND,ZEITSTEMPEL) values ('3','58','899','29.08.03');
 Insert into LAGERBESTAND (LANR,TNR,BESTAND,ZEITSTEMPEL) values ('2','1','4000','29.08.03');
 
-Insert into LIEFERANTEN (LIEF_NR,NAME,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('1','West-Ost-Handel',' Köln','Eibenweg','0221/985688','29.08.03');
-Insert into LIEFERANTEN (LIEF_NR,NAME,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('2','IMPORT-Wendel','Dortmund',' Kölner Str.','0221/76499','29.08.03');
+Insert into LIEFERANTEN (LIEF_NR,NAME,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('1','West-Ost-Handel','Köln','Eibenweg','0221/985688','29.08.03');
+Insert into LIEFERANTEN (LIEF_NR,NAME,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('2','IMPORT-Wendel','Dortmund','Kölner Str.','0221/76499','29.08.03');
 Insert into LIEFERANTEN (LIEF_NR,NAME,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('3','Quarks','Gummersbach','Muhle','02261/6711','29.08.03');
 Insert into LIEFERANTEN (LIEF_NR,NAME,ORT,STRASSE,TELEFONNR,ZEITSTEMPEL) values ('4','Wahle','Remscheid','Lenneperstr.',null,'29.08.03');
 
@@ -454,10 +454,10 @@ Insert into LIEFERUNGEN (LIEFER_NR,LIEF_NR,TNR,LIEF_DATUM,MENGE,ZEITSTEMPEL) val
 Insert into ORTE (ORT,STRASSE,PLZ) values ('Gladbeck','Agathastr.',null);
 Insert into ORTE (ORT,STRASSE,PLZ) values ('Gummersbach','Loh',null);
 Insert into ORTE (ORT,STRASSE,PLZ) values ('Gummersbach','Luisenstr',null);
-Insert into ORTE (ORT,STRASSE,PLZ) values (' Köln','Auf dem Hugel',null);
-Insert into ORTE (ORT,STRASSE,PLZ) values (' Köln','Bahnhofstr.',null);
-Insert into ORTE (ORT,STRASSE,PLZ) values (' Köln','Belaweg',null);
-Insert into ORTE (ORT,STRASSE,PLZ) values (' Köln','Bennstr',null);
+Insert into ORTE (ORT,STRASSE,PLZ) values ('Köln','Auf dem Hugel',null);
+Insert into ORTE (ORT,STRASSE,PLZ) values ('Köln','Bahnhofstr.',null);
+Insert into ORTE (ORT,STRASSE,PLZ) values ('Köln','Belaweg',null);
+Insert into ORTE (ORT,STRASSE,PLZ) values ('Köln','Bennstr',null);
 Insert into ORTE (ORT,STRASSE,PLZ) values ('Bergisch Gladbach','Burgstr.',null);
 Insert into ORTE (ORT,STRASSE,PLZ) values ('Bergisch Gladbach','Erntestr.',null);
 Insert into ORTE (ORT,STRASSE,PLZ) values ('Bergisch Gladbach','Falkenstr.',null);
