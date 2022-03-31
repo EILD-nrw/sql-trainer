@@ -138,14 +138,6 @@ const tasks: Task[] = [
     selectType: '5'
   },
   {
-    id: '19',
-    schema: 'reisen',
-    difficulty: 'mittel',
-    text: 'Nennen Sie alle Städte (alle Attribute) mit dem Land, in dem sie liegen und allen zugehörigen Flüghäfen, in denen ein Hotel existiert mit einer Buchung am Anreiseteg 31.12.2000!',
-    solutionQuery: "select * from stadt where stadtname in (select stadtname from buchung where anreisedatum = TO_DATE('31.12.2000', DD.MM.YYYY'))",
-    selectType: '5'
-  },
-  {
     id: '20',
     schema: 'reisen',
     difficulty: 'leicht',
@@ -191,14 +183,6 @@ const tasks: Task[] = [
     difficulty: 'mittel',
     text: 'Welcher Dichter (Name, Wohnort) hat in einem seiner eigenen Stücke mitgespielt?',
     solutionQuery: 'select name, wohnort from schauspieler, rolle, stellt_dar, drama, dichter where schauspieler.pnr = stellt_dar.pnr and drama.titel = rolle.titel and stellt_dar.figur = rolle.figur and schauspieler.name = dichter.autor',
-    selectType: '4'
-  },
-  {
-    id: '26',
-    schema: 'theater',
-    difficulty: 'mittel',
-    text: 'Welche Schauspieler (Name, Wohnort) waren bei den Sommerfestspielen in Salzburg 1999 länger als zwei Monate engagiert?',
-    solutionQuery: "select schauspieler.name, schauspieler.wohnort from schauspieler, spielzeit, engament, theater where schauspieler.pnr = engament.pnr and theater.name = engament.name and theater.ort = 'Salzburg' and engament.saison_jahr = TO_DATE('01.08.1999', 'DD.MM.YYYY') and engament.dauer > 2",
     selectType: '4'
   },
   {
@@ -303,14 +287,6 @@ const tasks: Task[] = [
     difficulty: 'leicht',
     text: 'Welche Teile haben, summiert über alle Lager, einen Bestand von mehr als 200 Einheiten ? Geben Sie die TNR aus!',
     solutionQuery: 'SELECT TNR FROM lagerbestand GROUP BY TNR HAVING SUM(bestand) >= 200 ',
-    selectType: '3'
-  },
-  {
-    id: '41',
-    schema: 'fahrrad',
-    difficulty: 'mittel',
-    text: 'Gibt es Teile, deren Bestand, summiert über alle Lager, den aus der Tabelle Teile unterschreitet ?',
-    solutionQuery: 'SELECT Teile.TNR FROM lagerbestand, Teile WHERE Teile.TNR = lagerbestand.TNR GROUP BY Teile.TNR, Mindestbestand HAVING SUM(Teile.Bestand) <= Mindestbestand',
     selectType: '3'
   },
   {
@@ -568,22 +544,6 @@ const tasks: Task[] = [
     text: 'An welchen Spielen (alle Spalten) nahm Polen teil?',
     solutionQuery: "SELECT * FROM Spiele WHERE Spiele.MANNSCHAFT_1 = 'Polen' OR Spiele.MANNSCHAFT_2 = 'Polen'",
     selectType: '1'
-  },
-  {
-    id: '109',
-    schema: 'fussball',
-    difficulty: 'leicht',
-    text: 'Welche Spiele (alle Spalten) fanden am 10.06.2006 statt?',
-    solutionQuery: "SELECT * FROM Spiele WHERE Spiele.TERMIN = TO_DATE('10.06.2006', 'DD.MM.YYYY')",
-    selectType: '14'
-  },
-  {
-    id: '110',
-    schema: 'fussball',
-    difficulty: 'mittel',
-    text: 'Welche Spiele (alle Spalten) fanden vor dem 19.06.2006 statt?',
-    solutionQuery: "SELECT * FROM Spiele WHERE Spiele.TERMIN < TO_DATE('19.06.2006', 'DD.MM.YYYY')",
-    selectType: '14'
   },
   {
     id: '111',
@@ -1034,14 +994,6 @@ const tasks: Task[] = [
     selectType: '5'
   },
   {
-    id: '204',
-    schema: 'busse',
-    difficulty: 'mittel',
-    text: 'Welche Busse (fahrzeug_id) wurden im September 2009 angemeldet?',
-    solutionQuery: "SELECT fahrzeug_id FROM busse WHERE angemeldet_am >= TO_DATE('01.09.09', 'DD.MM.YY') AND angemeldet_am <= TO_DATE('30.09.09', 'DD.MM.YY')",
-    selectType: '14'
-  },
-  {
     id: '205',
     schema: 'busse',
     difficulty: 'mittel',
@@ -1111,14 +1063,6 @@ const tasks: Task[] = [
     difficulty: 'schwer',
     text: 'Welche Linien (linien_id, bezeichnung) befahren eine Haltestelle, die auf der X-Koordinate "51° 01 N" liegt? Unterdrücken Sie doppelte Datensätze!',
     solutionQuery: "SELECT DISTINCT l.linien_id, l.bezeichnung FROM linie l, bestehen b, verbindung v, haltestelle h WHERE l.linien_id = b.linien_id AND b.kanten_id = v.kanten_id AND (v.bis = h.haltestellen_id OR v.von = h.haltestellen_id) AND h.x_koordinate ='51° 01_ N'",
-    selectType: '4'
-  },
-  {
-    id: '214',
-    schema: 'busse',
-    difficulty: 'schwer',
-    text: 'Welche Mitarbeiter (mita_id, vorname, nachname) fahren Busse, die am 01.11.09 zur Inspektion mussten? Beachten Sie, dass keine doppelten Datensätze ausgegeben werden und dass das Feld für den Tag der Inspektion unter Anderem nicht nur das Datum (evtl. Uhrzeit) enthält!',
-    solutionQuery: "SELECT distinct m.mita_id, vorname, nachname FROM mitarbeiter m, busfahrer b, einsatzplan e, busse bu, inspektionen i WHERE m.mita_id = b.mita_id AND e.mita_id = b.mita_id AND bu.fahrzeug_id = e.fahrzeug_id AND i.fahrzeug_id = bu.fahrzeug_id AND TO_DATE(i.am, 'DD.MM.YY') = TO_DATE('01.11.09', 'DD.MM.YY')",
     selectType: '4'
   },
   {
@@ -1498,14 +1442,6 @@ const tasks: Task[] = [
     selectType: '12'
   },
   {
-    id: '147',
-    schema: 'fussball',
-    difficulty: 'mittel',
-    text: 'Geben Sie die Spiele (alle Spalten) aus, die in der Zeit vom 24.06.2006 und dem 5.07.2006 ausgetragen wurden!',
-    solutionQuery: "SELECT * FROM Spiele WHERE Termin BETWEEN TO_DATE('24.06.2006', 'DD.MM.YYYY') and TO_DATE('05.07.2006', 'DD.MM.YYYY')",
-    selectType: '14'
-  },
-  {
     id: '148',
     schema: 'fussball',
     difficulty: 'schwer',
@@ -1840,30 +1776,6 @@ const tasks: Task[] = [
     text: 'Geben Sie alle Länder (country, population_growth, independence) aus, deren Bevölkerung schrumpft und die unabhängig sind (Spalte independence in politics)!',
     solutionQuery: 'SELECT p1.country, p1.population_growth, p2.independence FROM population p1 INNER JOIN politics p2 ON (p1.country =p2.country) WHERE p1.population_growth <= 0 and p2.independence IS NOT null',
     selectType: '4'
-  },
-  {
-    id: '1004',
-    schema: 'fahrrad',
-    difficulty: 'mittel',
-    text: 'Wie ist die maximale Stücklistentiefe des Artikel 60?',
-    solutionQuery: 'SELECT MAX (LEVEL)FROM StrukturSTART WITH OTeil = 60CONNECT BY PRIOR UTeil = OTeil',
-    selectType: '16'
-  },
-  {
-    id: '1003',
-    schema: 'fahrrad',
-    difficulty: 'mittel',
-    text: 'Welche Teile sind im Artikel 60 insgesamt enthalten?Geben Sie aus der Tabelle Struktur OTeil und Uteil aus!',
-    solutionQuery: 'SELECT OTeil, UTeilFROM StrukturSTART WITH OTeil = 60CONNECT BY PRIOR UTeil = OTeil;',
-    selectType: '16'
-  },
-  {
-    id: '1005',
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text: 'In welchen Teilen wird das Material mit der TNR 3 verwendet? Geben Sie OTeil, UTeil unddas Level aus!',
-    solutionQuery: 'SELECT OTeil, UTeil, LEVELFROM StrukturSTART WITH UTeil = 3CONNECT BY PRIOR OTeil = UTeil;',
-    selectType: '16'
   },
   {
     id: '1129',
