@@ -290,14 +290,6 @@ const tasks: Task[] = [
     selectType: '3'
   },
   {
-    id: '42',
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text: "In welchem Lager werden die meisten Artikel (Typ = 'Artikel') gelagert? Geben Sie die LANR aus!",
-    solutionQuery: "SELECT LANR FROM Teile, Lagerbestand WHERE Teile.tNr = lagerbestand.TNR AND Teile.Typ = 'Artikel' GROUP BY LANR HAVING SUM(Lagerbestand.bestand) >= ALL (SELECT SUM(Lagerbestand.Bestand) FROM Teile , lagerbestand WHERE Teile.tNr = lagerbestand.TNR AND Teile.Typ = 'Artikel' GROUP BY LANR)",
-    selectType: '3'
-  },
-  {
     id: '43',
     schema: 'fahrrad',
     difficulty: 'leicht',
@@ -472,14 +464,6 @@ const tasks: Task[] = [
     text: 'Wie viele Tore schoss der Spieler "Miroslav Klose"?',
     solutionQuery: "SELECT count(*) FROM tore WHERE tore.spieler_id=(SELECT spieler_id FROM spieler WHERE nachname='Klose')",
     selectType: '5'
-  },
-  {
-    id: '100',
-    schema: 'fussball',
-    difficulty: 'schwer',
-    text: 'Welcher Spieler (Ausgabe: Nachname, Nationname, Anzahl_Tore) hat die meisten Tore geschossen?',
-    solutionQuery: 'SELECT Spieler.NACHNAME, Spieler.NATIONNAME, COUNT(*) FROM spieler, Tore WHERE spieler.SPIELER_ID = Tore.SPIELER_ID GROUP BY Spieler.NACHNAME, Spieler.NATIONNAME HAVING COUNT(*) >= all (SELECT COUNT(*) FROM spieler, Tore WHERE spieler.SPIELER_ID = Tore.SPIELER_ID GROUP BY Spieler.NACHNAME, Spieler.NATIONNAME)',
-    selectType: '8'
   },
   {
     id: '101',
@@ -688,22 +672,6 @@ const tasks: Task[] = [
     text: 'Welche Mannschaft (Ausgabe: Mannschaft, SUM(Tore)) hat in der Vorrunde die meisten Tore geschossen? Geben Sie alle Mannschaften aus, mit der Summe aller Tore und sortieren Sie die Ausgabe absteigend nach der Summe über alle Tore!',
     solutionQuery: "SELECT mannschaft, sum (tore) FROM (SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft order by SUM(Tore) desc ",
     selectType: '8'
-  },
-  {
-    id: '123',
-    schema: 'fussball',
-    difficulty: 'schwer',
-    text: 'Welche Mannschaft hat die meisten Tore in der Vorrunde geschossen?',
-    solutionQuery: "SELECT mannschaft, sum (tore) FROM (SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as toreFROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft having SUM(TORE) >=ALL (SELECT sum (tore) FROM(SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft)",
-    selectType: '11'
-  },
-  {
-    id: '124',
-    schema: 'fussball',
-    difficulty: 'schwer',
-    text: 'Welche Mannschaft (Ausgabe: Mannschaft, SUM(Tore)) hat die meisten Tore in der Vorrunde kassiert?',
-    solutionQuery: "SELECT mannschaft, sum (tore) FROM (SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft having SUM(TORE) >=ALL ( SELECT sum (tore) FROM (SELECT mannschaft_1 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_1 UNION SELECT mannschaft_2 as mannschaft, SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore FROM spiele WHERE Typ = 'Vorrunde' GROUP BY Mannschaft_2 ) GROUP BY Mannschaft ) ",
-    selectType: '3'
   },
   {
     id: '125',
@@ -1016,14 +984,6 @@ const tasks: Task[] = [
     text: 'Geben Sie das durchschnittliche Gehalt aller Mitarbeiter aus incl. Busfahrer und Nichtbusfahrer! Das Gehalt der Busfahrer kann mit Stundenlohn*160 berechnet werden.',
     solutionQuery: 'SELECT avg(gehalt) FROM (SELECT stundenlohn*160 as gehalt FROM busfahrer UNION SELECT gehalt FROM nichtbusfahrer)',
     selectType: '11'
-  },
-  {
-    id: '208',
-    schema: 'busse',
-    difficulty: 'mittel',
-    text: 'Geben Sie die größte Entfernung zweier Haltestellen aus!',
-    solutionQuery: 'SELECT v.fahrstrecke FROM verbindung v WHERE v.fahrstrecke >= ALL (SELECT v2.fahrstrecke FROM verbindung v2)',
-    selectType: '5'
   },
   {
     id: '209',
@@ -1498,14 +1458,6 @@ const tasks: Task[] = [
     selectType: '5'
   },
   {
-    id: '166',
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text: 'Welche Angestellten (Ausgabe: Ang_nr, Gehalt) verdienen mehr als der Durchschnitt aller Gehälter der Angestellten jeder einzelnen Abteilung?',
-    solutionQuery: 'SELECT ang_nr , gehalt FROM angestellte WHERE gehalt > all (SELECT avg(gehalt) FROM angestellte Group by abt_nr) ',
-    selectType: '5'
-  },
-  {
     id: '167',
     schema: 'fahrrad',
     difficulty: 'schwer',
@@ -1610,14 +1562,6 @@ const tasks: Task[] = [
     selectType: '4'
   },
   {
-    id: '228',
-    schema: 'welt',
-    difficulty: 'mittel',
-    text: 'In welchem Land (country, name, population) leben die meisten Menschen?',
-    solutionQuery: 'SELECT country, Name, population FROM country WHERE population >= ALL ( SELECT population from country)',
-    selectType: '5'
-  },
-  {
     id: '229',
     schema: 'welt',
     difficulty: 'mittel',
@@ -1688,22 +1632,6 @@ const tasks: Task[] = [
     text: 'Berechnen Sie die absoluten Zahlen der Anhänger jeder Religion der Weltbevölkerung sowie den prozentualen Anteil der Anhänger jeder Religion an der Weltbevölkerung (religion, (KALKULATION ABSOLUTE ANZAHL) as amount, (KALKULATION RELATIVE PROZENTZAHL) as percentage)',
     solutionQuery: 'SELECT r.religion, SUM (TRUNC (r.percentage * c.population)), ROUND(SUM (TRUNC (r.percentage * c.population)) / (SELECT SUM (c2.population) FROM country c2), 1) AS percentage FROM country c, religion r WHERE r.country = c.country GROUP BY r.religion ORDER BY percentage DESC',
     selectType: '4'
-  },
-  {
-    id: '238',
-    schema: 'welt',
-    difficulty: 'schwer',
-    text: 'Geben Sie die Abkürzungen aller Organisationen aus, in denen alle Länder mit einem Bruttoinlandsprodukt (BIP, englisch GDP) von mehr als 300000 $ pro Person Mitglied sind (diese Operation wird als relationale Division bezeichnet). (COUNT AS amount, Organization.abbreviation, Organization.name)',
-    solutionQuery: 'SELECT COUNT (DISTINCT e.COUNTRY) AS anzahl, o.abbreviation, O.NAME FROM economy e, Organization o, ismember i WHERE O.ABBREVIATION = i.Organization AND I.COUNTRY = E.COUNTRY AND e.gdp >= 300000 GROUP BY o.abbreviation, O.NAME HAVING COUNT (DISTINCT e.COUNTRY) >= ALL ( SELECT COUNT (DISTINCT e.COUNTRY) FROM economy e, ismember i WHERE I.COUNTRY = E.COUNTRY AND e.gdp >= 300000 GROUP BY i.Organization)',
-    selectType: '9'
-  },
-  {
-    id: '239',
-    schema: 'welt',
-    difficulty: 'schwer',
-    text: 'Welcher Fluss hat die meisten Anrainerstaaten? (COUNT (COUNTRY), RIVER)',
-    solutionQuery: 'SELECT COUNT (COUNTRY), RIVER FROM (SELECT river, country FROM geo_river group by river, country) d GROUP BY RIVER HAVING COUNT (COUNTRY) >= ALL ( SELECT COUNT (COUNTRY) FROM ( SELECT river, country FROM geo_river group by river, country) d1 GROUP BY RIVER) GROUP BY RIVER)',
-    selectType: '3'
   },
   {
     id: '240',
