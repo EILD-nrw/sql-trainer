@@ -17,7 +17,6 @@ export default function TableLookupModal ({ db, tableName, resetLookup }: Props)
     if (!db || tableName === '') return
     try {
       const execResults = db.exec(`SELECT * FROM ${tableName}`)
-      console.log(execResults)
       setCurrentTabledata(execResults[0])
       setIsVisible(true)
       setError('')
