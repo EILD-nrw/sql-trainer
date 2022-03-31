@@ -90,14 +90,6 @@ const tasks: Task[] = [
     selectType: '4'
   },
   {
-    id: '10',
-    schema: 'fahrrad',
-    difficulty: 'mittel',
-    text: 'Welche Kunden aus Köln werden von Angestellten aus Gummersbach betreut? Geben Sie die Kun_Nr und den Nachnamen aus!',
-    solutionQuery: "SELECT K.Kun_nr , K.Nachname FROM Kunden k, Auftraege A , Angestellte AG WHERE K.Kun_Nr = A.Kun_Nr AND A.Ang_Nr = AG.Ang_NR AND K.Ort = 'Köln' AND AG.Ort = 'Gummersbach'",
-    selectType: '4'
-  },
-  {
     id: '17',
     schema: 'fahrrad',
     difficulty: 'leicht',
@@ -662,7 +654,7 @@ const tasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'mittel',
     text: 'Welche Artikel (Ausgabe : TNR) sind nicht auf Lager?',
-    solutionQuery: "SELECT t1.TNR FROM Teile t1WHERE t1.Typ = 'Artikel' AND NOT EXISTS (SELECT l.TNR FROM Lagerbestand lWHERE t1.TNR = l.TNr )",
+    solutionQuery: "SELECT t1.TNR FROM Teile t1 WHERE t1.Typ = 'Artikel' AND NOT EXISTS (SELECT l.TNR FROM Lagerbestand l WHERE t1.TNR = l.TNr )",
     selectType: '8'
   },
   {
