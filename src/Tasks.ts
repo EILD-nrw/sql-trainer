@@ -1250,14 +1250,6 @@ const tasks: Task[] = [
     selectType: '1'
   },
   {
-    id: '175',
-    schema: 'theater',
-    difficulty: 'schwer',
-    text: 'Geben Sie die Namen aller Dichter aus, die in den Monaten Januar oder Februar geboren wurden. ',
-    solutionQuery: "select autor from dichter where to_char(geburtsjahr, 'MON') IN ('JAN', 'FEB')",
-    selectType: '14'
-  },
-  {
     id: '176',
     schema: 'theater',
     difficulty: 'leicht',
@@ -1290,14 +1282,6 @@ const tasks: Task[] = [
     selectType: '3'
   },
   {
-    id: '180',
-    schema: 'theater',
-    difficulty: 'schwer',
-    text: 'Geben Sie alle Figuren aus, deren Drama im Mai uraufgeführt wurde. (Ausgabe r.figur, r.titel)',
-    solutionQuery: "select r.figur, r.titel from drama d, rolle r where r.titel=d.titel and to_char(jahr_urauffuehrung, 'MON')='MAY'",
-    selectType: '14'
-  },
-  {
     id: '181',
     schema: 'reisen',
     difficulty: 'mittel',
@@ -1312,22 +1296,6 @@ const tasks: Task[] = [
     text: 'Geben Sie Hotelname, Stadtname, gebuchte Einzelzimmer und gebuchte Doppelzimmer für Hotels an, in denen mehr Einzel- als Doppelzimmer gebucht wurden!',
     solutionQuery: 'select hotelname, stadtname, gebuchteez, gebuchtedz from buchung where gebuchteez>gebuchtedz',
     selectType: '1'
-  },
-  {
-    id: '183',
-    schema: 'reisen',
-    difficulty: 'schwer',
-    text: 'Geben Sie die Vor- und Nachnamen der Kunden an, die an einem Sonntag (SUN) ihre Anreise gebucht haben.',
-    solutionQuery: "select k.vorname, k.name from buchung b, kunde k where k.kundennr=b.kundennr and to_char(b.anreisedatum, 'DY')='SUN'",
-    selectType: '14'
-  },
-  {
-    id: '184',
-    schema: 'reisen',
-    difficulty: 'mittel',
-    text: 'Geben Sie alle Spalten der Buchungen aus, wo das Abreisedatum an einem Sonntag (SUN) war.',
-    solutionQuery: "select * from buchung where to_char(abreisedatum, 'DY')='SUN'",
-    selectType: '14'
   },
   {
     id: '185',
@@ -1416,14 +1384,6 @@ const tasks: Task[] = [
     text: 'Wie viele Zuschauer hat für jede Runde des Turniers (Typ des Spiels) gegeben?',
     solutionQuery: 'SELECT Typ, SUM(Anzahl_Zuschauer) FROM Spiele GROUP BY Typ',
     selectType: '2'
-  },
-  {
-    id: '158',
-    schema: 'fussball',
-    difficulty: 'mittel',
-    text: 'In welchen Ausführungsorten spielte die Nationalmannschaft von Frankreich in der Vorrunde, die bis zum 22.06.2006 ging?',
-    solutionQuery: "SELECT Spiele.AUSFUEHRUNGSORT FROM spiele WHERE (Mannschaft_1 = 'Frankreich' OR Mannschaft_2 = 'Frankreich') AND TO_CHAR(termin, 'ddmmrrrr') <= '22062006'",
-    selectType: '14'
   },
   {
     id: '159',
