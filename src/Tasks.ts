@@ -813,7 +813,7 @@ const tasks: Task[] = [
     id: '62',
     schema: 'fahrrad',
     difficulty: 'leicht',
-    text: 'Bestimmen Sie verschiedenen alle Artikel-Typen!',
+    text: 'Bestimmen Sie alle verschiedenen Artikel-Typen!',
     solutionQuery: 'SELECT DISTINCT Artikel_Typ FROM Artikel',
     selectType: '1'
   },
@@ -1010,14 +1010,6 @@ const tasks: Task[] = [
     selectType: '1'
   },
   {
-    id: '199',
-    schema: 'busse',
-    difficulty: 'leicht',
-    text: 'Ermitteln Sie den Busfahrer (mita_id) mit dem höchsten Stundenlohn!',
-    solutionQuery: 'SELECT mita_id FROM busfahrer WHERE stundenlohn >= ALL(SELECT stundenlohn FROM busfahrer)',
-    selectType: '5'
-  },
-  {
     id: '200',
     schema: 'busse',
     difficulty: 'mittel',
@@ -1136,14 +1128,6 @@ const tasks: Task[] = [
     text: 'Welche Mitarbeiter (mita_id, vorname, nachname) fahren Busse, die am 01.11.09 zur Inspektion mussten? Beachten Sie, dass keine doppelten Datensätze ausgegeben werden und dass das Feld für den Tag der Inspektion unter Anderem nicht nur das Datum (evtl. Uhrzeit) enthält!',
     solutionQuery: "SELECT distinct m.mita_id, vorname, nachname FROM mitarbeiter m, busfahrer b, einsatzplan e, busse bu, inspektionen i WHERE m.mita_id = b.mita_id AND e.mita_id = b.mita_id AND bu.fahrzeug_id = e.fahrzeug_id AND i.fahrzeug_id = bu.fahrzeug_id AND TO_DATE(i.am, 'DD.MM.YY') = TO_DATE('01.11.09', 'DD.MM.YY')",
     selectType: '4'
-  },
-  {
-    id: '215',
-    schema: 'busse',
-    difficulty: 'schwer',
-    text: 'Geben Sie den Bus aus, der am meisten Fahrten gefahren ist (fahrzeug_id, Anzahl_fahrten)!',
-    solutionQuery: 'SELECT b.fahrzeug_id, COUNT(*) FROM busse b, einsatzplan e WHERE e.fahrzeug_id = b.fahrzeug_id GROUP BY b.fahrzeug_id HAVING COUNT(*) >= ALL(SELECT COUNT(*) FROM einsatzplan e2 GROUP BY e2.fahrzeug_id)',
-    selectType: '3'
   },
   {
     id: '216',
@@ -1880,14 +1864,6 @@ const tasks: Task[] = [
     text: 'Welcher See (lake) ist der tiefste?',
     solutionQuery: 'SELECT lake FROM lake WHERE depth >= (SELECT MAX(depth) FROM lake)',
     selectType: '5'
-  },
-  {
-    id: '246',
-    schema: 'welt',
-    difficulty: 'schwer',
-    text: 'Welche Sprache (language) wird in den meisten Ländern gesprochen?',
-    solutionQuery: 'SELECT language FROM language GROUP BY language HAVING COUNT(language) >= ALL(SELECT COUNT(language) FROM language GROUP BY language)',
-    selectType: '3'
   },
   {
     id: '247',
