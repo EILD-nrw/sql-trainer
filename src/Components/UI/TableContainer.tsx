@@ -13,7 +13,7 @@ export default function TableContainer ({ children, currentSchema }: Props) {
         <span className='m-2 font-semibold'>
           Tabellen
         </span>
-        <a className='border border-gray-400 bg-gray-300 hover:bg-gray-400 rounded-lg p-1 mr-2' href={`./pdf/ER-DIAGRAM_DE_${currentSchema}.pdf`} download>
+        <a className='border border-gray-400 bg-gray-300 hover:bg-gray-400 rounded-lg p-1 mr-2' href={`./pdf/${currentSchema}.pdf`} download>
           <img className='w-4 h-4' src={downloadIcon} alt="Download" />
         </a>
       </div>
