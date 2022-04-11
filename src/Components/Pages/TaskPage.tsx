@@ -13,6 +13,7 @@ import { Task } from '../../Types/Task'
 import tables from '../../Tables'
 import TrainerContainer from '../UI/TrainerContainer'
 import TableLookupModal from '../UI/TableLookupModal'
+import TableContainer from '../UI/TableContainer'
 
 interface Props {
   schema: string
@@ -191,7 +192,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
           </TrainerContainer>
         </div>
         <div className='max-w-sm flex-1'>
-          <TrainerContainer title="Tabellen">
+          <TableContainer currentSchema={schema}>
             <div className='max-h-80 overflow-y-auto overflow-x-hidden space-y-2'>
               {tables[schema].map(table => {
                 return <p className='cursor-pointer bg-gray-50 border-gr shadow-md rounded-md px-2 py-1' key={table} onClick={() => setSelectedLookupTable(table)} >{table}</p>
@@ -200,7 +201,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
             { db &&
             <TableLookupModal db={db} tableName={selectedLookupTable} resetLookup={() => setSelectedLookupTable('')} />
             }
-          </TrainerContainer>
+          </TableContainer>
         </div>
       </div>
       <DetailsElement title='Ausgabe' taskSolved={taskSolved}>
