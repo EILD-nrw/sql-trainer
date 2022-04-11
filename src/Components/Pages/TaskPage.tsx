@@ -193,7 +193,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
         </div>
         <div className='max-w-sm flex-1'>
           <TableContainer currentSchema={schema}>
-            <div className='max-h-80 overflow-y-auto overflow-x-hidden space-y-2'>
+            <div className='h-80 overflow-y-auto overflow-x-hidden space-y-2'>
               {tables[schema].map(table => {
                 return <p className='cursor-pointer bg-gray-50 border-gr shadow-md rounded-md px-2 py-1' key={table} onClick={() => setSelectedLookupTable(table)} >{table}</p>
               })}
