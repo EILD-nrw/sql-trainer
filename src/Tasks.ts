@@ -1066,14 +1066,6 @@ const tasks: Task[] = [
     selectType: '12'
   },
   {
-    id: '133',
-    schema: 'fussball',
-    difficulty: 'schwer',
-    text: 'Welche Mannschaft hat alle Spiele in der Vorrunde gewonnen?',
-    solutionQuery: "SELECT spiele.MANNSCHAFT_1 as Mannschaft FROM spiele WHERE Mannschaft_1 NOT IN (SELECT mannschaft_1 FROM spiele WHERE substr(Ergebnis, 1,1) <= SUBSTR(Ergebnis, 3,1)) AND Typ = 'Vorrunde' MINUS SELECT spiele.MANNSCHAFT_2 as Mannschaft FROM spiele WHERE Mannschaft_2 not IN (SELECT mannschaft_2 FROM spiele WHERE substr(Ergebnis, 1,1) <= SUBSTR(Ergebnis, 3,1)) AND Typ = 'Vorrunde'",
-    selectType: '8'
-  },
-  {
     id: '134',
     schema: 'fussball',
     difficulty: 'schwer',
@@ -1226,14 +1218,6 @@ const tasks: Task[] = [
     selectType: '15'
   },
   {
-    id: '129',
-    schema: 'fussball',
-    difficulty: 'mittel',
-    text: 'Welcher Trainer (Trainername) trainiert den Spieler "Edison Vicente Mendez"?',
-    solutionQuery: "SELECT nation.TRAINERNAME FROM nation, spieler WHERE spieler.NATIONNAME = nation.NATIONNAME AND Nachname = 'Mendez' AND Vorname = 'Edison Vicente'",
-    selectType: '4'
-  },
-  {
     id: '153',
     schema: 'fussball',
     difficulty: 'mittel',
@@ -1246,24 +1230,8 @@ const tasks: Task[] = [
     schema: 'fussball',
     difficulty: 'schwer',
     text: 'Welche Nationen haben nur (!) in der Vorrunde gespielt?',
-    solutionQuery: "SELECT Nationname FROM NationWHERE Nationname IN (SELECT DISTINCT Mannschaft_1 FROM Spiele WHERE Typ = 'Vorrunde' UNION SELECT DISTINCT Mannschaft_2 FROM Spiele WHERE Typ = 'Vorrunde')AND Nationname NOT IN (SELECT DISTINCT Mannschaft_1 FROM Spiele WHERE Typ != 'Vorrunde' UNION SELECT DISTINCT Mannschaft_2 FROM Spiele WHERE Typ != 'Vorrunde')",
+    solutionQuery: "SELECT Nationname FROM Nation WHERE Nationname IN (SELECT DISTINCT Mannschaft_1 FROM Spiele WHERE Typ = 'Vorrunde' UNION SELECT DISTINCT Mannschaft_2 FROM Spiele WHERE Typ = 'Vorrunde') AND Nationname NOT IN (SELECT DISTINCT Mannschaft_1 FROM Spiele WHERE Typ != 'Vorrunde' UNION SELECT DISTINCT Mannschaft_2 FROM Spiele WHERE Typ != 'Vorrunde')",
     selectType: '11'
-  },
-  {
-    id: '155',
-    schema: 'fussball',
-    difficulty: 'schwer',
-    text: 'Listen Sie die Gruppen auf mit der Anzahl an Toren, die während der Vorrunde geschossen wurden!',
-    solutionQuery: 'SELECT n.Gruppe, COUNT(*) FROM Nation n, Spiele s, Tore t WHERE n.Nationname = s.mannschaft_1 AND s.Spiel_Id = t.Spiel_Id AND s.Typ group by n.gruppe',
-    selectType: '2'
-  },
-  {
-    id: '156',
-    schema: 'fussball',
-    difficulty: 'leicht',
-    text: 'Wie viele Zuschauer hat für jede Runde des Turniers (Typ des Spiels) gegeben?',
-    solutionQuery: 'SELECT Typ, SUM(Anzahl_Zuschauer) FROM Spiele GROUP BY Typ',
-    selectType: '2'
   },
   {
     id: '159',
@@ -1294,7 +1262,7 @@ const tasks: Task[] = [
     schema: 'fussball',
     difficulty: 'schwer',
     text: 'Welche Länder haben in welchen Spielen mehr als 2 Tore geschossen? (Ausgabe: Nationname, Spiel_id, Ausführunsort, Tore,)Achtung: Landname und Tore können sowohl die von Mannschaft 1 als auch von Mannschaft 2 sein!',
-    solutionQuery: 'SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*) FROM nation, spiele, tore WHERE nation.NATIONNAME = spiele.MANNSCHAFT_1 AND spiele.SPIEL_ID = tore.SPIEL_IDGROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT having COUNT(*) > 2 union SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*)FROM nation, spiele, tore WHERE nation.NATIONNAME = spiele.MANNSCHAFT_2 AND spiele.SPIEL_ID = tore.SPIEL_ID GROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT having COUNT(*) > 2',
+    solutionQuery: 'SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*) FROM nation, spiele, tore WHERE nation.NATIONNAME = spiele.MANNSCHAFT_1 AND spiele.SPIEL_ID = tore.SPIEL_ID GROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT having COUNT(*) > 2 union SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*)FROM nation, spiele, tore WHERE nation.NATIONNAME = spiele.MANNSCHAFT_2 AND spiele.SPIEL_ID = tore.SPIEL_ID GROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT having COUNT(*) > 2',
     selectType: '11'
   },
   {
@@ -1312,14 +1280,6 @@ const tasks: Task[] = [
     text: 'Welche Mannschaften (Spiele.Mannschaften_1, Spiele.Mannschaften_2) spielten im Finale gegeneinander?',
     solutionQuery: "SELECT spiele.MANNSCHAFT_1, spiele.MANNSCHAFT_2 FROM Spiele WHERe Typ = 'Finale'",
     selectType: '1'
-  },
-  {
-    id: '165',
-    schema: 'fussball',
-    difficulty: 'mittel',
-    text: 'Welche Länder spielten in allen Ausführungsorten, die mit H beginnen?',
-    solutionQuery: "SELECT nation.NATIONNAME FROM nation WHERe NOT EXISTS ( (SELECT * FROM Spiele s1 WHERE S1.AUSFUEHRUNGSORT like 'H%' AND NOT EXISTS\n (SELECT * FROM spiele s2 WHERE S2.AUSFUEHRUNGSORT like 'H%' AND (s1.mannschaft_1 = nation.NATIONNAME OR s2.mannschaft_2 = nation.NATIONNAME))))",
-    selectType: '9'
   },
   {
     id: '139',
@@ -1432,30 +1392,6 @@ const tasks: Task[] = [
     text: 'An welchen Spielen (alle Spalten) nahm England teil?',
     solutionQuery: "SELECT * FROM Spiele WHERE mannschaft_1 = 'England' OR Mannschaft_2 = 'England'",
     selectType: '1'
-  },
-  {
-    id: '131',
-    schema: 'fussball',
-    difficulty: 'schwer',
-    text: 'Welche Mannschaft (Ausgabe: Mannschaft) hat kein Tor geschossen?',
-    solutionQuery: 'SELECT spiele.MANNSCHAFT_1 as Manschaft FROM spiele WHERE Mannschaft_1 not IN (SELECT mannschaft_1 FROM spiele WHERE substr(Ergebnis, 1,1) > 0) INTERSECT SELECT spiele.MANNSCHAFT_2 as Manschaft FROM spiele WHERE Mannschaft_2 not IN (SELECT mannschaft_2 FROM spiele WHERE substr(Ergebnis, 3,1) > 0) ',
-    selectType: '5'
-  },
-  {
-    id: '135',
-    schema: 'fussball',
-    difficulty: 'schwer',
-    text: 'Wie viele Punkte hat Ghana in der Vorrunde bekommen?',
-    solutionQuery: "SELECT((SELECT COUNT(*) * 3 FROM spiele WHERE mannschaft_1 = 'Ghana'AND TYP = 'Vorrunde' AND SUBSTR(ergebnis, 1,1 ) > SUBSTR(ergebnis, 3,1 ) ) +(SELECT COUNT(*) * 3 FROM spiele WHERE mannschaft_2 = 'Ghana' AND TYP = 'Vorrunde' AND SUBSTR(ergebnis, 1,1 ) > SUBSTR(ergebnis, 3,1 )) + (SELECT COUNT(*) FROM spiele WHERE (mannschaft_2 = 'Ghana' or mannschaft_1 = 'Ghana')AND TYP = 'Vorrunde' AND SUBSTR(ergebnis, 1,1 ) = SUBSTR(ergebnis, 3,1 ))) FROM DUAL",
-    selectType: '8'
-  },
-  {
-    id: '136',
-    schema: 'fussball',
-    difficulty: 'mittel',
-    text: 'Welche Mannschaft hat am 13.06.2006 gespielt? Erzeugen Sie eine Tabelleausgabe mit einer Spalte, in der alle Mannschaften aufgeführt sind.',
-    solutionQuery: "SELECT mannschaft_1 as mannschaft FROM Spiele WHERE spiele.TERMIN = '13-Jun-2006' UNION SELECT mannschaft_2 as mannschaft FROM Spiele WHERE spiele.TERMIN = '13-Jun-2006'",
-    selectType: '11'
   },
   {
     id: '137',
@@ -1750,7 +1686,7 @@ const tasks: Task[] = [
     schema: 'fussball',
     difficulty: 'mittel',
     text: 'Welche Trainer (Ausgabe: Trainername, Nationname) der Mannschaft_1 haben nur (!) Spiele in der Stadt Dortmund betreut?',
-    solutionQuery: "SELECT n.trainername FROM spiele w, nation n WHERE w.MANNSCHAFT_1 = n.NATIONNAMEAND w.AUSFUEHRUNGSORT = 'Dortmund' AND n.TRAINERNAME NOT IN (SELECT n.trainername FROM spiele w, nation n WHERE w.MANNSCHAFT_1 = n.NATIONNAME AND w.AUSFUEHRUNGSORT != 'Dortmund')",
+    solutionQuery: "SELECT n.trainername FROM spiele w, nation n WHERE w.MANNSCHAFT_1 = n.NATIONNAME AND w.AUSFUEHRUNGSORT = 'Dortmund' AND n.TRAINERNAME NOT IN (SELECT n.trainername FROM spiele w, nation n WHERE w.MANNSCHAFT_1 = n.NATIONNAME AND w.AUSFUEHRUNGSORT != 'Dortmund')",
     selectType: '8'
   },
   {
@@ -1758,7 +1694,7 @@ const tasks: Task[] = [
     schema: 'fussball',
     difficulty: 'schwer',
     text: 'Welche Nationen haben in welchen Spielen mehr als 2 Tore geschossen? (Ausgabe: Nationname, Spiel_id, Ausfuehrunsort, Tore,)Achtung: Nationname und Tore können sowohl die von Mannschaft 1 als auch von Mannschaft 2 sein!',
-    solutionQuery: 'SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*)FROM nation, spiele, toreWHERE nation.NATIONNAME = spiele.MANNSCHAFT_1 AND spiele.SPIEL_ID = tore.SPIEL_IDGROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORThaving COUNT(*) > 2union SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*)FROM nation, spiele, toreWHERE nation.NATIONNAME = spiele.MANNSCHAFT_2 AND spiele.SPIEL_ID = tore.SPIEL_IDGROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORThaving COUNT(*) > 2',
+    solutionQuery: 'SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*) FROM nation, spiele, tore WHERE nation.NATIONNAME = spiele.MANNSCHAFT_1 AND spiele.SPIEL_ID = tore.SPIEL_ID GROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT having COUNT(*) > 2 union SELECT nation.NATIONNAME, spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT, nation.TRAINERNAME, count(*) FROM nation, spiele, tore WHERE nation.NATIONNAME = spiele.MANNSCHAFT_2 AND spiele.SPIEL_ID = tore.SPIEL_ID GROUP BY nation.NATIONNAME, nation.TRAINERNAME ,spiele.SPIEL_ID, spiele.AUSFUEHRUNGSORT having COUNT(*) > 2',
     selectType: '3'
   },
   {
