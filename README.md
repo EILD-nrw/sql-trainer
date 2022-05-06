@@ -12,7 +12,7 @@ In EILD wird ein Ansatz mit weitgehender Adaptierbarkeit und Wiederverwendbarkei
 
 ## Verwendung
 
-Es gibt verschiedene Möglichkeiten den Trainer zu benutzen. Am einfachsten ist die Verwendung der [auf GitHub bereitgestellten Version](https://eild-nrw.github.io/sql-trainer/#/). Diese wird bei Änderungen regelmäßig Aktualisiert und muss nicht selbst betrieben werden.
+Es gibt verschiedene Möglichkeiten den Trainer zu benutzen. Am einfachsten ist die Verwendung der [auf GitHub bereitgestellten Version](https://eild-nrw.github.io/sql-trainer/#/). Diese wird bei Änderungen regelmäßig aktualisiert und muss nicht selbst betrieben werden.
 
 Alternativ lässt sich diese Version aus dem `gh-pages`-Branch als .zip-Datei herunterladen und anschließend auf Ilias, Moodle oder ähnliche Plattformen hochladen. Dort muss diese lediglich entpackt werden. Ilias erkennt die `index.html` automatisch als Startpunkt der Anwendung, auf anderen Plattformen muss dies eventuell noch manuell passieren.
 
