@@ -109,16 +109,21 @@ export default function TaskPage ({ schema, difficulty }: Props) {
   const [taskSolved, setTaskSolved] = useState(false)
   const [selectedLookupTable, setSelectedLookupTable] = useState('')
   const [solutionTable, setSolutionTable] = useState<QueryExecResult>()
+  const [taskpool, setTaskpool] = useState<Task[]>([])
 
   /*
     Init
   */
-  const taskPool = tasks.filter(
-    (task) => task.difficulty === difficulty && task.schema === schema
-  )
+  useEffect(() => {
+    setTaskpool(
+      tasks.filter(
+        (task) => task.difficulty === difficulty && task.schema === schema
+      )
+    )
+  }, [difficulty, schema])
 
   function setNewRandomTask (): void {
-    const newTask = taskPool[Math.floor(Math.random() * taskPool.length)]
+    const newTask = taskpool[Math.floor(Math.random() * taskpool.length)]
     if (!newTask) return
     setSelectedTask(newTask)
 
@@ -131,7 +136,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
 
   useEffect(() => {
     setNewRandomTask()
-  }, [])
+  }, [taskpool])
 
   /*
     Database
@@ -152,7 +157,7 @@ export default function TaskPage ({ schema, difficulty }: Props) {
       }
     }
     initDB()
-  }, [])
+  }, [schema])
 
   useEffect(() => {
     // Fetch Solution
