@@ -158,7 +158,7 @@ const tasks: Task[] = [
     schema: 'theater',
     difficulty: 'mittel',
     text: 'Welche Schauspieler (Name, Wohnort) haben in Dramen von Schiller mitgespielt?',
-    solutionQuery: "select name, wohnortfrom schauspieler, rolle, stellt_dar, dramawhere schauspieler.pnr = stellt_dar.pnrand drama.titel = rolle.titeland stellt_dar.figur = rolle.figurand drama.autor = 'Schiller'",
+    solutionQuery: "select name, wohnort from schauspieler, rolle, stellt_dar, drama where schauspieler.pnr = stellt_dar.pnr and drama.titel = rolle.titel and stellt_dar.figur = rolle.figur and drama.autor = 'Schiller'",
     selectType: '4'
   },
   {
