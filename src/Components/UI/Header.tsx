@@ -6,24 +6,26 @@ import eildHeaderLogo from '../../img/eild_header_logo.png'
 export const Header = () => {
   return (
     <header className="bg-white p-4">
-      <Link to="/">
-        <div className="w-full flex">
-          <div className="flex-auto">
+      <div className="w-full flex">
+        <div className="flex-auto">
+          <Link to="/">
             <img
               className="max-h-32 max-w-full"
               src={edbHeaderLogo}
               alt="EDB Logo"
             />
-          </div>
-          <div className="flex-auto">
+          </Link>
+        </div>
+        <div className="flex-auto">
+          <a href="https://medien.hs-duesseldorf.de/eild">
             <img
               className="max-h-32 max-w-full float-right"
               src={eildHeaderLogo}
               alt="EILD Logo"
             />
-          </div>
+          </a>
         </div>
-      </Link>
+      </div>
     </header>
   )
 }
