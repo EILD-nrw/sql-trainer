@@ -11,7 +11,7 @@ export default function DetailsElement({
   children,
   title,
   startsOpen = true,
-  taskSolved = false,
+  taskSolved,
 }: Props) {
   const [isOpen, setIsOpen] = useState(startsOpen)
 
@@ -26,7 +26,11 @@ export default function DetailsElement({
         className={`font-semibold p-2 border ${
           isOpen ? 'rounded-t-lg' : 'rounded-lg'
         } ${
-          taskSolved ? 'bg-green-200' : 'bg-gray-200'
+          taskSolved !== undefined
+            ? taskSolved === true
+              ? 'bg-green-200'
+              : 'bg-red-200'
+            : 'bg-gray-200'
         } border-gray-600 select-none cursor-pointer`}
         onClick={toggleDetails}
       >
@@ -35,7 +39,11 @@ export default function DetailsElement({
       </summary>
       <div
         className={`border-l border-r border-b rounded-b-lg border-gray-600 p-2 space-y-2 ${
-          taskSolved ? 'bg-green-50' : ''
+          taskSolved !== undefined
+            ? taskSolved === true
+              ? 'bg-green-50'
+              : 'bg-red-50'
+            : ''
         }`}
       >
         {children}
