@@ -168,7 +168,10 @@ export default function TaskPage({ schema, difficulty }: Props) {
     try {
       const solution = db.exec(selectedTask.solutionQuery)
       setSolutionTable(solution[0])
-    } catch (err) {
+    } catch (err: any) {
+      // Trainer might try to load data from default schema on page reload which can fail
+      if (err?.message?.includes('no such table')) return
+
       console.error(err)
     }
   }, [selectedTask, db])
