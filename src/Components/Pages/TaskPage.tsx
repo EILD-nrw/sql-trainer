@@ -8,7 +8,7 @@ import initSqlJs, { Database, QueryExecResult, SqlValue } from 'sql.js'
 import DetailsElement from '../UI/DetailsElement'
 import Table from '../UI/Table'
 
-import tasks from '../../Tasks'
+import tasks from '../../Tasks/DQLTasks'
 import { Task } from '../../Types/Task'
 import tables from '../../Tables'
 import TrainerContainer from '../UI/TrainerContainer'
