@@ -7,6 +7,8 @@ interface Props {
   setSchema: (newSchema: string) => void
   difficulty: string
   setDifficulty: (newDifficulty: string) => void
+  topic: string
+  setTopic: (newTopic: string) => void
 }
 
 export default function SelectionPage ({ schema, setSchema, difficulty, setDifficulty }: Props) {
