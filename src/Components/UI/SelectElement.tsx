@@ -1,4 +1,4 @@
-import React from 'react'
+import { ChangeEvent } from 'react'
 
 interface Props {
   title: string
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function SelectElement ({ title, options, selected, setSelected }: Props) {
-  function handleChange (e: React.ChangeEvent) {
+  function handleChange (e: ChangeEvent) {
     const value = (e.target as HTMLInputElement).value
     setSelected(value)
   }

@@ -1,7 +1,7 @@
-import React from 'react'
+import { ReactNode } from 'react'
 
 interface PropTypes {
-  children?: React.ReactNode
+  children?: ReactNode
   onClick?: () => void
   disabled?: boolean
 }

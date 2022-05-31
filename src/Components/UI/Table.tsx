@@ -1,4 +1,3 @@
-import React from 'react'
 import { QueryExecResult } from 'sql.js'
 
 interface Props {

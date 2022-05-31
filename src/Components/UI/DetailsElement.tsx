@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import { MouseEvent, ReactNode, useState } from 'react'
 
 interface Props {
-  children?: React.ReactNode
+  children?: ReactNode
   title: string
   startsOpen?: boolean
   taskSolved?: boolean
@@ -15,7 +15,7 @@ export default function DetailsElement({
 }: Props) {
   const [isOpen, setIsOpen] = useState(startsOpen)
 
-  function toggleDetails(e: React.MouseEvent) {
+  function toggleDetails(e: MouseEvent) {
     e.preventDefault()
     setIsOpen(!isOpen)
   }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import PrimaryButton from '../UI/PrimaryButton'
 import SelectElement from '../UI/SelectElement'

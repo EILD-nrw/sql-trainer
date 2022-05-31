@@ -1,8 +1,8 @@
-import React from 'react'
+import { ReactNode } from 'react'
 import downloadIcon from '../../img/download.png'
 
 interface Props {
-  children?: React.ReactNode
+  children?: ReactNode
   currentSchema: string
 }
 
