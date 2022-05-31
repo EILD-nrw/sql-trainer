@@ -1,8 +1,8 @@
 export interface Task {
-  id: string,
+  id: number,
   schema: string,
-  difficulty: string,
+  difficulty: 'leicht' | 'mittel' | 'schwer',
   text: string,
   solutionQuery: string,
-  selectType: string
+  taskType: number
 }
