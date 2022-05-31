@@ -1,24 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Editor from '@monaco-editor/react'
-
-// @ts-ignore
-// eslint-disable-next-line
-import sqlWasm from '!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm'
-import initSqlJs, { Database, QueryExecResult, SqlValue } from 'sql.js'
 import DetailsElement from '../UI/DetailsElement'
 import Table from '../UI/Table'
 
-import tasks from '../../Tasks/DQLTasks'
 import { Task } from '../../Types/Task'
 import tables from '../../Tables'
 import TrainerContainer from '../UI/TrainerContainer'
 import TableLookupModal from '../UI/TableLookupModal'
 import TableContainer from '../UI/TableContainer'
-
-interface Props {
-  schema: string
-  difficulty: string
-}
+import { Database, QueryExecResult, SqlValue } from 'sql.js'
 
 /*
   Helper Functions
@@ -100,33 +90,34 @@ function compareQueryResults(x: QueryExecResult, y: QueryExecResult) {
 /*
   Component Code
 */
-export default function TaskPage({ schema, difficulty }: Props) {
-  const [db, setDb] = useState<Database>()
+
+interface Props {
+  database: Database | undefined
+  schema: string
+  selectedTask: Task | undefined
+  nextTask: () => void
+}
+
+export default function DQLTaskPage({
+  database,
+  schema,
+  selectedTask,
+  nextTask,
+}: Props) {
   const [code, setCode] = useState('')
   const [queryData, setQueryData] = useState<QueryExecResult[]>([])
   const [error, setError] = useState('')
-  const [selectedTask, setSelectedTask] = useState<Task>()
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>()
   const [selectedLookupTable, setSelectedLookupTable] = useState('')
   const [solutionTable, setSolutionTable] = useState<QueryExecResult>()
-  const [taskpool, setTaskpool] = useState<Task[]>([])
   const [showSolution, setShowSolution] = useState(false)
 
   /*
     Init
   */
-  useEffect(() => {
-    setTaskpool(
-      tasks.filter(
-        (task) => task.difficulty === difficulty && task.schema === schema
-      )
-    )
-  }, [difficulty, schema])
 
-  function setNewRandomTask(): void {
-    const newTask = taskpool[Math.floor(Math.random() * taskpool.length)]
-    if (!newTask) return
-    setSelectedTask(newTask)
+  function handleNextTask(): void {
+    nextTask()
 
     // Reset other states
     setIsCorrect(undefined)
@@ -137,36 +128,10 @@ export default function TaskPage({ schema, difficulty }: Props) {
   }
 
   useEffect(() => {
-    setNewRandomTask()
-  }, [taskpool])
-
-  /*
-    Database
-  */
-  async function initDB(): Promise<void> {
-    try {
-      // Get SQL File
-      const dbFile = await fetch(`./db/${schema}.db`).then((res) =>
-        res.arrayBuffer()
-      )
-
-      // Initialize DB
-      const SQL = await initSqlJs({ locateFile: () => sqlWasm })
-      setDb(new SQL.Database(new Uint8Array(dbFile)))
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  useEffect(() => {
-    initDB()
-  }, [schema])
-
-  useEffect(() => {
     // Fetch Solution
-    if (!db || !selectedTask) return
+    if (!database || !selectedTask) return
     try {
-      const solution = db.exec(selectedTask.solutionQuery)
+      const solution = database.exec(selectedTask.solutionQuery)
       setSolutionTable(solution[0])
     } catch (err: any) {
       // Trainer might try to load data from default schema on page reload which can fail
@@ -174,7 +139,7 @@ export default function TaskPage({ schema, difficulty }: Props) {
 
       console.error(err)
     }
-  }, [selectedTask, db])
+  }, [selectedTask, database])
 
   /*
     Editor
@@ -197,9 +162,9 @@ export default function TaskPage({ schema, difficulty }: Props) {
   }
 
   function executeCode(): void {
-    if (!db) return
+    if (!database) return
     try {
-      const execResults = db.exec(code)
+      const execResults = database.exec(code)
 
       if (execResults.length === 0) throw Error('No Results!')
 
@@ -209,7 +174,6 @@ export default function TaskPage({ schema, difficulty }: Props) {
     } catch (err) {
       setError(err as string)
       setQueryData([])
-      initDB()
     }
   }
 
@@ -217,8 +181,10 @@ export default function TaskPage({ schema, difficulty }: Props) {
     <div className="space-y-4">
       {/* Task description */}
       <h1 className="text-2xl font-semibold">Trainer</h1>
-      {selectedTask && (
+      {selectedTask ? (
         <p className="font-semibold whitespace-pre-line">{selectedTask.text}</p>
+      ) : (
+        <p className="font-semibold">Loading...</p>
       )}
       <div className="flex flex-row space-x-4">
         <div className="flex-grow">
@@ -252,7 +218,7 @@ export default function TaskPage({ schema, difficulty }: Props) {
               <button
                 className="bg-th-violet rounded-md border px-2 py-1 font-semibold text-white float-right"
                 type="button"
-                onClick={setNewRandomTask}
+                onClick={handleNextTask}
               >
                 Neue Aufgabe
               </button>
@@ -276,9 +242,9 @@ export default function TaskPage({ schema, difficulty }: Props) {
                 )
               })}
             </div>
-            {db && (
+            {database && (
               <TableLookupModal
-                db={db}
+                db={database}
                 tableName={selectedLookupTable}
                 resetLookup={() => setSelectedLookupTable('')}
               />
