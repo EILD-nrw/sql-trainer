@@ -37,7 +37,7 @@ export default function useShuffledTasks(
     )
     const shuffledTasks = filteredTasks.sort(() => Math.random() - 0.5)
     setTasks(shuffledTasks)
-    nextTask()
+    setSelectedTask(shuffledTasks[0])
   }, [topic, schema, difficulty])
 
   return {
