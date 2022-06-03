@@ -11,10 +11,6 @@ import TableContainer from '../UI/TableContainer'
 import { Database } from 'sql.js'
 import { useDQLTrainer } from '../../Util/useDQLTrainer'
 
-/*
-  Component Code
-*/
-
 interface Props {
   database: Database | undefined
   schema: string
@@ -33,11 +29,7 @@ export default function DQLTaskPage({
   const [showSolution, setShowSolution] = useState(false)
   const { solutionTable, isCorrect, error, queryData, executeCode } =
     useDQLTrainer(selectedTask, database)
-
-  /*
-    Init
-  */
-
+    
   function handleNextTask(): void {
     nextTask()
 
@@ -45,14 +37,6 @@ export default function DQLTaskPage({
     setCode('')
     setShowSolution(false)
   }
-
-  /*
-    Editor
-  */
-  function handleEditorChange(value: string | undefined): void {
-    if (value) setCode(value)
-  }
-
   return (
     <div className="space-y-4">
       {/* Task description */}
@@ -71,7 +55,7 @@ export default function DQLTaskPage({
               language="sql"
               theme="vs-dark"
               value={code}
-              onChange={handleEditorChange}
+              onChange={(value: string | undefined) => setCode(value || '')}
               options={{ minimap: { enabled: false } }}
             />
 
