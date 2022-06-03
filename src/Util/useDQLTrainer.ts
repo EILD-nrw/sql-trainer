@@ -135,6 +135,7 @@ export function useDQLTrainer(
     } catch (err) {
       setError(err as string)
       setQueryData([])
+      setIsCorrect(false)
     }
   }
 
