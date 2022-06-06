@@ -10,6 +10,7 @@ import DQLTaskPage from './Pages/DQLTaskPage'
 import useShuffledTasks from '../Util/useShuffledTasks'
 import DDLTaskPage from './Pages/DDLTaskPage'
 
+const LOCALSTORAGE_KEY_TOPIC = 'selection.topic'
 const LOCALSTORAGE_KEY_SCHEMA = 'selection.schema'
 const LOCALSTORAGE_KEY_DIFFICULTY = 'selection.difficulty'
 
@@ -33,9 +34,10 @@ export default function QuizRouter() {
 
   // Store settings upon change
   useEffect(() => {
+    window.localStorage.setItem(LOCALSTORAGE_KEY_TOPIC, topic)
     window.localStorage.setItem(LOCALSTORAGE_KEY_SCHEMA, schema)
     window.localStorage.setItem(LOCALSTORAGE_KEY_DIFFICULTY, difficulty)
-  }, [schema, difficulty])
+  }, [topic, schema, difficulty])
 
   /*
     Database
