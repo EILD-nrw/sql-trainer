@@ -37,6 +37,7 @@ export default function DQLTaskPage({
     setCode('')
     setShowSolution(false)
   }
+  
   return (
     <div className="space-y-4">
       {/* Task description */}
