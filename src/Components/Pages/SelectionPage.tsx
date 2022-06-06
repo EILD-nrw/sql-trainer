@@ -1,4 +1,7 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDifficultyOptions } from '../../Util/useDifficultyOptions'
+import { useSchemaOptions } from '../../Util/useSchemaOptions'
 import PrimaryButton from '../UI/PrimaryButton'
 import SelectElement from '../UI/SelectElement'
 import TopicSelect from '../UI/TopicSelect'
@@ -20,8 +23,13 @@ export default function SelectionPage({
   topic,
   setTopic,
 }: Props) {
-  const schemaOptions = ['Busse', 'Fahrrad', 'Theater', 'Reisen', 'Fussball']
-  const difficultyOptions = ['Leicht', 'Mittel', 'Schwer']
+  const schemaOptions = useSchemaOptions(topic)
+  const difficultyOptions = useDifficultyOptions(topic, schema)
+
+  useEffect(() => {
+    setSchema('')
+    setDifficulty('')
+  }, [topic])
 
   const navigate = useNavigate()
 
@@ -42,15 +50,22 @@ export default function SelectionPage({
         options={schemaOptions}
         selected={schema}
         setSelected={setSchema}
+        disabled={topic === ''}
       />
       <SelectElement
         title="Schwierigkeitsgrad"
         options={difficultyOptions}
         selected={difficulty}
         setSelected={setDifficulty}
+        disabled={schema === ''}
       />
       <div className="pt-6">
-        <PrimaryButton onClick={startTrainer}>Trainer Starten</PrimaryButton>
+        <PrimaryButton
+          onClick={startTrainer}
+          disabled={!topic || !schema || !difficulty}
+        >
+          Trainer Starten
+        </PrimaryButton>
       </div>
     </div>
   )
