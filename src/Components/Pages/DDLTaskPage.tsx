@@ -4,6 +4,7 @@ import { Database } from 'sql.js'
 import tables from '../../Tables'
 import { Task } from '../../Types/Task'
 import { useDDLTrainer } from '../../Util/useDDLTrainer'
+import DetailsElement from '../UI/DetailsElement'
 import TableContainer from '../UI/TableContainer'
 import TableLookupModal from '../UI/TableLookupModal'
 import TrainerContainer from '../UI/TrainerContainer'
@@ -24,7 +25,7 @@ export default function DDLTaskPage({
   const [code, setCode] = useState('')
   const [selectedLookupTable, setSelectedLookupTable] = useState('')
   const [showSolution, setShowSolution] = useState(false)
-  const { executeCode } = useDDLTrainer(selectedTask, database)
+  const { executeCode, isCorrect, error } = useDDLTrainer(selectedTask, database)
 
   function handleNextTask(): void {
     nextTask()
@@ -111,6 +112,20 @@ export default function DDLTaskPage({
           </TableContainer>
         </div>
       </div>
+      {/* Output container */}
+      <DetailsElement title="Ausgabe" taskSolved={isCorrect}>
+        {error ? <p>{(error || '').toString()}</p> : 'Output'}
+      </DetailsElement>
+
+      {/* Solution container */}
+      {showSolution && (
+        <DetailsElement title="Lösung">
+          <h3 className="font-semibold text-lg">Query</h3>
+          {selectedTask?.solutionQuery && (
+            <p className="px-4 py-1">{selectedTask.solutionQuery}</p>
+          )}
+        </DetailsElement>
+      )}
     </div>
   )
 }
