@@ -23,6 +23,9 @@ export default function QuizRouter() {
 
   // Restore settings if possible
   useEffect(() => {
+    const lastTopic = window.localStorage.getItem(LOCALSTORAGE_KEY_TOPIC)
+    if (lastTopic) setTopic(lastTopic)
+
     const lastSchema = window.localStorage.getItem(LOCALSTORAGE_KEY_SCHEMA)
     if (lastSchema) setSchema(lastSchema)
 
@@ -87,16 +90,16 @@ export default function QuizRouter() {
           />
         }
       />
-      <Route 
-        path="ddl" 
+      <Route
+        path="ddl"
         element={
-          <DDLTaskPage 
+          <DDLTaskPage
             database={database}
             selectedTask={selectedTask}
             nextTask={nextTask}
             schema={schema}
           />
-        } 
+        }
       />
     </Routes>
   )
