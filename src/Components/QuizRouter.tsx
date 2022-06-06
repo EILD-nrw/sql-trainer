@@ -8,14 +8,15 @@ import sqlWasm from '!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/
 import initSqlJs, { Database } from 'sql.js'
 import DQLTaskPage from './Pages/DQLTaskPage'
 import useShuffledTasks from '../Util/useShuffledTasks'
+import DDLTaskPage from './Pages/DDLTaskPage'
 
 const LOCALSTORAGE_KEY_SCHEMA = 'selection.schema'
 const LOCALSTORAGE_KEY_DIFFICULTY = 'selection.difficulty'
 
 export default function QuizRouter() {
-  const [schema, setSchema] = useState('busse')
-  const [difficulty, setDifficulty] = useState('leicht')
   const [topic, setTopic] = useState('dql')
+  const [schema, setSchema] = useState('')
+  const [difficulty, setDifficulty] = useState('')
   const { selectedTask, nextTask } = useShuffledTasks(topic, schema, difficulty)
   const [database, setDatabase] = useState<Database>()
 
@@ -83,7 +84,18 @@ export default function QuizRouter() {
             schema={schema}
           />
         }
-      ></Route>
+      />
+      <Route 
+        path="ddl" 
+        element={
+          <DDLTaskPage 
+            database={database}
+            selectedTask={selectedTask}
+            nextTask={nextTask}
+            schema={schema}
+          />
+        } 
+      />
     </Routes>
   )
 }
