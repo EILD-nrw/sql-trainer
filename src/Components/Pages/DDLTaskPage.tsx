@@ -1,12 +1,10 @@
 import Editor from '@monaco-editor/react'
 import { useState } from 'react'
 import { Database } from 'sql.js'
-import tables from '../../Tables'
 import { Task } from '../../Types/Task'
 import { useDDLTrainer } from '../../Util/useDDLTrainer'
 import DetailsElement from '../UI/DetailsElement'
 import TableContainer from '../UI/TableContainer'
-import TableLookupModal from '../UI/TableLookupModal'
 import TrainerContainer from '../UI/TrainerContainer'
 
 interface Props {
@@ -23,9 +21,11 @@ export default function DDLTaskPage({
   schema,
 }: Props) {
   const [code, setCode] = useState('')
-  const [selectedLookupTable, setSelectedLookupTable] = useState('')
   const [showSolution, setShowSolution] = useState(false)
-  const { executeCode, isCorrect, error } = useDDLTrainer(selectedTask, database)
+  const { executeCode, isCorrect, error, renderableOutput } = useDDLTrainer(
+    selectedTask,
+    database
+  )
 
   function handleNextTask(): void {
     nextTask()
@@ -34,8 +34,6 @@ export default function DDLTaskPage({
     setCode('')
     setShowSolution(false)
   }
-
-  console.log(showSolution)
 
   return (
     <div className="space-y-4">
@@ -88,33 +86,14 @@ export default function DDLTaskPage({
 
         {/* Table lookup bar */}
         <div className="max-w-sm flex-1">
-          <TableContainer currentSchema={schema}>
-            <div className="h-80 overflow-y-auto overflow-x-hidden space-y-2">
-              {tables[schema].map((table) => {
-                return (
-                  <p
-                    className="cursor-pointer bg-gray-100 hover:bg-gray-200 border-gray shadow-md rounded-md px-2 py-1"
-                    key={table}
-                    onClick={() => setSelectedLookupTable(table)}
-                  >
-                    {table}
-                  </p>
-                )
-              })}
-            </div>
-            {database && (
-              <TableLookupModal
-                db={database}
-                tableName={selectedLookupTable}
-                resetLookup={() => setSelectedLookupTable('')}
-              />
-            )}
-          </TableContainer>
+          { schema &&
+            <TableContainer currentSchema={schema} database={database} />
+          }
         </div>
       </div>
       {/* Output container */}
       <DetailsElement title="Ausgabe" taskSolved={isCorrect}>
-        {error ? <p>{(error || '').toString()}</p> : 'Output'}
+        {error ? <p>{(error || '').toString()}</p> : renderableOutput}
       </DetailsElement>
 
       {/* Solution container */}

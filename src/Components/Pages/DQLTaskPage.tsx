@@ -4,9 +4,7 @@ import DetailsElement from '../UI/DetailsElement'
 import Table from '../UI/Table'
 
 import { Task } from '../../Types/Task'
-import tables from '../../Tables'
 import TrainerContainer from '../UI/TrainerContainer'
-import TableLookupModal from '../UI/TableLookupModal'
 import TableContainer from '../UI/TableContainer'
 import { Database } from 'sql.js'
 import { useDQLTrainer } from '../../Util/useDQLTrainer'
@@ -25,11 +23,10 @@ export default function DQLTaskPage({
   nextTask,
 }: Props) {
   const [code, setCode] = useState('')
-  const [selectedLookupTable, setSelectedLookupTable] = useState('')
   const [showSolution, setShowSolution] = useState(false)
   const { solutionTable, isCorrect, error, queryData, executeCode } =
     useDQLTrainer(selectedTask, database)
-    
+
   function handleNextTask(): void {
     nextTask()
 
@@ -37,7 +34,7 @@ export default function DQLTaskPage({
     setCode('')
     setShowSolution(false)
   }
-  
+
   return (
     <div className="space-y-4">
       {/* Task description */}
@@ -89,28 +86,9 @@ export default function DQLTaskPage({
 
         {/* Table lookup bar */}
         <div className="max-w-sm flex-1">
-          <TableContainer currentSchema={schema}>
-            <div className="h-80 overflow-y-auto overflow-x-hidden space-y-2">
-              {tables[schema].map((table) => {
-                return (
-                  <p
-                    className="cursor-pointer bg-gray-100 hover:bg-gray-200 border-gray shadow-md rounded-md px-2 py-1"
-                    key={table}
-                    onClick={() => setSelectedLookupTable(table)}
-                  >
-                    {table}
-                  </p>
-                )
-              })}
-            </div>
-            {database && (
-              <TableLookupModal
-                db={database}
-                tableName={selectedLookupTable}
-                resetLookup={() => setSelectedLookupTable('')}
-              />
-            )}
-          </TableContainer>
+          {schema && (
+            <TableContainer currentSchema={schema} database={database} />
+          )}
         </div>
       </div>
 
