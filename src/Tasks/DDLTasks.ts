@@ -75,15 +75,7 @@ export const ddlTasks: Task[] = [
     solutionQuery: 'DROP INDEX PK_Teile_Fahrrad',
     taskType: 2,
   },
-  {
-    id: 10,
-    schema: 'fahrrad',
-    difficulty: 'leicht',
-    text:
-      'Die SEQUENCE "counter_seq" wird nicht mehr benötigt. Löschen Sie diese',
-    solutionQuery: 'DROP SEQUENCE counter_seq;',
-    taskType: 2,
-  },
+
   {
     id: 11,
     schema: 'fahrrad',
@@ -325,32 +317,6 @@ export const ddlTasks: Task[] = [
       'Erstellen Sie eine View mit dem Namen "busse_angemeldet", die alle Busse (fahrzeug_id) anzeigt, die im September 2009 angemeldet wurden.',
     solutionQuery:
       "CREATE VIEW busse_angemeldet AS SELECT fahrzeug_id FROM busse WHERE angemeldet_am >= TO_DATE('01.09.09', 'DD.MM.YY') AND angemeldet_am <= TO_DATE('30.09.09', 'DD.MM.YY')",
-    taskType: 1,
-  },
-  {
-    id: 171,
-    schema: 'busse',
-    difficulty: 'leicht',
-    text: 'Erstellen Sie eine Sequence  mit dem Namen "counter".',
-    solutionQuery: 'CREATE SEQUENCE counter',
-    taskType: 1,
-  },
-  {
-    id: 172,
-    schema: 'busse',
-    difficulty: 'leicht',
-    text:
-      'Erstellen Sie eine Sequence  mit dem Namen "counter", die immer um 10 erhöht wird.',
-    solutionQuery: 'CREATE SEQUENCE counter INCREMENT BY 10',
-    taskType: 1,
-  },
-  {
-    id: 173,
-    schema: 'busse',
-    difficulty: 'leicht',
-    text:
-      'Erstellen Sie eine Sequence  mit dem Namen "counter", die bei 100 anfängt.',
-    solutionQuery: 'CREATE SEQUENCE counter START WITH 100',
     taskType: 1,
   },
   {
