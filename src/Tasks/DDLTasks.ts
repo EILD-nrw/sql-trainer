@@ -115,16 +115,6 @@ export const ddlTasks: Task[] = [
     taskType: 1,
   },
   {
-    id: 15,
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text:
-      'In der Tabelle "Artikel" soll nachträglich "artikel_typ" als Primärschlüssel hinzugefügt werden!',
-    solutionQuery:
-      'ALTER TABLE Artikel ADD CONSTRAINT artikel_typ PRIMARY KEY (artikel_typ);',
-    taskType: 3,
-  },
-  {
     id: 16,
     schema: 'fahrrad',
     difficulty: 'schwer',
@@ -288,16 +278,6 @@ export const ddlTasks: Task[] = [
     text:
       'Benennen Sie die Spalte "richtung" in der Tabelle "Fahrten" in "Zielstation" um.',
     solutionQuery: 'ALTER TABLE Fahrten RENAME COLUMN richtung TO Fahrten;',
-    taskType: 3,
-  },
-  {
-    id: 160,
-    schema: 'busse',
-    difficulty: 'schwer',
-    text:
-      'In der Tabelle "Fuehrerscheinklassen" soll das Attribut "kuerzel" als Primärschlüssel definiert werden. Schreiben Sie den entsprechenden Befehl!',
-    solutionQuery:
-      'ALTER TABLE Fuehrerscheinklassen ADD CONSTRAINT kuerzel PRIMARY KEY (kuerzel);',
     taskType: 3,
   },
   {
