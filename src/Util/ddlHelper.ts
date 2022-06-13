@@ -29,7 +29,7 @@ export function validateDrop(
 
   // Must start with "DROP"
   if (splitUserCode[0] !== 'drop')
-    return { isValid: false, feedback: 'Eingabe enthält kein "DROP"!' }
+    return { isValid: false, feedback: 'Eingabe muss mit "DROP" anfangen!' }
 
   // Must have same TYPE as solution
   if (splitUserCode[1] !== splitSolutionCode[1])
