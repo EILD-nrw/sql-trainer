@@ -71,7 +71,9 @@ function validateAlter(
     database.run(solutionQuery)
     const solutionResult = database.exec(`PRAGMA TABLE_INFO(${affectedTable});`)
     // table_info returns ['cid', 'name', 'type', 'notnull', 'dflt_value', 'pk'] for each column in the table
-    const solutionColumnNames = solutionResult[0].values.map((row) => row[1])
+    const solutionColumnNames = solutionResult[0].values
+      .map((row) => row[1])
+      .map((columnName) => String(columnName).toLowerCase())
 
     // Rollback solution code
     database.run('ROLLBACK;')
@@ -80,11 +82,14 @@ function validateAlter(
     database.run(code)
 
     const userResult = database.exec(`PRAGMA TABLE_INFO(${affectedTable});`)
-    const userColumnNames = userResult[0].values.map((row) => row[1])
+    const userColumnNames = userResult[0].values
+      .map((row) => row[1])
+      .map((columnName) => String(columnName).toLowerCase())
 
     // Compares columns after the solution alter to the user code
     // If all columns match the alter was performed sufficiently correct
     if (
+      solutionColumnNames.length === userColumnNames.length &&
       solutionColumnNames.every((columnName) =>
         userColumnNames.includes(columnName)
       )
@@ -93,7 +98,7 @@ function validateAlter(
     } else {
       validation = {
         isValid: false,
-        feedback: 'Tabelle stimmt nicht mit Lösung überein!',
+        feedback: 'Tabelle stimmt nicht mit Lösung überein! (Gibt es vielleicht einen Tippfehler?)',
       }
     }
   } catch (err: any) {
