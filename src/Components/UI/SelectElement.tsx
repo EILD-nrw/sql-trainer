@@ -32,7 +32,7 @@ export default function SelectElement({
         onChange={handleChange}
         disabled={disabled}
       >
-        <option value="" selected disabled hidden>
+        <option value="" disabled hidden>
           Bitte wählen
         </option>
         {options.map((option) => {
