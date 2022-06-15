@@ -1,23 +1,23 @@
+import { Database } from 'sql.js'
 import { Task } from '../Types/Task'
 
-export interface TaskInfo {
-  queryType: string
-  targetType: string
+export interface ValidationResult {
+  isValid: boolean
+  feedback?: string
 }
 
-export function getTaskInformation(query: string): TaskInfo {
-  const words = query.split(' ')
-
-  return {
-    queryType: words?.[0].toLowerCase() || '',
-    targetType: words?.[1].toLowerCase() || '',
-  }
+export function validateCreate(
+  code: string,
+  solutionQuery: string,
+  database: Database
+): ValidationResult {
+  return { isValid: true }
 }
 
 export function validateDrop(
   code: string,
   solutionQuery: string
-): { isValid: boolean; feedback?: string } {
+): ValidationResult {
   // Remove unnecessary semicolons and capitalization to avoid minor missmatches
   const preparedCode = code.replace(';', '').toLowerCase()
   const preparedSolutionQuery = solutionQuery.replace(';', '').toLowerCase()
@@ -52,10 +52,15 @@ export function validateDrop(
   return { isValid: true }
 }
 
-function validateRename(
+function validateAlter(
   code: string,
-  solutionQuery: string
-): { isValid: boolean; feedback?: string } {
+  solutionQuery: string,
+  database: Database
+): ValidationResult {
+  return { isValid: true }
+}
+
+function validateRename(code: string, solutionQuery: string): ValidationResult {
   // Remove unnecessary semicolons and capitalization to avoid minor missmatches
   const preparedCode = code.replace(';', '').toLowerCase()
   const preparedSolutionQuery = solutionQuery.replace(';', '').toLowerCase()
@@ -94,23 +99,25 @@ function validateRename(
 
 export function validateUserInput(
   userQuery: string,
-  selectedTask: Task
-): { isValid: boolean; feedback?: string } {
-  const taskInfo = getTaskInformation(selectedTask.solutionQuery)
+  selectedTask: Task,
+  database: Database
+): ValidationResult {
+  const queryType =
+    selectedTask.solutionQuery.split(' ')?.[0]?.toLowerCase() || ''
 
-  if (taskInfo.queryType === 'create') {
-    // TODO
+  if (queryType === 'create') {
+    return validateCreate(userQuery, selectedTask.solutionQuery, database)
   }
 
-  if (taskInfo.queryType === 'drop') {
+  if (queryType === 'drop') {
     return validateDrop(userQuery, selectedTask.solutionQuery)
   }
 
-  if (taskInfo.queryType === 'alter') {
-    // TODO
+  if (queryType === 'alter') {
+    return validateAlter(userQuery, selectedTask.solutionQuery, database)
   }
 
-  if (taskInfo.queryType === 'rename') {
+  if (queryType === 'rename') {
     return validateRename(userQuery, selectedTask.solutionQuery)
   }
 
