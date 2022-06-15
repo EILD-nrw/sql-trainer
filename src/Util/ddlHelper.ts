@@ -57,7 +57,61 @@ function validateAlter(
   solutionQuery: string,
   database: Database
 ): ValidationResult {
-  return { isValid: true }
+  // Prepare validationResult
+  let validation: ValidationResult = { isValid: false }
+
+  // Get name of affected table from solutionQuery ("ALTER TABLE X" -> X)
+  const affectedTable = solutionQuery.split(' ')[2]
+
+  try {
+    // Wrap userquery in transaction to rollback later
+    database.run('BEGIN TRANSACTION;')
+
+    // Execute solution and save expected result
+    database.run(solutionQuery)
+    const solutionResult = database.exec(`PRAGMA TABLE_INFO(${affectedTable});`)
+    // table_info returns ['cid', 'name', 'type', 'notnull', 'dflt_value', 'pk'] for each column in the table
+    const solutionColumnNames = solutionResult[0].values.map((row) => row[1])
+
+    // Rollback solution code
+    database.run('ROLLBACK;')
+    database.run('BEGIN TRANSACTION;')
+    // Execute user code
+    database.run(code)
+
+    const userResult = database.exec(`PRAGMA TABLE_INFO(${affectedTable});`)
+    const userColumnNames = userResult[0].values.map((row) => row[1])
+
+    // Compares columns after the solution alter to the user code
+    // If all columns match the alter was performed sufficiently correct
+    if (
+      solutionColumnNames.every((columnName) =>
+        userColumnNames.includes(columnName)
+      )
+    ) {
+      validation = { isValid: true }
+    } else {
+      validation = {
+        isValid: false,
+        feedback: 'Tabelle stimmt nicht mit Lösung überein!',
+      }
+    }
+  } catch (err: any) {
+    // Return the error as feedback in case something unexpected fails
+    validation = {
+      isValid: false,
+      feedback: err?.message || 'Unknown error',
+    }
+  } finally {
+    // Revert alterations by the user
+    try {
+      database.run('ROLLBACK;')
+    } catch (e) {
+      console.log('Rollback failed.')
+    }
+  }
+
+  return validation
 }
 
 function validateRename(code: string, solutionQuery: string): ValidationResult {

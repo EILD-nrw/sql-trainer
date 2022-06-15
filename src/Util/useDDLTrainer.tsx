@@ -8,17 +8,17 @@ export function useDDLTrainer(
   database: Database | undefined
 ) {
   const [isCorrect, setIsCorrect] = useState<boolean>()
-  const [error, setError] = useState('')
+  const [feedback, setFeedback] = useState('')
 
   // Check the users code using the solution
   function executeCode(code: string) {
     if (!selectedTask) {
-      setError('Fehler bei der Ausgabenauswahl!')
+      setFeedback('Fehler bei der Ausgabenauswahl!')
       return
     }
 
     if (!database) {
-      setError('Fehler beim Laden der Datenbank!')
+      setFeedback('Fehler beim Laden der Datenbank!')
       return
     }
 
@@ -26,17 +26,16 @@ export function useDDLTrainer(
 
     if (validationResult.isValid) {
       setIsCorrect(true)
-      setError('')
+      setFeedback('Die Aufgabe wurde korrekt gelöst!')
     } else {
       setIsCorrect(false)
-      setError(validationResult?.feedback || 'Validation-Error')
+      setFeedback(validationResult?.feedback || 'Validation-Error')
     }
   }
 
   return {
     executeCode,
     isCorrect,
-    error,
-    renderableOutput: <p>Output</p>,
+    feedback,
   }
 }

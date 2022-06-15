@@ -22,7 +22,7 @@ export default function DDLTaskPage({
 }: Props) {
   const [code, setCode] = useState('')
   const [showSolution, setShowSolution] = useState(false)
-  const { executeCode, isCorrect, error, renderableOutput } = useDDLTrainer(
+  const { executeCode, isCorrect, feedback } = useDDLTrainer(
     selectedTask,
     database
   )
@@ -86,14 +86,14 @@ export default function DDLTaskPage({
 
         {/* Table lookup bar */}
         <div className="max-w-sm flex-1">
-          { schema &&
+          {schema && (
             <TableContainer currentSchema={schema} database={database} />
-          }
+          )}
         </div>
       </div>
       {/* Output container */}
       <DetailsElement title="Ausgabe" taskSolved={isCorrect}>
-        {error ? <p>{(error || '').toString()}</p> : renderableOutput}
+        <p>{feedback}</p>
       </DetailsElement>
 
       {/* Solution container */}
