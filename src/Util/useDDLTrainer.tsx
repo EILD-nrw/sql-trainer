@@ -17,7 +17,12 @@ export function useDDLTrainer(
       return
     }
 
-    const validationResult = validateUserInput(code, selectedTask)
+    if (!database) {
+      setError('Fehler beim Laden der Datenbank!')
+      return
+    }
+
+    const validationResult = validateUserInput(code, selectedTask, database)
 
     if (validationResult.isValid) {
       setIsCorrect(true)
