@@ -10,10 +10,8 @@ export default function useShuffledTasks(
   difficulty: string
 ) {
   const [tasks, setTasks] = useState<Task[]>()
-  const [selectedTask, setSelectedTask] = useState<Task>()
 
   function nextTask() {
-    setSelectedTask(tasks?.[0])
     setTasks((oldTasks) => {
       if (!oldTasks) return
 
@@ -23,6 +21,8 @@ export default function useShuffledTasks(
   }
 
   useEffect(() => {
+    if (!topic || !schema || !difficulty) return
+
     let topicTasks: Task[] = []
     if (topic === 'ddl') {
       topicTasks = ddlTasks
@@ -37,11 +37,10 @@ export default function useShuffledTasks(
     )
     const shuffledTasks = filteredTasks.sort(() => Math.random() - 0.5)
     setTasks(shuffledTasks)
-    setSelectedTask(shuffledTasks[0])
   }, [topic, schema, difficulty])
 
   return {
-    selectedTask,
+    selectedTask: tasks?.[0],
     nextTask,
   }
 }
