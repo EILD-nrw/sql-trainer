@@ -127,29 +127,35 @@ function validateRename(code: string, solutionQuery: string): ValidationResult {
   const splitUserCode = preparedCode.split(' ')
   const splitSolutionCode = preparedSolutionQuery.split(' ')
 
-  // Input is sufficiently correct if it fits the pattern "RENAME OLD TO NEW" and matches the solution in both old and new
+  // Input is sufficiently correct if it fits the pattern "ALTER TABLE OLD RENAME TO NEW" and matches the solution in both old and new
 
   // Has to fit "FROM OLD TO NEW" pattern
-  if (splitUserCode[0] !== 'rename' || splitSolutionCode[2] !== 'to') {
+  if (
+    splitUserCode[0] !== 'alter' ||
+    splitUserCode[1] !== 'table' ||
+    splitUserCode[3] !== 'rename' ||
+    splitUserCode[4] !== 'to'
+  ) {
     return {
       isValid: false,
-      feedback: 'Eingabe muss dem Schema "RENAME OLD_NAME TO NEW_NAME" folgen!',
+      feedback:
+        'Eingabe muss dem Schema "ALTER TABLE OLD_NAME RENAME TO NEW_NAME" folgen!',
     }
   }
 
   // Must match old name
-  if (splitUserCode[1] !== splitSolutionCode[1]) {
+  if (splitUserCode[2] !== splitSolutionCode[2]) {
     return {
       isValid: false,
-      feedback: `Falscher alter Name! (erwartet: "${splitSolutionCode[1]}"`,
+      feedback: `Falscher alter Name! (erwartet: "${splitSolutionCode[2]}")`,
     }
   }
 
   // Must match new name
-  if (splitUserCode[3] !== splitSolutionCode[3]) {
+  if (splitUserCode[5] !== splitSolutionCode[5]) {
     return {
       isValid: false,
-      feedback: `Falscher neuer Name! (erwartet: "${splitSolutionCode[3]}"`,
+      feedback: `Falscher neuer Name! (erwartet: "${splitSolutionCode[5]}"`,
     }
   }
 
