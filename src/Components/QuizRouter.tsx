@@ -61,6 +61,8 @@ export default function QuizRouter() {
   }
 
   useEffect(() => {
+    if (!schema) return
+
     initDB()
   }, [schema])
 
