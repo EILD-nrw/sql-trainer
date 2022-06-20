@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Database } from 'sql.js'
 import { Task } from '../Types/Task'
 import { validateUserInput } from './ddlHelper'
@@ -9,6 +9,11 @@ export function useDDLTrainer(
 ) {
   const [isCorrect, setIsCorrect] = useState<boolean>()
   const [feedback, setFeedback] = useState('')
+
+  useEffect(() => {
+    setIsCorrect(undefined)
+    setFeedback('')
+  }, [selectedTask])
 
   // Check the users code using the solution
   function executeCode(code: string) {
