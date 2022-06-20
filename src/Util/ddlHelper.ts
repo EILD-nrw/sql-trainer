@@ -250,11 +250,56 @@ export function validateDrop(
   return { isValid: true }
 }
 
+function validateRename(code: string, solutionQuery: string): ValidationResult {
+  // Remove unnecessary semicolons and capitalization to avoid minor missmatches
+  const preparedCode = code.replace(';', '').toLowerCase()
+  const preparedSolutionQuery = solutionQuery.replace(';', '').toLowerCase()
+
+  const splitUserCode = preparedCode.split(' ')
+  const splitSolutionCode = preparedSolutionQuery.split(' ')
+
+  // Input is sufficiently correct if it fits the pattern "ALTER TABLE OLD RENAME TO NEW" and matches the solution in both old and new
+
+  // Has to fit pattern
+  if (
+    splitUserCode[0] !== 'alter' ||
+    splitUserCode[1] !== 'table' ||
+    splitUserCode[3] !== 'rename' ||
+    splitUserCode[4] !== 'to'
+  ) {
+    return {
+      isValid: false,
+      feedback:
+        'Eingabe muss dem Schema "ALTER TABLE OLD_NAME RENAME TO NEW_NAME" folgen!',
+    }
+  }
+
+  // Must match old name
+  if (splitUserCode[2] !== splitSolutionCode[2]) {
+    return {
+      isValid: false,
+      feedback: `Falscher alter Name! (erwartet: "${splitSolutionCode[2]}")`,
+    }
+  }
+
+  // Must match new name
+  if (splitUserCode[5] !== splitSolutionCode[5]) {
+    return {
+      isValid: false,
+      feedback: `Falscher neuer Name! (erwartet: "${splitSolutionCode[5]}")`,
+    }
+  }
+
+  return { isValid: true }
+}
+
 function validateAlter(
   code: string,
   solutionQuery: string,
   database: Database
 ): ValidationResult {
+  if (solutionQuery.includes('rename to'))
+    return validateRename(code, solutionQuery)
   // Get name of affected table from solutionQuery ("ALTER TABLE X" -> X)
   const affectedTable = solutionQuery.split(' ')[2]
 
@@ -298,49 +343,6 @@ function validateAlter(
   }
 }
 
-function validateRename(code: string, solutionQuery: string): ValidationResult {
-  // Remove unnecessary semicolons and capitalization to avoid minor missmatches
-  const preparedCode = code.replace(';', '').toLowerCase()
-  const preparedSolutionQuery = solutionQuery.replace(';', '').toLowerCase()
-
-  const splitUserCode = preparedCode.split(' ')
-  const splitSolutionCode = preparedSolutionQuery.split(' ')
-
-  // Input is sufficiently correct if it fits the pattern "ALTER TABLE OLD RENAME TO NEW" and matches the solution in both old and new
-
-  // Has to fit pattern
-  if (
-    splitUserCode[0] !== 'alter' ||
-    splitUserCode[1] !== 'table' ||
-    splitUserCode[3] !== 'rename' ||
-    splitUserCode[4] !== 'to'
-  ) {
-    return {
-      isValid: false,
-      feedback:
-        'Eingabe muss dem Schema "ALTER TABLE OLD_NAME RENAME TO NEW_NAME" folgen!',
-    }
-  }
-
-  // Must match old name
-  if (splitUserCode[2] !== splitSolutionCode[2]) {
-    return {
-      isValid: false,
-      feedback: `Falscher alter Name! (erwartet: "${splitSolutionCode[2]}")`,
-    }
-  }
-
-  // Must match new name
-  if (splitUserCode[5] !== splitSolutionCode[5]) {
-    return {
-      isValid: false,
-      feedback: `Falscher neuer Name! (erwartet: "${splitSolutionCode[5]}"`,
-    }
-  }
-
-  return { isValid: true }
-}
-
 export function validateUserInput(
   userQuery: string,
   selectedTask: Task,
@@ -348,21 +350,21 @@ export function validateUserInput(
 ): ValidationResult {
   const queryType =
     selectedTask.solutionQuery.split(' ')?.[0]?.toLowerCase() || ''
+  const preparedSolutionQuery = selectedTask.solutionQuery
+    .replace(/\s\s+/g, ' ')
+    .trim()
+    .toLowerCase()
 
   if (queryType === 'create') {
-    return validateCreate(userQuery, selectedTask.solutionQuery, database)
+    return validateCreate(userQuery, preparedSolutionQuery, database)
   }
 
   if (queryType === 'drop') {
-    return validateDrop(userQuery, selectedTask.solutionQuery)
+    return validateDrop(userQuery, preparedSolutionQuery)
   }
 
   if (queryType === 'alter') {
-    return validateAlter(userQuery, selectedTask.solutionQuery, database)
-  }
-
-  if (queryType === 'rename') {
-    return validateRename(userQuery, selectedTask.solutionQuery)
+    return validateAlter(userQuery, preparedSolutionQuery, database)
   }
 
   return {
