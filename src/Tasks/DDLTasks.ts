@@ -157,7 +157,7 @@ export const ddlTasks: Task[] = [
     difficulty: 'mittel',
     text:
       'Ändern Sie den Namen der Tabelle "Werke" zu "Produktionsstaette".',
-    solutionQuery: 'RENAME werke TO Produktionsstaette;',
+    solutionQuery: 'ALTER TABLE werke RENAME TO Produktionsstaette;',
     taskType: 4,
   },
   {
@@ -166,7 +166,7 @@ export const ddlTasks: Task[] = [
     difficulty: 'mittel',
     text:
       'Ändern Sie den Namen der Tabelle "Fahrradwerkstatt" zu "Werkstatt".',
-    solutionQuery: 'RENAME Fahrradwerkstatt TO Werkstatt;',
+    solutionQuery: 'ALTER TABLE Fahrradwerkstatt RENAME TO Werkstatt;',
     taskType: 4,
   },
   {
@@ -305,7 +305,7 @@ export const ddlTasks: Task[] = [
     difficulty: 'mittel',
     text:
       'Ändern Sie den Namen der Tabelle "Fuehrerscheinklassen" zu "Fuehrerschein".',
-    solutionQuery: 'RENAME Fuehrerscheinklassen TO Fuehrerschein;',
+    solutionQuery: 'ALTER TABLE Fuehrerscheinklassen RENAME TO Fuehrerschein;',
     taskType: 4,
   },
   {
