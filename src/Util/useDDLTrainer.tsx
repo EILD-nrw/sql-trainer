@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Database } from 'sql.js'
 import { Task } from '../Types/Task'
-import { validateUserInput } from './ddlHelper'
+import { validateUserInput } from './ddlValidators'
 
 export function useDDLTrainer(
   selectedTask: Task | undefined,
