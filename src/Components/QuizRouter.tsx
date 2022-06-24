@@ -9,6 +9,7 @@ import initSqlJs, { Database } from 'sql.js'
 import DQLTaskPage from './Pages/DQLTaskPage'
 import useShuffledTasks from '../Util/useShuffledTasks'
 import DDLTaskPage from './Pages/DDLTaskPage'
+import DMLTaskPage from './Pages/DMLTaskPage'
 
 const LOCALSTORAGE_KEY_TOPIC = 'selection.topic'
 const LOCALSTORAGE_KEY_SCHEMA = 'selection.schema'
@@ -96,6 +97,17 @@ export default function QuizRouter() {
         path="ddl"
         element={
           <DDLTaskPage
+            database={database}
+            selectedTask={selectedTask}
+            nextTask={nextTask}
+            schema={schema}
+          />
+        }
+      />
+      <Route
+        path="dml"
+        element={
+          <DMLTaskPage
             database={database}
             selectedTask={selectedTask}
             nextTask={nextTask}
