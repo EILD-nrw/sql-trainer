@@ -1,10 +1,6 @@
 import { Database, QueryExecResult } from 'sql.js'
 import { Task } from '../Types/Task'
-
-export interface ValidationResult {
-  isValid: boolean
-  feedback?: string
-}
+import { ValidationResult } from '../Types/ValidationResult'
 
 /*
   PRAGMA TABLE_INFO OUTPUT Example:
