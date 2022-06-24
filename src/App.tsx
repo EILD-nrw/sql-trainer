@@ -1,7 +1,6 @@
-import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './Components/Pages/Home'
-import QuizRouter from './Components/Pages/QuizRouter'
+import QuizRouter from './Components/QuizRouter'
 import MainLayout from './Components/UI/MainLayout'
 
 function App () {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Database, QueryExecResult } from 'sql.js'
 import Table from './Table'
 
