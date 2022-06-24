@@ -93,7 +93,7 @@ export default function DMLTaskPage({
       </div>
       {/* Output container */}
       <DetailsElement title="Ausgabe" taskSolved={isCorrect}>
-        <p>{feedback}</p>
+        <p className="whitespace-pre-wrap">{feedback}</p>
       </DetailsElement>
 
       {/* Solution container */}

@@ -124,7 +124,9 @@ export function validateCreate(
       return validateTableInfo(
         solutionResult[0],
         userResult[0],
+        // Should check for not-null
         solutionQuery.toLowerCase().includes('not null'),
+        // Should check for primary key
         solutionQuery.toLowerCase().includes('primary key')
       )
 
