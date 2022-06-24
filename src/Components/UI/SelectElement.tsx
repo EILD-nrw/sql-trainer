@@ -26,7 +26,7 @@ export default function SelectElement({
         {title}
       </label>
       <select
-        className="border rounded-sm"
+        className="border rounded-sm max-w-xs"
         id="difficulty"
         value={selected}
         onChange={handleChange}
