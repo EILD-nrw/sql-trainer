@@ -2,16 +2,6 @@ import { Task } from '../Types/Task'
 
 export const dmlTasks: Task[] = [
   {
-    id: 127,
-    schema: 'busse',
-    difficulty: 'schwer',
-    text:
-      'Der Mitarbeiter Frank Baldus besitzt seit dem 02.01.10 den Führerschein mit der Klasse für die meisten Sitzplätze. Tragen Sie dies in die Datenbank ein!',
-    solutionQuery:
-      "INSERT INTO besitzt_fuehrerschein (besitzt_id, fklassen_id, mita_id, seit) VALUES ((SELECT MAX(besitzt_id)+1 FROM besitzt_fuehrerschein), (SELECT fklassen_id FROM fuehrerscheinklassen WHERE max_sitze >= (SELECT MAX(max_sitze) FROM fuehrerscheinklassen)), (SELECT mita_id FROM mitarbeiter WHERE vorname LIKE 'Frank%' AND nachname LIKE 'Baldus%'), TO_DATE('02.01.10','DD.MM.YY'))",
-    taskType: 1,
-  },
-  {
     id: 128,
     schema: 'busse',
     difficulty: 'schwer',
@@ -49,16 +39,6 @@ export const dmlTasks: Task[] = [
       'Österreich nimmt jetzt doch an der WM teil mit dem Trainer Josef Höbli und in der Gruppe D. Tragen Sie dies ein!',
     solutionQuery:
       "INSERT INTO nation (nationname, trainername, gruppe) VALUES ('Ö–sterreich', 'Josef Höbli', 'D')",
-    taskType: 1,
-  },
-  {
-    id: 251,
-    schema: 'fussball',
-    difficulty: 'leicht',
-    text:
-      'Es wurde folgendes Spiel vergessen einzutragen: Das Spiel mit der ID 65, Deutschland gegen Schweiz, am zweiten Spieltag am 10.Jun.06 in der Vorrunde in Gelsenkirchen mit dem Ergebnis 5:0. Tragen Sie dieses Spiel noch zusätzlich ein!',
-    solutionQuery:
-      "INSERT INTO spiele (spiel_id, mannschaft_1, mannschaft_2, ausfuehrungsort, spieltag, termin, typ, ergebnis) VALUES (65, 'Deutschland', 'Schweiz', 'Gelsenkirchen', 2, TO_DATE('10-JUN-06', 'DD-MON-YY'), 'Vorrunde', '5:0')",
     taskType: 1,
   },
   {
@@ -102,16 +82,6 @@ export const dmlTasks: Task[] = [
     taskType: 3,
   },
   {
-    id: 256,
-    schema: 'fussball',
-    difficulty: 'leicht',
-    text:
-      'Alle Spiele, die am 10.Jun.06 stattfinden sollten, müssen um einen Tag auf den 11.Jun.06 verschoben werden. Berichtigen Sie dies.',
-    solutionQuery:
-      "UPDATE spiele SET termin = TO_DATE('11-JUN-06', 'DD-MON-YY') WHERE termin = '10-JUN-06'",
-    taskType: 3,
-  },
-  {
     id: 257,
     schema: 'fussball',
     difficulty: 'leicht',
@@ -149,16 +119,6 @@ export const dmlTasks: Task[] = [
     solutionQuery:
       "UPDATE inspektionen SET firma = 'Abwrack' WHERE fahrzeug_id IN (SELECT fahrzeug_id FROM busse WHERE anzahl_sitzplaetze >= (SELECT MAX(anzahl_sitzplaetze) FROM busse))",
     taskType: 3,
-  },
-  {
-    id: 120,
-    schema: 'busse',
-    difficulty: 'mittel',
-    text:
-      'Der Mitarbeiter Mathias Busch hat seit dem 12.12.09 den Führerschein der Klasse 1. Tragen Sie dies mit der besitzt_id 7 in die Datenbank ein!',
-    solutionQuery:
-      "INSERT INTO besitzt_fuehrerschein (besitzt_id, fklassen_id, mita_id, seit) VALUES (7, 1, (SELECT mita_id FROM mitarbeiter WHERE vorname = 'Mathias' AND nachname ='Busch'), TO_DATE('12.12.09','DD.MM.YY'))",
-    taskType: 1,
   },
   {
     id: 121,
@@ -201,26 +161,6 @@ export const dmlTasks: Task[] = [
     taskType: 3,
   },
   {
-    id: 125,
-    schema: 'busse',
-    difficulty: 'schwer',
-    text:
-      'Der Busfahrer mit dem höchsten Stundenlohn besitzt seit dem 15.01.10 den Führerschein der Klasse 3. Tragen Sie dies in die Datenbank ein!',
-    solutionQuery:
-      "INSERT INTO besitzt_fuehrerschein (besitzt_id, fklassen_id, mita_id, seit) VALUES ((SELECT MAX(besitzt_id)+1 FROM besitzt_fuehrerschein), 3, (SELECT mita_id FROM busfahrer WHERE stundenlohn >= (SELECT MAX(stundenlohn) FROM busfahrer)), TO_DATE('15.01.10','DD.MM.YY'))",
-    taskType: 1,
-  },
-  {
-    id: 126,
-    schema: 'busse',
-    difficulty: 'schwer',
-    text:
-      'Es gibt eine Sonderfahrt am 31.12.09 für das Fahrzeug mit der ID 10, die der Mitarbeiter mit der ID 12 übernimmt. Die Fahrt soll für die Linie L321 sein. Tragen Sie diese Fahrt im Einsatzplan ein!',
-    solutionQuery:
-      "INSERT INTO einsatzplan (einplan_id, fahrt_id, tag, fahrzeug_id, mita_id) VALUES ((SELECT MAX(einplan_id)+1 FROM einsatzplan), (SELECT fahrt_id FROM fahrten f, linie l WHERE l.linien_id = f.linien_id AND l.bezeichnung ='L321'), TO_DATE('31.12.09','DD.MM.YY'), 10, 12)",
-    taskType: 1,
-  },
-  {
     id: 260,
     schema: 'fussball',
     difficulty: 'leicht',
@@ -259,16 +199,6 @@ export const dmlTasks: Task[] = [
     solutionQuery:
       "DELETE FROM Spieler WHERE NATIONNAME = 'Costa Rica'  AND Funktion = 'Torhueter'",
     taskType: 2,
-  },
-  {
-    id: 264,
-    schema: 'fussball',
-    difficulty: 'mittel',
-    text:
-      'Die WM wird verschoben. Alle Spiele, die vor dem 19-Jun-06 stattfinden sollten, finden jetzt auch an diesem Tag (19-JUN-06) statt. Führen Sie die Änderungen durch.',
-    solutionQuery:
-      "UPDATE spiele SET termin = TO_DATE('19-JUN-06', 'DD-MON-YY') WHERE termin < '19-JUN-06'",
-    taskType: 3,
   },
   {
     id: 265,
@@ -360,16 +290,6 @@ export const dmlTasks: Task[] = [
     taskType: 1,
   },
   {
-    id: 275,
-    schema: 'fussball',
-    difficulty: 'schwer',
-    text:
-      'Das Spiel, das in der Vorrunde in der Gruppe B 0:0 ausging, soll auf den 12. Spieltag mit dem Datum 20.06.2006 (in der Form 20-JUN-06) gesetzt werden.',
-    solutionQuery:
-      "UPDATE spiele SET spieltag = 12, termin = TO_DATE('20-JUN-06','DD-MON-YY') WHERE spiel_id = (SELECT spiel_id FROM Spiele,  nation    WHERE Nation.GRUPPE = 'B'  AND nation.NATIONNAME = Spiele.MANNSCHAFT_1    AND (SUBSTR(Spiele.ERGEBNIS, 1,1) = 0 AND SUBSTR(Spiele.ERGEBNIS, 3,1) = 0))",
-    taskType: 3,
-  },
-  {
     id: 276,
     schema: 'fussball',
     difficulty: 'schwer',
@@ -436,16 +356,6 @@ export const dmlTasks: Task[] = [
     solutionQuery:
       'DELETE FROM karten WHERE spiel_id IN (SELECT spiel_id FROM tore GROUP BY spiel_id HAVING COUNT(*) >= (SELECT MAX(COUNT(*)) FROM tore GROUP BY spiel_id))',
     taskType: 2,
-  },
-  {
-    id: 200,
-    schema: 'reisen',
-    difficulty: 'leicht',
-    text:
-      'Es soll eine neue Buchung mit der Buchungsnummer 10 erfasst werden. Die Kundennummer lautet 9 für das Hotel Metropol in Köln. Die Anreise erfolgt am 10.07.2001 (in der Form 10-JUL-01) und die Abreise genau einen Monat später. Gebucht werden 20 Einzel- und keine Doppelzimmer.',
-    solutionQuery:
-      "INSERT INTO buchung (buchungsnr, kundennr, hotelname, stadtname, zeit, anreisedatum, abreisedatum, gebuchteez, gebuchtedz) VALUES (10, 9, 'Metropol','Köln', 4, TO_DATE('10-JUL-01', 'DD-MON-YY'),TO_DATE('10-AUG-01', 'DD-MON-YY'), 20, 0)",
-    taskType: 1,
   },
   {
     id: 201,
@@ -1019,16 +929,6 @@ export const dmlTasks: Task[] = [
     taskType: 2,
   },
   {
-    id: 106,
-    schema: 'busse',
-    difficulty: 'leicht',
-    text:
-      'Der Bus mit der fahrzeug_id 10 musste am 08.01.10 zu einer Inspektion bei der Firma Abwrack. Tragen Sie dies bitte mit einer inspek_id von 7 ein!',
-    solutionQuery:
-      "INSERT INTO inspektionen (inspek_id, am, firma, fahrzeug_id) VALUES (7, TO_DATE('08.01.10','DD.MM.YY'), 'Abwrack', 10)",
-    taskType: 1,
-  },
-  {
     id: 107,
     schema: 'busse',
     difficulty: 'leicht',
@@ -1063,16 +963,6 @@ export const dmlTasks: Task[] = [
     solutionQuery:
       'DELETE FROM haltestelle WHERE haltestellen_id NOT IN (SELECT bis FROM verbindung) AND haltestellen_id NOT IN (SELECT von FROM verbindung)',
     taskType: 2,
-  },
-  {
-    id: 112,
-    schema: 'busse',
-    difficulty: 'mittel',
-    text:
-      'Der Bus mit dem KFZ-Kennzeichen GM-K 12 wurde am 12.01.10 zur Inspektion zur Firma Abwrack gebracht. Tragen Sie dieses in die Datenbank ein!',
-    solutionQuery:
-      "INSERT INTO inspektionen (inspek_id, am, firma, fahrzeug_id) VALUES ((SELECT MAX(inspek_id)+1 FROM inspektionen), TO_DATE('12.01.10','DD.MM.YY'), 'Abwrack', (SELECT fahrzeug_id FROM busse WHERE kfz_knz LIKE 'GM-K 12%'))",
-    taskType: 1,
   },
   {
     id: 113,
@@ -1165,16 +1055,6 @@ export const dmlTasks: Task[] = [
     taskType: 3,
   },
   {
-    id: 224,
-    schema: 'reisen',
-    difficulty: 'schwer',
-    text:
-      'Es soll eine neue Buchung aufgenommen werden mit folgenden Daten: Die Buchungsnummer soll eine höher sein, als die bisher höchste. Die Kundennummer ist die höchste Kundennummer. Das Hotel ist das Metropol (Stadtname ist herauszufinden) für die Zeit vom 10. bis 11. Juni 2002 (Datum hat die Form DD-MON-YY). Es werden keine Doppelzimmer benötigt, aber so viele Einzelzimmer, wie bisher am höchsten gebucht worden sind.',
-    solutionQuery:
-      "INSERT INTO buchung (buchungsnr, kundennr, hotelname, stadtname, zeit, anreisedatum, abreisedatum, gebuchteez, gebuchtedz) VALUES ((SELECT MAX(buchungsnr) + 1 FROM buchung), (SELECT MAX(kundennr) FROM kunde), 'Metropol', (SELECT stadtname FROM hotel WHERE hotelname LIKE 'Metropol%'), 1, TO_DATE('10-JUN-02', 'DD-MON-YY'), TO_DATE('11-JUN-02', 'DD-MON-YY'), (SELECT MAX(gebuchteez) FROM buchung), 0)",
-    taskType: 1,
-  },
-  {
     id: 225,
     schema: 'reisen',
     difficulty: 'schwer',
@@ -1193,16 +1073,6 @@ export const dmlTasks: Task[] = [
     solutionQuery:
       "UPDATE kunde SET vorname = 'Hans', name = 'Fies' WHERE kundennr IN (SELECT kundennr FROM buchung WHERE stadtname IN (SELECT stadtname FROM stadt WHERE land LIKE 'Deutschland%'))",
     taskType: 3,
-  },
-  {
-    id: 227,
-    schema: 'reisen',
-    difficulty: 'schwer',
-    text:
-      'Tragen Sie folgende neue Buchung ein: Die Buchungsnummer soll eine höher sein als bisher. Die Kundennummer ist von dem Kunden, der die höchste Kundennummer hat und bisher keine Buchung getätigt hat. Das Hotel heisst Metropol und steht in Köln. Die Zeit ist 1, das Anreisedatum ist der 15. August 2003 und das Abreisedatum der 20. August 2003 (jeweils in der Form DD-MON-YY). Ausserdem werden jeweils 20 Doppel- und Einzelzimmer gebucht.',
-    solutionQuery:
-      "INSERT INTO buchung (buchungsnr, kundennr, hotelname, stadtname, zeit, anreisedatum, abreisedatum, gebuchteez, gebuchtedz) VALUES ((SELECT MAX(buchungsnr)+1 FROM buchung), (SELECT MAX(kundennr) FROM kunde WHERE NOT EXISTS (SELECT kundennr FROM buchung WHERE buchung.kundennr = kunde.kundennr)), 'Metropol', 'Köln', 1, TO_DATE('15-AUG-03', 'DD-MON-YY'), TO_DATE('20-AUG-03', 'DD-MON-YY'), 20,20)",
-    taskType: 1,
   },
   {
     id: 228,
@@ -1272,16 +1142,6 @@ export const dmlTasks: Task[] = [
     taskType: 3,
   },
   {
-    id: 155,
-    schema: 'theater',
-    difficulty: 'leicht',
-    text:
-      'Der Schauspieler Gerhard Hähndel (PNR 5) spielte 5 Monate im 1-APR-07 auf der Elisabethbühne. Tragen Sie dieses Engagement ein.',
-    solutionQuery:
-      "INSERT INTO engament (pnr, name, saison_jahr, dauer) VALUES (5, 'Elisabethbühne', TO_DATE('01-APR-07', 'DD-MON-YY'), 5)",
-    taskType: 1,
-  },
-  {
     id: 156,
     schema: 'theater',
     difficulty: 'leicht',
@@ -1290,26 +1150,6 @@ export const dmlTasks: Task[] = [
     solutionQuery:
       "UPDATE theater SET ort = 'Mainz' WHERE sparte LIKE 'Musiktheater%'",
     taskType: 3,
-  },
-  {
-    id: 157,
-    schema: 'theater',
-    difficulty: 'leicht',
-    text:
-      'Tragen Sie den Dichter Heinrich Heine, geboren am 13.12.1797 (englische Format DD-MON-YY) in Düsseldorf in die Datenbank ein.',
-    solutionQuery:
-      "INSERT INTO dichter (autor, geburtsjahr, geburtsort) VALUES ('Heinrich Heine', TO_DATE('13-DEC-97', 'DD-MON-YY'), 'Düsseldorf')",
-    taskType: 1,
-  },
-  {
-    id: 158,
-    schema: 'theater',
-    difficulty: 'leicht',
-    text:
-      "Das Stück 'Der Tanz in den Mai' von Goethe wurde am 13-AUG-33 in Gummersbach uraufgeführt. Tragen Sie dieses Stück ein.",
-    solutionQuery:
-      "INSERT INTO drama (titel, autor, jahr_urauffuehrung, ort_urauffuehrung) VALUES ('Der Tanz in den Mai', 'Goethe', TO_DATE('13-AUG-33', 'DD-MON-YY'),'Gummersbach')",
-    taskType: 1,
   },
   {
     id: 159,
@@ -1409,15 +1249,6 @@ export const dmlTasks: Task[] = [
     taskType: 2,
   },
   {
-    id: 169,
-    schema: 'theater',
-    difficulty: 'mittel',
-    text:
-      'Alle Spielzeiten mit Daten aus dem Jahr 01 können gelöscht werden.',
-    solutionQuery: "DELETE FROM spielzeit WHERE '01' = to_char(saison_jahr, 'YY')",
-    taskType: 2,
-  },
-  {
     id: 171,
     schema: 'theater',
     difficulty: 'schwer',
@@ -1425,16 +1256,6 @@ export const dmlTasks: Task[] = [
     solutionQuery:
       'DELETE FROM schauspieler WHERE pnr IN (SELECT pnr FROM schauspieler s WHERE NOT EXISTS (SELECT * FROM rolle r WHERE NOT EXISTS (SELECT * FROM stellt_dar st WHERE r.figur = st.figur AND st.pnr = s.pnr)))',
     taskType: 2,
-  },
-  {
-    id: 172,
-    schema: 'theater',
-    difficulty: 'schwer',
-    text:
-      "Der Dichter mit den meisten Dramen hat ein neues Stück geschrieben. Es heisst 'Der neue Morgen'. Es wurde am 25-APR-88 in Kön uraufgeführt. Tragen Sie dieses neue Stück ein.",
-    solutionQuery:
-      "INSERT INTO drama (titel, autor, jahr_urauffuehrung, ort_urauffuehrung) VALUES ('Ein neuer Morgen', (SELECT autor FROM drama GROUP BY autor HAVING COUNT(*) = (SELECT MAX(COUNT(autor)) FROM drama GROUP BY autor)), TO_DATE('25-APR-88', 'DD-MON-YY'), 'Köln')",
-    taskType: 1,
   },
   {
     id: 173,
@@ -1505,16 +1326,6 @@ export const dmlTasks: Task[] = [
     solutionQuery:
       "DELETE FROM schauspieler WHERE pnr IN (SELECT DISTINCT pnr FROM engament e, theater t WHERE t.name LIKE e.name AND t.sparte LIKE 'Musiktheater%')",
     taskType: 2,
-  },
-  {
-    id: 180,
-    schema: 'theater',
-    difficulty: 'schwer',
-    text:
-      'Der Schauspieler, der in einem Opernhaus gespielt hat, hat auch in diesen Opernhaus in einem Engagement ab dem 01-APR-02 für 3 Monate gespielt. Tragen Sie dies ein!',
-    solutionQuery:
-      "INSERT INTO engament (pnr, name, saison_jahr, dauer) VALUES ((SELECT DISTINCT s.pnr FROM theater t, engament e, schauspieler s WHERE sparte = 'Opernhaus' AND t.name = e.name AND s.pnr = e.pnr), (SELECT name FROM theater WHERE sparte LIKE 'Opernhaus%'), TO_DATE('01-APR-02', 'DD-MON-YY'), 3)",
-    taskType: 1,
   },
   {
     id: 50,
@@ -1695,16 +1506,6 @@ export const dmlTasks: Task[] = [
     solutionQuery:
       "INSERT INTO language VALUES ((SELECT country FROM country WHERE capital LIKE 'Z%'), 'German', 4)",
     taskType: 1,
-  },
-  {
-    id: 69,
-    schema: 'welt',
-    difficulty: 'mittel',
-    text:
-      'Ändern Sie das Gründungsdatum (established) der Organisation, deren Abkürzung (Abbreaviation) nur aus einem Buchstaben besteht, auf den 30.12.1931.',
-    solutionQuery:
-      "UPDATE organization SET established = to_date('30.12.1931','DD.MM.YYYY') WHERE LENGTH(abbreviation) = 1",
-    taskType: 3,
   },
   {
     id: 70,
