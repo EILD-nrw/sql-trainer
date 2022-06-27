@@ -106,7 +106,7 @@ export default function DQLTaskPage({
       {/* Solution container */}
       {showSolution && (
         <DetailsElement title="Lösung">
-          <h3 className="font-semibold text-lg">Query</h3>
+          <h3 className="font-semibold text-lg">SQL-Statement:</h3>
           {selectedTask?.solutionQuery && (
             <p className="px-4 py-1">{selectedTask.solutionQuery}</p>
           )}
