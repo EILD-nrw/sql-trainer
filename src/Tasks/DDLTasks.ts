@@ -277,7 +277,7 @@ export const ddlTasks: Task[] = [
     difficulty: 'schwer',
     text:
       'Benennen Sie die Spalte "richtung" in der Tabelle "Fahrten" in "Zielstation" um.',
-    solutionQuery: 'ALTER TABLE Fahrten RENAME COLUMN richtung TO Fahrten;',
+    solutionQuery: 'ALTER TABLE Fahrten RENAME COLUMN richtung TO Zielstation;',
     taskType: 3,
   },
   {
