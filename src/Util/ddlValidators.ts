@@ -72,8 +72,8 @@ function validateTableInfo(
 
   // Check Primary Key Constraints
   if (comparePrimaryKeys) {
-    const solutionPKs = solutionTableInfo.values.map((row) => row[3])
-    const userPKs = userTableInfo.values.map((row) => row[3])
+    const solutionPKs = solutionTableInfo.values.map((row) => row[5])
+    const userPKs = userTableInfo.values.map((row) => row[5])
 
     if (
       !solutionPKs.every((solutionPK, index) => solutionPK === userPKs[index])
