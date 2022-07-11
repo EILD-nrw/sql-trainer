@@ -38,7 +38,7 @@ export const dmlTasks: Task[] = [
     text:
       'Österreich nimmt jetzt doch an der WM teil mit dem Trainer Josef Höbli und in der Gruppe D. Tragen Sie dies ein!',
     solutionQuery:
-      "INSERT INTO nation (nationname, trainername, gruppe) VALUES ('Ö–sterreich', 'Josef Höbli', 'D')",
+      "INSERT INTO nation (nationname, trainername, gruppe) VALUES ('Österreich', 'Josef Höbli', 'D')",
     taskType: 1,
   },
   {
@@ -46,7 +46,7 @@ export const dmlTasks: Task[] = [
     schema: 'fussball',
     difficulty: 'leicht',
     text:
-      'Natürlich stand Deutschland im Finale als Mannschaft_1. Ändern Sie dies in der Datenbank.',
+      'Natürlich stand Deutschland im Finale als mannschaft_1. Ändern Sie dies in der Datenbank.',
     solutionQuery:
       "UPDATE spiele SET mannschaft_1 = 'Deutschland' WHERE typ = 'Finale'",
     taskType: 3,
@@ -95,7 +95,7 @@ export const dmlTasks: Task[] = [
     schema: 'fussball',
     difficulty: 'leicht',
     text:
-      "Die Funktion bei den Spielern soll von 'Mittelfeld' einfach nur in 'Mittel' geändert werden.",
+      "Die Funktion bei den Spielern soll von 'mittelfeld' einfach nur in 'mittel' geändert werden.",
     solutionQuery:
       "UPDATE spieler SET funktion = 'Mittel' WHERE funktion = 'Mittelfeld'",
     taskType: 3,
@@ -161,26 +161,6 @@ export const dmlTasks: Task[] = [
     taskType: 3,
   },
   {
-    id: 260,
-    schema: 'fussball',
-    difficulty: 'leicht',
-    text:
-      'Alle Spiele, die in Berlin stattfinden sollten, finden nun in Köln statt. Berichtigen Sie dies in der Datenbank!',
-    solutionQuery:
-      "UPDATE spiele SET ausfuehrungsort = 'Köln' WHERE ausfuehrungsort = 'Berlin'",
-    taskType: 3,
-  },
-  {
-    id: 261,
-    schema: 'fussball',
-    difficulty: 'leicht',
-    text:
-      'Natürlich stand Deutschland im Finale als Mannschaft_1. Ändern Sie dies in der Datenbank!',
-    solutionQuery:
-      "UPDATE spiele SET mannschaft_1 = 'Deutschland' WHERE typ = 'Finale'",
-    taskType: 3,
-  },
-  {
     id: 262,
     schema: 'fussball',
     difficulty: 'mittel',
@@ -195,7 +175,7 @@ export const dmlTasks: Task[] = [
     schema: 'fussball',
     difficulty: 'mittel',
     text:
-      "Löschen Sie alle Torhüter (Funktion ist 'Torhueter') aus Costa Rica!",
+      "Löschen Sie alle Torhüter (Funktion ist 'torhueter') aus Costa Rica!",
     solutionQuery:
       "DELETE FROM Spieler WHERE NATIONNAME = 'Costa Rica'  AND Funktion = 'Torhueter'",
     taskType: 2,
@@ -207,7 +187,7 @@ export const dmlTasks: Task[] = [
     text:
       'Philipp Lahm hat in der 86. Minute im ersten Spiel mit der ID 1 ein Tor geschossen. Tragen Sie dieses Tor noch zusätzlich ein!',
     solutionQuery:
-      "INSERT INTO tore (minute, spiel_id, spieler_id) VALUES (87, 1, (SELECT spieler_id FROM spieler WHERE vorname LIKE 'Philipp%' AND nachname LIKE 'Lahm%'))",
+      "INSERT INTO tore (minute, spiel_id, spieler_id) VALUES (86, 1, (SELECT spieler_id FROM spieler WHERE vorname LIKE 'Philipp%' AND nachname LIKE 'Lahm%'))",
     taskType: 1,
   },
   {
@@ -225,7 +205,7 @@ export const dmlTasks: Task[] = [
     schema: 'fussball',
     difficulty: 'mittel',
     text:
-      'Der Trainer der Mannschaft_1, der nur Spiele in Dortmund betreut hat, heißt eigentlich "Koosheeder". Ändern Sie das!',
+      'Der Trainer der mannschaft_1, der nur Spiele in Dortmund betreut hat, heißt eigentlich "Koosheeder". Ändern Sie das!',
     solutionQuery:
       "UPDATE nation SET trainername = 'Koosheeder' WHERE trainername in (SELECT n.trainername FROM   spiele w, nation n WHERE  w.MANNSCHAFT_1 = n.NATIONNAME AND w.AUSFUEHRUNGSORT = 'Dortmund' AND  n.TRAINERNAME NOT IN (SELECT n.trainername FROM   spiele w, nation n WHERE  w.MANNSCHAFT_1 = n.NATIONNAME AND    w.AUSFUEHRUNGSORT != 'Dortmund'))",
     taskType: 3,
@@ -304,7 +284,7 @@ export const dmlTasks: Task[] = [
     schema: 'fussball',
     difficulty: 'schwer',
     text:
-      'Ändern Sie den Trainernamen der Mannschaft, die die Weltmeisterschaft gewonnen hat, auf Spaghotti!',
+      'Ändern Sie den Trainernamen der Mannschaft, die die Weltmeisterschaft gewonnen hat, auf "Spaghotti"!',
     solutionQuery:
       "UPDATE nation SET trainername = 'Spaghotti' WHERE nationname in (SELECT Mannschaft_1 FROM Spiele WHERE TYP = 'Finale' and SUBSTR(Ergebnis, 1,1) > SUBSTR(Ergebnis, 3,1) union SELECT Mannschaft_2 FROM Spiele WHERE TYP = 'Finale' and SUBSTR(Ergebnis, 3,1) > SUBSTR(Ergebnis, 1,1))",
     taskType: 3,
@@ -362,7 +342,7 @@ export const dmlTasks: Task[] = [
     schema: 'reisen',
     difficulty: 'leicht',
     text:
-      'Der neue Kunde heisst mit Vornamen Andreas und mit Namen Fischer. Die Adresse lautet: Zülpicher Str.4, 50674 Köln. Die Kundennummer soll eine Zahl höher sein, als die bisher höchste.',
+      'Der neue Kunde heisst mit Vornamen "Andreas" und mit Namen "Fischer". Die Adresse lautet: Zülpicher Str.4, 50674 Köln. Die Kundennummer soll eine Zahl höher sein, als die bisher höchste.',
     solutionQuery:
       "INSERT INTO kunde (kundennr, vorname, name, adresse) values ((select max(kundennr)+1 from kunde),'Andreas','Zülpicher Str.4, 50674 Köln','Fischer')",
     taskType: 1,
@@ -382,7 +362,7 @@ export const dmlTasks: Task[] = [
     schema: 'reisen',
     difficulty: 'leicht',
     text:
-      'Geben Sie folgendes Hotel in die Datenbank ein: Der Name ist Gummersbacher Inn und es steht in Köln. Die Klasse ist genauso wie die bisher am hÃ¶chsten vergebene Klasse. Es hat jeweils 100 Einzel- und Doppelzimmer, wobei ein Einzelzimmer 300 Euro und ein Doppelzimmer 500 Euro kostet.',
+      'Geben Sie folgendes Hotel in die Datenbank ein: Der Name ist "Gummersbacher Inn" und es steht in Köln. Die Klasse ist genauso wie die bisher am höchsten vergebene Klasse. Es hat jeweils 100 Einzel- und Doppelzimmer, wobei ein Einzelzimmer 300 Euro und ein Doppelzimmer 500 Euro kostet.',
     solutionQuery:
       "INSERT INTO hotel (hotelname, stadtname, klasse, anzahlez, anzahldz, preisez, preisdz) VALUES ('Gummersbacher Inn', 'Köln', (SELECT MAX(klasse) FROM hotel), 100, 100, 300, 500)",
     taskType: 1,
@@ -392,7 +372,7 @@ export const dmlTasks: Task[] = [
     schema: 'reisen',
     difficulty: 'leicht',
     text:
-      'Fügen Sie folgende neue Reisezeit ein: \\nDie Zeit soll eins höher sein, als die bisher höchste. Die Reisezeit ist 18, Flughafen 1 ist Düsseldorf Flughafen und Flughafen 2 ist Ufa Aeroport',
+      'Fügen Sie folgende neue Reisezeit ein: \\nDie Zeit soll eins höher sein, als die bisher höchste. Die Reisezeit ist 18, Flughafen 1 ist "Düsseldorf Flughafen" und Flughafen 2 ist "Ufa Aeroport"',
     solutionQuery:
       "INSERT INTO reisezeit (zeit, rzeit, flughafen1, flughafen2) VALUES ((SELECT MAX(zeit)+1 FROM reisezeit), 18, 'Düsseldorf Flughafen', 'Ufa Aeroport')",
     taskType: 1,
@@ -411,7 +391,7 @@ export const dmlTasks: Task[] = [
     schema: 'reisen',
     difficulty: 'leicht',
     text:
-      'Ein neues Hotel hat eröffnet. Es heisst Kingdom und steht in Köln. Es hat die höchste Klasse, die es momentan gibt. Ausserdem hat es jeweils 100 Einzel- und Doppelzimmer, wobei ein Einzelzimmer 200 Euro und ein Doppelzimmer 350 Euro kostet. Tragen Sie das neue Hotel ein.',
+      'Ein neues Hotel hat eröffnet. Es heisst "Kingdom" und steht in Köln. Es hat die höchste Klasse, die es momentan gibt. Ausserdem hat es jeweils 100 Einzel- und Doppelzimmer, wobei ein Einzelzimmer 200 Euro und ein Doppelzimmer 350 Euro kostet. Tragen Sie das neue Hotel ein.',
     solutionQuery:
       "INSERT INTO hotel (hotelname, stadtname, klasse, anzahlez, anzahldz, preisez, preisdz) VALUES ('Kingdom', 'Köln', (SELECT MAX(klasse) FROM hotel), 100, 100, 200, 350)",
     taskType: 1,
@@ -461,7 +441,7 @@ export const dmlTasks: Task[] = [
     schema: 'reisen',
     difficulty: 'mittel',
     text:
-      'Bei dem Kunden mit den meisten gebuchten Einzelzimmern ist ein falscher Vorname eingetragen. Ändern Sie den Namen auf Erna.',
+      'Bei dem Kunden mit den meisten gebuchten Einzelzimmern ist ein falscher Vorname eingetragen. Ändern Sie den Namen auf "Erna".',
     solutionQuery:
       "UPDATE kunde SET vorname = 'Erna' WHERE kundennr = (SELECT kundennr FROM buchung WHERE gebuchteez = (SELECT MAX(gebuchteez) FROM buchung))",
     taskType: 3,
@@ -479,7 +459,7 @@ export const dmlTasks: Task[] = [
     id: 213,
     schema: 'reisen',
     difficulty: 'mittel',
-    text: 'Lösche alle Hotels, die in den USA stehen!',
+    text: 'Löschen Sie alle Hotels, die in den USA stehen!',
     solutionQuery:
       "DELETE FROM hotel WHERE stadtname IN (SELECT stadtname FROM stadt WHERE land LIKE 'USA%'",
     taskType: 2,
@@ -489,7 +469,7 @@ export const dmlTasks: Task[] = [
     schema: 'reisen',
     difficulty: 'mittel',
     text:
-      'Ändern Sie den Vornamen auf Hugo und den Namen auf Bügel bei dem Kunden, der in einer Buchung die meisten Einzelzimmer gebucht hat.',
+      'Ändern Sie den Vornamen auf "Hugo" und den Namen auf "Bügel" bei dem Kunden, der in einer Buchung die meisten Einzelzimmer gebucht hat.',
     solutionQuery:
       "UPDATE kunde SET vorname = 'Hugo', name = 'Bügel' WHERE kundennr = (SELECT kundennr FROM buchung WHERE buchung.kundennr = kunde.kundennr AND gebuchteez = (SELECT MAX(gebuchteez) FROM buchung))",
     taskType: 3,
@@ -519,7 +499,7 @@ export const dmlTasks: Task[] = [
     schema: 'reisen',
     difficulty: 'mittel',
     text:
-      'Alle Hotels, die in den USA stehen, senken ihre Preise für Einzelzimmer um 10 Euro. FÃ¼hren Sie die Änderung durch.',
+      'Alle Hotels, die in den USA stehen, senken ihre Preise für Einzelzimmer um 10 Euro. Führen Sie die Änderung durch.',
     solutionQuery:
       "UPDATE hotel SET preisez = preisez - 10 WHERE stadtname IN (SELECT stadtname FROM stadt WHERE land LIKE 'USA%')",
     taskType: 3,
@@ -529,7 +509,7 @@ export const dmlTasks: Task[] = [
     schema: 'reisen',
     difficulty: 'mittel',
     text:
-      'Ändern Sie den Flughafen1 bei der Reisezeit auf den einzigen Flughafen in der USA bei der Zeit, die am häufigsten gebucht wurde.',
+      'Ändern Sie den flughafen1 bei der Reisezeit auf den einzigen Flughafen in der USA bei der Zeit, die am häufigsten gebucht wurde.',
     solutionQuery:
       "UPDATE reisezeit SET flughafen1 = (SELECT flughafen FROM stadt WHERE land LIKE 'USA%') WHERE zeit = (SELECT zeit FROM buchung GROUP BY zeit HAVING COUNT(*) >= ALL(SELECT COUNT(*) FROM buchung GROUP BY zeit))",
     taskType: 3,
@@ -549,7 +529,7 @@ export const dmlTasks: Task[] = [
     schema: 'reisen',
     difficulty: 'schwer',
     text:
-      "Ändern Sie den Flughafen1 bei der Reisezeit auf 'Düsseldorf Flughafen', bei der Zeit, die am meisten gebucht worden ist.",
+      "Ändern Sie den flughafen1 bei der Reisezeit auf 'Düsseldorf Flughafen', bei der Zeit, die am meisten gebucht worden ist.",
     solutionQuery:
       "UPDATE reisezeit SET flughafen1 = 'Düsseldorf Flughafen' WHERE zeit = (SELECT zeit FROM buchung GROUP BY zeit HAVING COUNT(*) >= ALL(SELECT COUNT(zeit) FROM buchung GROUP BY zeit))",
     taskType: 3,
@@ -559,7 +539,7 @@ export const dmlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'leicht',
     text:
-      'Ein neuer Angestellter fängt in der Abteilung 6 (Datenverarbeitung) an. Er heisst Anton Becker, ist männlich (m), Informatiker und seine Aufgabe ist das Backup der Datenbank zu erstellen. Fügen Sie den neuen Angestellten in die Datenbank ein!',
+      'Ein neuer Angestellter fängt in der Abteilung 6 (Datenverarbeitung) an. Sein Vorname ist "Anton" und sein Name "Becker". Er ist männlich (m), Informatiker und seine Aufgabe ist das "Backup der Datenbank" zu erstellen. Fügen Sie den neuen Angestellten in die Datenbank ein!',
     solutionQuery:
       "INSERT INTO angestellte (vorname, nachname, abt_nr, aufgabenbeschreibung, beruf, geschlecht) VALUES ('Anton', 'Becker', 6, 'Backup der Datenbank', 'Informatiker', 'm')",
     taskType: 1,
@@ -570,7 +550,7 @@ export const dmlTasks: Task[] = [
     difficulty: 'leicht',
     text:
       'Durch eine Sonderaktion soll der Preis aller Fahrräder um 10% gesenkt werden. Führen Sie diese Aktion durch.',
-    solutionQuery: 'UPDATE artikel SET verkaufspreis = verkaufspreis * 0,9',
+    solutionQuery: 'UPDATE artikel SET verkaufspreis = verkaufspreis * 0.9',
     taskType: 3,
   },
   {
@@ -597,37 +577,17 @@ export const dmlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'leicht',
     text:
-      'Die Fahrräder werden ab jetzt auch in gold lackiert. Dazu muss ein neues Teil in die Teile-Tabelle eingeben werden. Die Mengeneinheit ist kg, die Bezeichnung ist "Goldfarbe", der Typ ist "Material", die Herstellungskosten betragen 100 Euro und der Mindestbestand soll auf 25 gesetzt werden. Außerdem betragen die Herstelldauer und die Lieferzeit jeweils 15 Tage.',
+      'Die Fahrräder werden ab jetzt auch in gold lackiert. Dazu muss ein neues Teil in die Teile-Tabelle eingeben werden. Die Mengeneinheit ist "kg", die Bezeichnung ist "Goldfarbe", der Typ ist "Material", die Herstellungskosten betragen 100 Euro und der Mindestbestand soll auf 25 gesetzt werden. Außerdem betragen die Herstelldauer und die Lieferzeit jeweils 15 Tage.',
     solutionQuery:
       "INSERT INTO teile (me, bezeichnung, typ, herstellkosten, mindestbestand, lieferzeit, herstelldauer) VALUES ('kg', 'Goldfarbe', 'Material', 100, 25, 15, 15)",
     taskType: 1,
-  },
-  {
-    id: 6,
-    schema: 'fahrrad',
-    difficulty: 'leicht',
-    text:
-      'Im Lager 2 ist das Teil mit der Teilenummer 58 eingetroffen. Die Anzahl der Lieferung beträgt 2000. Ändern Sie den Lagerbestand und setzen Sie den Zeitstempel auf das aktuelle Datum. ',
-    solutionQuery:
-      'UPDATE lagerbestand SET bestand = bestand + 2000, zeitstempel = SYSDATE WHERE lanr = 2 AND tnr = 58',
-    taskType: 3,
-  },
-  {
-    id: 7,
-    schema: 'fahrrad',
-    difficulty: 'leicht',
-    text:
-      'Aus dem Lager 3 werden aus dem Bestand von jedem Teil 500 entnommen. Führen Sie diese Aktion durch und setzen Sie den Zeitstempel auf das aktuelle Datum.',
-    solutionQuery:
-      'UPDATE lagerbestand SET bestand = bestand - 500, zeitstempel = SYSDATE WHERE lanr = 3',
-    taskType: 3,
   },
   {
     id: 8,
     schema: 'fahrrad',
     difficulty: 'leicht',
     text:
-      'Unser Angestellter Otto Schmidt geht in den wohlverdienten Ruhestand. Löschen Sie dazu den Angestellten aus der Tabelle.',
+      'Unser Angestellter "Otto Schmidt" geht in den wohlverdienten Ruhestand. Löschen Sie dazu den Angestellten aus der Tabelle.',
     solutionQuery:
       "DELETE FROM angestellte WHERE nachname LIKE 'Schmidt%' AND vorname LIKE 'Otto%'",
     taskType: 2,
@@ -637,7 +597,7 @@ export const dmlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'leicht',
     text:
-      'Die Gehälter der Angestellten sollen angepasst. Alle Angestellten, die weniger als der Durchschnitt aller Gehälter verdienen, sollen 100 Euro mehr Gehalt bekommen.',
+      'Die Gehälter der Angestellten sollen angepasst werden. Alle Angestellten, die weniger als der Durchschnitt aller Gehälter verdienen, sollen 100 Euro mehr Gehalt bekommen.',
     solutionQuery:
       'UPDATE angestellte \nSET gehalt = gehalt + 100 \nWHERE gehalt < (SELECT AVG(gehalt) FROM angestellte)',
     taskType: 3,
@@ -647,7 +607,7 @@ export const dmlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'leicht',
     text:
-      'Der Angestellte Holger Kall wird von der Abteilung "Arbeitsvorbereitung" mit der Abteilungsnummer 5 zur Abteilung 4 (Einkauf) versetzt. Führen Sie diese Aktion durch.',
+      'Der Angestellte "Holger Kall" wird von der Abteilung "Arbeitsvorbereitung" mit der Abteilungsnummer 5 zur Abteilung 4 (Einkauf) versetzt. Führen Sie diese Aktion durch.',
     solutionQuery:
       "UPDATE angestellte SET abt_nr = 4 WHERE nachname LIKE 'Kall%' AND vorname LIKE 'Holger%'",
     taskType: 3,
@@ -663,21 +623,11 @@ export const dmlTasks: Task[] = [
     taskType: 1,
   },
   {
-    id: 12,
-    schema: 'fahrrad',
-    difficulty: 'mittel',
-    text:
-      'Ein Kunde, "Tobias Muller", möchte ein Fahrrad bestellen. Die Angestellte, Frau "Erna Wanne", nimmt den Auftrag am "heutigen Tage" entgegen. Der Auftragstyp ist also "Auftrag". Fügen Sie diese Bestellung in die Datenbank ein!',
-    solutionQuery:
-      "INSERT INTO auftraege (auftrags_typ, kun_nr, ang_nr, bestelldatum) VALUES ('Auftrag', (SELECT kun_nr FROM kunden WHERE nachname LIKE 'Muller%' AND vorname LIKE 'Tobias%'), (SELECT ang_nr FROM angestellte WHERE nachname LIKE 'Wanne%' AND vorname LIKE 'Erna%'), SYSDATE)",
-    taskType: 1,
-  },
-  {
     id: 13,
     schema: 'fahrrad',
     difficulty: 'mittel',
     text:
-      'Unsere Angestellte, Frau Anna Weber, hat geheiratet und heisst jetzt Anna Meier. Sie ist angestellt als Informatiker. Ändern Sie den Namen von Frau Meier. Beachten Sie, dass in unserer Firma zwei Frauen mit dem Namen Anna Weber arbeiten.',
+      'Unsere Angestellte, Frau "Anna Weber", hat geheiratet und heisst jetzt "Anna Meier". Sie ist angestellt als Informatiker. Ändern Sie den Namen von Frau Meier. Beachten Sie, dass in unserer Firma zwei Frauen mit dem Namen Anna Weber arbeiten.',
     solutionQuery:
       'UPDATE angestellte SET nachname = "Meier" WHERE UPPER(vorname) LIKE "ANNA%" AND UPPER(nachname) LIKE "WEBER%" AND UPPER(beruf) LIKE "INFORMATIKER%"',
     taskType: 3,
@@ -687,7 +637,7 @@ export const dmlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'mittel',
     text:
-      'Der Angestellte Willi Brater mit der Angestelltennummer 12 ist krank. Deswegen übernimmt Susanne Bar alle seine Aufträge. Bitte Ändern Sie dies in der Datenbank.',
+      'Der Angestellte "Willi Brater" mit der Angestelltennummer 12 ist krank. Deswegen übernimmt "Susanne Bar" alle seine Aufträge. Bitte Ändern Sie dies in der Datenbank.',
     solutionQuery:
       "UPDATE SET ang_nr = (SELECT ang_nr FROM angestellte WHERE vorname LIKE 'Susanne%' AND nachname LIKE 'Bar%') WHERE ang_nr = 12",
     taskType: 3,

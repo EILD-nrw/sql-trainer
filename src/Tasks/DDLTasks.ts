@@ -34,8 +34,8 @@ export const ddlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'leicht',
     text:
-      'In der Tabelle "Artikel" soll die Spalte artikel_typ umbenannt werden und soll nun Fahrrad_typ heißen. Geben Sie hierzu den entsprechenden Befehl ein!',
-    solutionQuery: 'ALTER TABLE Artikel RENAME COLUMN artikel_typ TO Fahrrad_typ;',
+      'In der Tabelle "Artikel" soll die Spalte "artikel_typ" umbenannt werden und soll nun "fahrrad_typ" heißen. Geben Sie hierzu den entsprechenden Befehl ein!',
+    solutionQuery: 'ALTER TABLE Artikel RENAME COLUMN artikel_typ TO fahrrad_typ;',
     taskType: 3,
   },
   {
@@ -43,7 +43,7 @@ export const ddlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'leicht',
     text:
-      'Schreiben Sie die Anweisung zum Erzeugen einer neuen Tabelle "Verkauf". Die Tabelle soll einen eindeutigen Primärschlüssel "Verkauf_id" besitzen sowie die Attribute Kasse und Fahrrad.',
+      'Schreiben Sie die Anweisung zum Erzeugen einer neuen Tabelle "Verkauf". Die Tabelle soll einen eindeutigen Primärschlüssel "verkauf_id", sowie die Attribute "kasse" und "fahrrad" besitzen.',
     solutionQuery:
       'CREATE TABLE Verkauf (Verkauf_id INTEGER NOT NULL, Kasse VARCHAR2(20), Fahrrad VARCHAR2(20));',
     taskType: 1,
@@ -81,7 +81,7 @@ export const ddlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'mittel',
     text:
-      'Zur schnelleren Datenabfrage soll in der Tabelle "Artikel" ein View mit der Bezeichnung "Abfrage" auf den Attributen "artikel_typ" und "verkaufspreis" angelegt werden, wo der "verkaufspreis" >= 1650 ist. Schreiben Sie den entsprechenden Befehl!',
+      'Zur leichteren Datenabfrage soll in der Tabelle "Artikel" ein View mit der Bezeichnung "Abfrage" auf den Attributen "artikel_typ" und "verkaufspreis" angelegt werden, wo der "verkaufspreis" >= 1650 ist. Schreiben Sie den entsprechenden Befehl!',
     solutionQuery:
       'CREATE VIEW Abfrage (Artikeltyp, verkaufspreis) AS SELECT artikel_typ, verkaufspreis FROM Artikel WHERE verkaufspreis >= 1650;',
     taskType: 1,
@@ -100,7 +100,7 @@ export const ddlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'mittel',
     text:
-      'Es soll ein neuer eindeutiger Index mit der Bezeichnung "Kundennamen" auf der Tabelle "kunden" angelegt werden, der die beiden Attribute "nachname" und "vorname" beeinhaltet!',
+      'Es soll ein neuer eindeutiger Index mit der Bezeichnung "Kundennamen" auf der Tabelle "Kunden" angelegt werden, der die beiden Attribute "nachname" und "vorname" beeinhaltet!',
     solutionQuery: 'CREATE UNIQUE INDEX Kundennamen ON kunden (nachname, vorname);',
     taskType: 1,
   },
@@ -109,7 +109,7 @@ export const ddlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'mittel',
     text:
-      'Es soll eine VIEW mit dem Namen "Gehalt_ABT" auf den Spalten "Abteilungs_NR, Name, AVG_Gehalt" erstellt werden, die das durchschnittliche Gehalt aller Angestellten der gleichen Abteilung zeigt. (Benötigt wird: Abt_nr, abteilungen.name, gehalt)',
+      'Es soll eine VIEW mit dem Namen "Gehalt_ABT" auf den Spalten "abteilungs_nr", "name", "avg_gehalt" erstellt werden, die das durchschnittliche Gehalt aller Angestellten der gleichen Abteilung zeigt. (Benötigt wird: Abt_nr, abteilungen.name, gehalt)',
     solutionQuery:
       'CREATE VIEW Gehalt_ABT (Abteilungs_NR, Name, AVG_Gehalt) AS SELECT a1.abt_nr, a2.name , avg(a1.gehalt) FROM angestellte a1, abteilungen a2  WHERE a1.abt_nr = a2.abt_nr  GROUP BY a1.abt_nr, a2.name;',
     taskType: 1,
@@ -119,7 +119,7 @@ export const ddlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'schwer',
     text:
-      'In der Tabelle "Werke" soll eine neue Spalte "Adresse" hinzugefügt werden. Schreiben Sie den entsprechenden Befehl!',
+      'In der Tabelle "Werke" soll eine neue Spalte "adresse" hinzugefügt werden. Schreiben Sie den entsprechenden Befehl!',
     solutionQuery: 'ALTER TABLE Werke ADD Adresse VARCHAR2(20);',
     taskType: 3,
   },
@@ -128,8 +128,8 @@ export const ddlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'schwer',
     text:
-      'In der Tabelle "Orte" soll die Spalte "strasse" in "Straßennamen" umbennant werden. Schreiben Sie den entsprechenden Befehl!',
-    solutionQuery: 'ALTER TABLE Orte RENAME COLUMN strasse TO Straßennamen;',
+      'In der Tabelle "Orte" soll die Spalte "strasse" in "strassennamen" umbennant werden. Schreiben Sie den entsprechenden Befehl!',
+    solutionQuery: 'ALTER TABLE Orte RENAME COLUMN strasse TO Strassennamen;',
     taskType: 3,
   },
   {
@@ -183,7 +183,7 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'leicht',
     text:
-      'In der Tabelle "Beschraenkungen" soll die Spalte "text" umbennant werden in "Ausnahmen". Schreiben Sie den entsprechenden Befehl!',
+      'In der Tabelle "Beschraenkungen" soll die Spalte "text" umbennant in "ausnahmen" werden. Schreiben Sie den entsprechenden Befehl!',
     solutionQuery: 'ALTER TABLE Beschraenkungen RENAME COLUMN text TO Ausnahmen;',
     taskType: 3,
   },
@@ -192,7 +192,7 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'leicht',
     text:
-      'Schreiben Sie den Befehl zum Erzeugen einer neuen Tabelle mit dem Namen "Busfahrerin", mit den Attributen "vorname" und nachname.',
+      'Schreiben Sie den Befehl zum Erzeugen einer neuen Tabelle "Busfahrerin", mit den Attributen "Vorname" und "Nachname".',
     solutionQuery:
       'CREATE TABLE Busfahrerin (vorname VARCHAR2(20), nachname VARCHAR2(20));',
     taskType: 1,
@@ -202,7 +202,7 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'leicht',
     text:
-      'Erzeugen Sie eine neue Tabelle mit dem Namen "Bus_Sitzplaetze" und fügen Sie nur das Attribut "Sitz_id" als Primärschlüssel hinzu, welcher nicht Null sein soll.',
+      'Erzeugen Sie eine neue Tabelle mit dem Namen "Bus_Sitzplaetze" und fügen Sie nur das Attribut "sitz_id" als Primärschlüssel hinzu, welcher nicht Null sein soll.',
     solutionQuery:
       'CREATE TABLE Bus_Sitzplaetze (Sitz_id INTEGER NOT NULL PRIMARY KEY);',
     taskType: 1,
@@ -221,9 +221,9 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'mittel',
     text:
-      'Schreiben Sie den Befehl zum Erstellen einer View mit dem Namen "Mitarbeiter" auf den Attributen "vorname" und "nachname" auf der Tabelle "Mitarebiter", wo die Lohnsteuerklasse = 1 ist.',
+      'Schreiben Sie den Befehl zum Erstellen einer View mit dem Namen "v_mitarbeiter" auf den Attributen "vorname" und "nachname" auf der Tabelle "Mitarbeiter", wo die Lohnsteuerklasse = 1 ist.',
     solutionQuery:
-      'CREATE VIEW Mitarbeiter AS SELECT vorname, nachname FROM Mitarbeiter WHERE lohnst_klasse = 1;',
+      'CREATE VIEW v_mitarbeiter AS SELECT vorname, nachname FROM Mitarbeiter WHERE lohnst_klasse = 1;',
     taskType: 1,
   },
   {
@@ -231,8 +231,8 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'mittel',
     text:
-      'In der Tabelle "Busfahrer" soll die Spalte "Gehaltsstuffe" hinzugefügt werden und ausschließlich NULL- INTEGER Werte enthalten.',
-    solutionQuery: 'ALTER TABLE BUSFAHRER ADD (Gehaltsstuffe INTEGER);',
+      'In der Tabelle "Busfahrer" soll die Spalte "gehaltsstufe" hinzugefügt werden.',
+    solutionQuery: 'ALTER TABLE BUSFAHRER ADD (gehaltsstufe INTEGER);',
     taskType: 3,
   },
   {
@@ -240,7 +240,7 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'mittel',
     text:
-      'Schreiben Sie den Befehl zum Erstellen einer View mit dem Namen "Inspektion" auf den Attributen "am" und "fahrzeug_id" auf der Tabelle "Inspektionen", wo die Firma = VeServ ist.',
+      'Schreiben Sie den Befehl zum Erstellen einer View mit dem Namen "v_inspektion" auf den Attributen "am" und "fahrzeug_id" auf der Tabelle "Inspektionen", wo die Firma = VeServ ist.',
     solutionQuery:
       "CREATE VIEW Inspektion AS SELECT am, fahrzeug_id FROM Inspektionen WHERE firma = 'VeServ';",
     taskType: 1,
@@ -276,8 +276,8 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'schwer',
     text:
-      'Benennen Sie die Spalte "richtung" in der Tabelle "Fahrten" in "Zielstation" um.',
-    solutionQuery: 'ALTER TABLE Fahrten RENAME COLUMN richtung TO Zielstation;',
+      'Benennen Sie die Spalte "richtung" in der Tabelle "Fahrten" in "zielstation" um.',
+    solutionQuery: 'ALTER TABLE Fahrten RENAME COLUMN richtung TO zielstation;',
     taskType: 3,
   },
   {
@@ -285,8 +285,8 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'schwer',
     text:
-      'Fügen Sie in der Tabelle "Techniker" die Spalte "Ausbildung" hinzu!',
-    solutionQuery: 'ALTER TABLE Techniker ADD Ausbildung VARCHAR2(20);',
+      'Fügen Sie in der Tabelle "Techniker" die Spalte "ausbildung" hinzu!',
+    solutionQuery: 'ALTER TABLE Techniker ADD ausbildung VARCHAR2(20);',
     taskType: 3,
   },
   {
@@ -313,7 +313,7 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'schwer',
     text:
-      'Die Tabelle Einsatzplan wurde versehentlich gelöscht. Erstellen Sie diese erneut mit "EINPLAN_ID", "FAHRT_ID", "FAHRZEUG_ID", "MITA_ID" und "TAG".\n    Der Primärschlüssel liegt auf "EINPLAN_ID" und außer "TAG" welcher im DATE-Format sein soll sind alle 9-stellige Zahlen ohne Kommastellen.\n    Es soll überprüft werden ob die "FAHRT_ID" größer als 0 ist und eine "FAHRZEUG_ID" muss auch immer eingegeben werden.',
+      'Die Tabelle Einsatzplan wurde versehentlich gelöscht. Erstellen Sie diese erneut mit "einplan_id", "fahrt_id", "fahrzeug_id", "mita_id" und "tag".\n    Der Primärschlüssel liegt auf "einplan_id" und außer "tag" welcher im DATE-Format sein soll, sind alle 9-stelligen Zahlen ohne Kommastellen.\n    Es soll überprüft werden ob die "fahrt_id" größer als 0 ist und eine "fahrzeug_id" muss auch immer eingegeben werden.',
     solutionQuery:
       'CREATE TABLE EINSATZPLAN (\n      "EINPLAN_ID" NUMBER(9,0) PRIMARY KEY,\n      "TAG" DATE,\n     "FAHRT_ID" NUMBER(9,0) CONSTRAINT "POS_ID41" CHECK ("FAHRT_ID">= 0),\n     "FAHRZEUG_ID" NUMBER(9,0) NOT NULL,\n     "MITA_ID" NUMBER(9,0)\n     ) ;',
     taskType: 1,
