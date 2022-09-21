@@ -13,7 +13,7 @@ export const Header = () => {
         </Link>
         <div className="flex-auto">
           <a
-            href="https://eild.nrw/"
+            href="https://medien.hs-duesseldorf.de/eild"
             rel="noreferrer"
             target="_blank"
           >
