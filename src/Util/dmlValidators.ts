@@ -39,7 +39,7 @@ function compareTableData(
   return { isValid: true }
 }
 
-export function validateUserInput(
+export function validateDMLInput(
   code: string,
   selectedTask: Task,
   database: Database

@@ -6,10 +6,8 @@ import SelectionPage from './Pages/SelectionPage'
 // eslint-disable-next-line
 import sqlWasm from '!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm'
 import initSqlJs, { Database } from 'sql.js'
-import DQLTaskPage from './Pages/DQLTaskPage'
+import TrainerPage from './Pages/TrainerPage'
 import useShuffledTasks from '../Util/useShuffledTasks'
-import DDLTaskPage from './Pages/DDLTaskPage'
-import DMLTaskPage from './Pages/DMLTaskPage'
 
 const LOCALSTORAGE_KEY_TOPIC = 'selection.topic'
 const LOCALSTORAGE_KEY_SCHEMA = 'selection.schema'
@@ -83,35 +81,14 @@ export default function QuizRouter() {
         }
       ></Route>
       <Route
-        path="dql"
+        path="trainer"
         element={
-          <DQLTaskPage
+          <TrainerPage
             database={database}
             selectedTask={selectedTask}
             nextTask={nextTask}
             schema={schema}
-          />
-        }
-      />
-      <Route
-        path="ddl"
-        element={
-          <DDLTaskPage
-            database={database}
-            selectedTask={selectedTask}
-            nextTask={nextTask}
-            schema={schema}
-          />
-        }
-      />
-      <Route
-        path="dml"
-        element={
-          <DMLTaskPage
-            database={database}
-            selectedTask={selectedTask}
-            nextTask={nextTask}
-            schema={schema}
+            selectedTopic={topic}
           />
         }
       />

@@ -341,7 +341,7 @@ function validateAlter(
   }
 }
 
-export function validateUserInput(
+export function validateDDLInput(
   userQuery: string,
   selectedTask: Task,
   database: Database

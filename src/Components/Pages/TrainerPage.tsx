@@ -7,25 +7,27 @@ import { Task } from '../../Types/Task'
 import TrainerContainer from '../UI/TrainerContainer'
 import TableContainer from '../UI/TableContainer'
 import { Database } from 'sql.js'
-import { useDQLTrainer } from '../../Util/useDQLTrainer'
+import { useQueryValidation } from '../../Util/useQueryValidation'
 
 interface Props {
   database: Database | undefined
   schema: string
   selectedTask: Task | undefined
   nextTask: () => void
+  selectedTopic: string
 }
 
-export default function DQLTaskPage({
+export default function TrainerPage({
   database,
   schema,
   selectedTask,
   nextTask,
+  selectedTopic,
 }: Props) {
   const [code, setCode] = useState('')
   const [showSolution, setShowSolution] = useState(false)
-  const { solutionTable, isCorrect, error, queryData, executeCode } =
-    useDQLTrainer(selectedTask, database)
+  const { solutionTable, isCorrect, feedback, queryData, executeCode } =
+    useQueryValidation(selectedTask, database, selectedTopic)
 
   function handleNextTask(): void {
     nextTask()
@@ -99,8 +101,8 @@ export default function DQLTaskPage({
 
       {/* Output container */}
       <DetailsElement title="Ausgabe" taskSolved={isCorrect}>
-        {error ? (
-          <p>{(error || '').toString()}</p>
+        {feedback ? (
+          <p>{(feedback || '').toString()}</p>
         ) : (
           queryData.map((result, index) => {
             return <Table key={index} tableData={result} />
@@ -115,8 +117,12 @@ export default function DQLTaskPage({
           {selectedTask?.solutionQuery && (
             <p className="px-4 py-1">{selectedTask.solutionQuery}</p>
           )}
-          <h3 className="font-semibold text-lg">Output</h3>
-          {solutionTable && <Table tableData={solutionTable} />}
+          {solutionTable && (
+            <>
+              <h3 className="font-semibold text-lg">Output</h3>
+              <Table tableData={solutionTable} />
+            </>
+          )}
         </DetailsElement>
       )}
     </div>

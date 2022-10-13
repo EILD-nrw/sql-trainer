@@ -34,7 +34,7 @@ export default function SelectionPage({
   const navigate = useNavigate()
 
   function startTrainer() {
-    navigate(`/sqltrainer/${topic}`)
+    navigate('/sqltrainer/trainer')
   }
 
   return (
