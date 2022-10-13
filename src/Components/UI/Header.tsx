@@ -6,7 +6,7 @@ export const Header = () => {
     <header className="bg-white p-4 md:py-6 md:px-10">
       <div className="w-full grid grid-cols-2">
         <Link
-          className="flex items-center no-underline text-black whitespace-nowrap text-2xl sm:text-6xl font-bold font-mono mr-8"
+          className="flex items-center no-underline text-black whitespace-nowrap text-2xl sm:text-4xl md:text-6xl font-bold font-mono mr-8"
           to="/"
         >
           SQL-Trainer

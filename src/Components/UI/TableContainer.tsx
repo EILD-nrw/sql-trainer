@@ -28,8 +28,8 @@ export default function TableContainer({ currentSchema, database }: Props) {
           <img className="w-4 h-4" src={downloadIcon} alt="Download" />
         </a>
       </div>
-      <div className="border-l border-r border-b rounded-b-lg border-gray-600 p-2 space-y-2">
-        <div className="h-80 overflow-y-auto overflow-x-hidden space-y-2">
+      <div className="border-l border-r border-b rounded-b-lg border-gray-600 p-2 space-y-2 h-80 overflow-auto">
+        <div className="space-y-2">
           {tables[currentSchema].map((table) => {
             return (
               <p

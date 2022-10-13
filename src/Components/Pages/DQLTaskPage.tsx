@@ -44,52 +44,57 @@ export default function DQLTaskPage({
       ) : (
         <p className="font-semibold">Loading...</p>
       )}
-      <div className="flex flex-row space-x-4">
-        <div className="flex-grow">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="col-span-1 sm:col-span-2">
           {/* Trainer container */}
           <TrainerContainer title="Editor">
-            <Editor
-              height="278px"
-              language="sql"
-              theme="vs-dark"
-              value={code}
-              onChange={(value: string | undefined) => setCode(value || '')}
-              options={{ minimap: { enabled: false } }}
-            />
+            <div className="flex flex-col h-full">
+              <div className="flex-grow">
+                <Editor
+                  language="sql"
+                  theme="vs-dark"
+                  height="100%"
+                  value={code}
+                  onChange={(value: string | undefined) => setCode(value || '')}
+                  options={{
+                    minimap: { enabled: false },
+                    automaticLayout: true,
+                  }}
+                />
+              </div>
 
-            {/* Trainer button bar */}
-            <div className="flex justify-between">
-              <button
-                className="bg-th-red rounded-md border px-2 py-1 font-semibold text-white"
-                type="button"
-                onClick={() => executeCode(code)}
-              >
-                Ausführen
-              </button>
-              <button
-                className="bg-th-orange rounded-md border px-2 py-1 font-semibold text-white"
-                type="button"
-                onClick={() => setShowSolution(true)}
-              >
-                Lösung anzeigen
-              </button>
-              <button
-                className="bg-th-violet rounded-md border px-2 py-1 font-semibold text-white float-right"
-                type="button"
-                onClick={handleNextTask}
-              >
-                Neue Aufgabe
-              </button>
+              {/* Trainer button bar */}
+              <div className="flex justify-between pt-2">
+                <button
+                  className="bg-th-red rounded-md border px-2 py-1 font-semibold text-white"
+                  type="button"
+                  onClick={() => executeCode(code)}
+                >
+                  Ausführen
+                </button>
+                <button
+                  className="bg-th-orange rounded-md border px-2 py-1 font-semibold text-white"
+                  type="button"
+                  onClick={() => setShowSolution(true)}
+                >
+                  Lösung anzeigen
+                </button>
+                <button
+                  className="bg-th-violet rounded-md border px-2 py-1 font-semibold text-white float-right"
+                  type="button"
+                  onClick={handleNextTask}
+                >
+                  Neue Aufgabe
+                </button>
+              </div>
             </div>
           </TrainerContainer>
         </div>
 
         {/* Table lookup bar */}
-        <div className="max-w-sm flex-1">
-          {schema && (
-            <TableContainer currentSchema={schema} database={database} />
-          )}
-        </div>
+        {schema && (
+          <TableContainer currentSchema={schema} database={database} />
+        )}
       </div>
 
       {/* Output container */}
