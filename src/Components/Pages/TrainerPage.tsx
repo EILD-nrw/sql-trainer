@@ -40,7 +40,9 @@ export default function TrainerPage({
   return (
     <div className="space-y-4">
       {/* Task description */}
-      <h1 className="text-2xl font-semibold">Trainer</h1>
+      <h1 className="text-2xl font-semibold">
+        {selectedTopic.toUpperCase()}-Trainer
+      </h1>
       {selectedTask ? (
         <p className="font-semibold whitespace-pre-line">{selectedTask.text}</p>
       ) : (
