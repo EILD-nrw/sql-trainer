@@ -1,9 +1,9 @@
 import { Database, QueryExecResult } from 'sql.js'
 import { Task } from '../Types/Task'
 import { useEffect, useState } from 'react'
-import { compareQueryResults } from './commonValidationHelper'
 import { validateDMLInput } from './dmlValidators'
 import { validateDDLInput } from './ddlValidators'
+import { validateDQLInput } from './dqlValidators'
 
 export function useQueryValidation(
   selectedTask: Task | undefined,
@@ -37,20 +37,6 @@ export function useQueryValidation(
     }
   }, [selectedTask, database])
 
-  // Compares User Query with Solution and sets states accordingly
-  function evaluateQuery(queryResult: QueryExecResult) {
-    if (!solutionTable) {
-      setIsCorrect(false)
-      return
-    }
-
-    if (compareQueryResults(queryResult, solutionTable)) {
-      setIsCorrect(true)
-    } else {
-      setIsCorrect(false)
-    }
-  }
-
   function executeCode(code: string) {
     if (!selectedTask) {
       setFeedback('Fehler bei der Ausgabenauswahl!')
@@ -65,12 +51,23 @@ export function useQueryValidation(
     // Use corresponding helper functions to evaluate user input
     if (selectedTopic === 'dql') {
       try {
+        if (!solutionTable) return
+
+        // Execute user query here to display its result later
         const execResults = database.exec(code)
 
         if (execResults.length === 0) throw Error('No Results!')
 
+        const validationResult = validateDQLInput(execResults[0], solutionTable)
+
+        if (validationResult.isValid) {
+          setIsCorrect(true)
+        } else {
+          setIsCorrect(false)
+        }
+        
+        // Display query result and reset feedback state since they are mutually exclusive
         setQueryData(execResults)
-        evaluateQuery(execResults[0])
         setFeedback('')
       } catch (err) {
         setFeedback(err as string)
