@@ -20,6 +20,7 @@ export default function useShuffledTasks(
     })
   }
 
+  // Reset task list upon topic, schema or difficulty change
   useEffect(() => {
     if (!topic || !schema || !difficulty) return
 
@@ -35,7 +36,9 @@ export default function useShuffledTasks(
     const filteredTasks = topicTasks.filter(
       (task) => task.schema === schema && task.difficulty === difficulty
     )
+
     const shuffledTasks = filteredTasks.sort(() => Math.random() - 0.5)
+    
     setTasks(shuffledTasks)
   }, [topic, schema, difficulty])
 

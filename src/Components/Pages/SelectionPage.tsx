@@ -26,6 +26,7 @@ export default function SelectionPage({
   const schemaOptions = useSchemaOptions(topic)
   const difficultyOptions = useDifficultyOptions(topic, schema)
 
+  // Reset schema and difficulty upon topic changes
   useEffect(() => {
     setSchema('')
     setDifficulty('')

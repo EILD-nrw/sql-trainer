@@ -18,7 +18,7 @@ export function compareSqlValueLists(x: SqlValue[], y: SqlValue[]) {
   return sortedX.every((entry, index) => entry === sortedY[index])
 }
 
-function columnNamesAreEqual(columnsX: string[], columnsY: string[]): boolean {
+function compareColumnNames(columnsX: string[], columnsY: string[]): boolean {
   if (columnsX.length !== columnsY.length) return false
 
   const preparedX = columnsX.map((column) => column.toLowerCase())
@@ -27,6 +27,7 @@ function columnNamesAreEqual(columnsX: string[], columnsY: string[]): boolean {
   const sortedX = preparedX.sort()
   const sortedY = preparedY.sort()
 
+  // Check if all column names are equal / exception for aggregate function
   return sortedX.every(
     (entry, index) =>
       entry === sortedY[index] ||
@@ -56,7 +57,7 @@ function findCorrespondingIndex(
 
 export function compareQueryResults(x: QueryExecResult, y: QueryExecResult) {
   // Check Column-names
-  if (!columnNamesAreEqual(x.columns, y.columns)) return false
+  if (!compareColumnNames(x.columns, y.columns)) return false
 
   // Check entries columnwise
   for (const column of x.columns) {

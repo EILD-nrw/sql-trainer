@@ -21,6 +21,7 @@ function validateTableInfo(
   compareNotNull: boolean = false,
   comparePrimaryKeys: boolean = false
 ): ValidationResult {
+  // Use PRAGMA TABLE_INFO Output to access column names (see example)
   const solutionColumnNames = solutionTableInfo.values
     .map((row) => row[1])
     .map((columnName) => String(columnName).toLowerCase())
@@ -28,7 +29,7 @@ function validateTableInfo(
     .map((row) => row[1])
     .map((columnName) => String(columnName).toLowerCase())
 
-  // Wrong number of columns
+  // Check for wrong number of columns
   if (solutionColumnNames.length !== userColumnNames.length) {
     return {
       isValid: false,
@@ -40,7 +41,7 @@ function validateTableInfo(
     }
   }
 
-  // Same column names
+  // Check for identical column names
   const missingColumns = solutionColumnNames.filter(
     (columnName) => !userColumnNames.includes(columnName)
   )
@@ -94,9 +95,14 @@ export function validateCreate(
   solutionQuery: string,
   database: Database
 ): ValidationResult {
-  // Get create type and name ("CREATE TABLE X" -> TYPE: TABLE NAME: X)
-  const type = solutionQuery.split(' ')[1].toLowerCase()
-  const name = solutionQuery.split(' ')[2].toLowerCase()
+  // Get create type and name ("CREATE TABLE X" -> TYPE: TABLE & NAME: X)
+  // EXCEPTION: CREATE UNIQUE INDEX
+  const splitQuery = solutionQuery.split(' ').map(word => word.toLowerCase())
+  const type = splitQuery[1] === 'unique' ? splitQuery[2] : splitQuery[1]
+  const name = splitQuery[1] === 'unique' ? splitQuery[3] : splitQuery[2]
+
+  console.log(type)
+
   if (type === 'table' || type === 'view') {
     try {
       // Wrap queries in transaction to rollback later
@@ -129,8 +135,6 @@ export function validateCreate(
         // Should check for primary key
         solutionQuery.toLowerCase().includes('primary key')
       )
-
-      // last rollback in finally block
     } catch (err: any) {
       // Return the error as feedback in case something unexpected fails
       return {
@@ -162,6 +166,8 @@ export function validateCreate(
 
       database.run(code)
       const userResult = database.exec(`PRAGMA INDEX_INFO(${name})`)
+
+      // TABLE_INFO returns nothing if there is a typo in the name of the created index
       if (userResult.length === 0) {
         return {
           isValid: false,
@@ -173,24 +179,22 @@ export function validateCreate(
         .map((row) => row[2])
         .map((columnName) => String(columnName).toLowerCase())
 
+      // All columns match
       if (
-        solutionColumnNames.length === userColumnNames.length &&
-        solutionColumnNames.every((columnName) =>
+        !(solutionColumnNames.length === userColumnNames.length) ||
+        !solutionColumnNames.every((columnName) =>
           userColumnNames.includes(columnName)
         )
       ) {
-        return {
-          isValid: true,
-        }
-      } else {
         return {
           isValid: false,
           feedback:
             'Index stimmt nicht mit Lösung überein! (Gibt es vielleicht einen Tippfehler?)',
         }
       }
-
-      // last rollback in finally block
+      return {
+        isValid: true,
+      }
     } catch (err: any) {
       // Return the error as feedback in case something unexpected fails
       return {
@@ -202,11 +206,15 @@ export function validateCreate(
       try {
         database.run('ROLLBACK;')
       } catch (e) {
-        console.log('Rollback failed.')
+        console.error('Rollback failed.')
       }
     }
   } else {
-    throw Error('Unknown task type (Only TABLE, VIEW and INDEX are supported)')
+    console.error('Unknown task type (Only TABLE, VIEW and INDEX are supported)')
+    return {
+      isValid: false,
+      feedback: 'Interner Fehler!'
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 import { Database, QueryExecResult } from 'sql.js'
 import { Task } from '../Types/Task'
 import { useEffect, useState } from 'react'
-import { compareQueryResults } from './validationHelper'
+import { compareQueryResults } from './commonValidationHelper'
 import { validateDMLInput } from './dmlValidators'
 import { validateDDLInput } from './ddlValidators'
 

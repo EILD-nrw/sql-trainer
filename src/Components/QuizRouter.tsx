@@ -47,18 +47,18 @@ export default function QuizRouter() {
   async function initDB(): Promise<void> {
     try {
       // Get SQL File
-      const dbFile = await fetch(`./db/${schema}.db`).then((res) =>
-        res.arrayBuffer()
-      )
+      const rawDBFile = await fetch(`./db/${schema}.db`)
+      const preparedFile = await rawDBFile.arrayBuffer()
 
       // Initialize DB
       const SQL = await initSqlJs({ locateFile: () => sqlWasm })
-      setDatabase(new SQL.Database(new Uint8Array(dbFile)))
+      setDatabase(new SQL.Database(new Uint8Array(preparedFile)))
     } catch (err) {
       console.log(err)
     }
   }
 
+  // Reset database upon schema change
   useEffect(() => {
     if (!schema) return
 
