@@ -73,6 +73,7 @@ export function validateDMLInput(
     database.run(code)
     const userResult = database.exec(`SELECT * FROM ${tableName}`)
 
+    // Evaluate query data
     return compareTableData(solutionResult[0], userResult[0])
   } catch (err: any) {
     return {
