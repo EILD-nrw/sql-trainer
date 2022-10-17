@@ -19,6 +19,7 @@ export function useQueryValidation(
   useEffect(() => {
     setIsCorrect(undefined)
     setFeedback('')
+    setQueryData([])
     setSolutionTable(undefined)
   }, [selectedTask])
 
