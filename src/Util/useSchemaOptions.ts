@@ -3,6 +3,8 @@ import { dmlTasks } from '../Tasks/DMLTasks'
 import { dqlTasks } from '../Tasks/DQLTasks'
 import { Task } from '../Types/Task'
 
+export const SCHEMA_OPTIONS = ['Busse', 'Fahrrad', 'Theater', 'Reisen', 'Fussball']
+
 export function useSchemaOptions(topic: string) {
   let tasks: Task[]
   if (topic === 'ddl') {
@@ -13,9 +15,7 @@ export function useSchemaOptions(topic: string) {
     tasks = dqlTasks
   }
 
-  const schemaList = ['Busse', 'Fahrrad', 'Theater', 'Reisen', 'Fussball']
-
-  const schemaOptions = schemaList.filter((schemaName) =>
+  const schemaOptions = SCHEMA_OPTIONS.filter((schemaName) =>
     tasks.some((task) => task.schema === schemaName.toLowerCase())
   )
 
