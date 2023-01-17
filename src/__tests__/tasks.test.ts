@@ -11,7 +11,13 @@ import path from 'path'
 import { Task } from '../Types/Task'
 import { SCHEMA_OPTIONS } from '../Util/useSchemaOptions'
 
+const loadedDatabases: { [schema: string]: Database } = {}
+
 async function getDatabase(schema: string): Promise<Database> {
+    if (schema in loadedDatabases) {
+        return loadedDatabases[schema]
+    }
+
     // Prepare sql.js from wasm file
     const sqlWasm = fs.readFileSync(
         path.resolve(__dirname, '../../node_modules/sql.js/dist/sql-wasm.wasm'))
@@ -20,7 +26,9 @@ async function getDatabase(schema: string): Promise<Database> {
     // Load the database for this schema
     const rawDBFile = fs.readFileSync(
         path.resolve(__dirname, `../../public/db/${schema}.db`))
-    return new SQL.Database(rawDBFile)
+    const database = new SQL.Database(rawDBFile)
+    loadedDatabases[schema] = database
+    return database
 }
 
 function makeTestForTask(task: Task, topic: 'dql'|'ddl'|'dml') {
@@ -42,7 +50,12 @@ Attempted solution: ${task.solutionQuery}
         let result: { isValid: boolean, feedback?: string }
         if (topic === 'dql') {
             const solutionTable = database.exec(task.solutionQuery)[0]
-            result = validateDQLInput(solutionTable, solutionTable)
+            if (solutionTable) {
+                result = validateDQLInput(solutionTable, solutionTable)
+            } else {
+                // Currently treating solutions with no results as valid
+                result = { isValid: true, feedback: undefined }
+            }
         } else if (topic === 'ddl') {
             result = validateDDLInput(task.solutionQuery, task, database)
         } else {
