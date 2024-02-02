@@ -232,7 +232,7 @@ export const ddlTasks: Task[] = [
     difficulty: 'mittel',
     text:
       'In der Tabelle "Busfahrer" soll die Spalte "gehaltsstufe" hinzugefügt werden.',
-    solutionQuery: 'ALTER TABLE BUSFAHRER ADD (gehaltsstufe INTEGER);',
+    solutionQuery: 'ALTER TABLE BUSFAHRER ADD gehaltsstufe INTEGER;',
     taskType: 3,
   },
   {
@@ -242,7 +242,7 @@ export const ddlTasks: Task[] = [
     text:
       'Schreiben Sie den Befehl zum Erstellen einer View mit dem Namen "v_inspektion" auf den Attributen "am" und "fahrzeug_id" auf der Tabelle "Inspektionen", wo die Firma = VeServ ist.',
     solutionQuery:
-      "CREATE VIEW Inspektion AS SELECT am, fahrzeug_id FROM Inspektionen WHERE firma = 'VeServ';",
+      "CREATE VIEW v_inspektion AS SELECT am, fahrzeug_id FROM Inspektionen WHERE firma = 'VeServ';",
     taskType: 1,
   },
   {
@@ -285,8 +285,8 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'schwer',
     text:
-      'Fügen Sie in der Tabelle "Techniker" die Spalte "ausbildung" hinzu!',
-    solutionQuery: 'ALTER TABLE Techniker ADD ausbildung VARCHAR2(20);',
+      'Fügen Sie in der Tabelle "Mitarbeiter" die Spalte "ausbildung" hinzu!',
+    solutionQuery: 'ALTER TABLE Mitarbeiter ADD ausbildung VARCHAR2(20);',
     taskType: 3,
   },
   {
@@ -296,7 +296,7 @@ export const ddlTasks: Task[] = [
     text:
       'Erstellen Sie eine View mit dem Namen "busse_angemeldet", die alle Busse (fahrzeug_id) anzeigt, die im September 2009 angemeldet wurden.',
     solutionQuery:
-      "CREATE VIEW busse_angemeldet AS SELECT fahrzeug_id FROM busse WHERE angemeldet_am >= TO_DATE('01.09.09', 'DD.MM.YY') AND angemeldet_am <= TO_DATE('30.09.09', 'DD.MM.YY')",
+      "CREATE VIEW busse_angemeldet AS SELECT fahrzeug_id FROM busse WHERE angemeldet_am LIKE '%09.09'",
     taskType: 1,
   },
   {
@@ -313,9 +313,9 @@ export const ddlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'schwer',
     text:
-      'Die Tabelle Einsatzplan wurde versehentlich gelöscht. Erstellen Sie diese erneut mit "einplan_id", "fahrt_id", "fahrzeug_id", "mita_id" und "tag".\n    Der Primärschlüssel liegt auf "einplan_id" und außer "tag" welcher im DATE-Format sein soll, sind alle 9-stelligen Zahlen ohne Kommastellen.\n    Es soll überprüft werden ob die "fahrt_id" größer als 0 ist und eine "fahrzeug_id" muss auch immer eingegeben werden.',
+      'Die Tabelle Einsatzplan wurde versehentlich gelöscht. Erstellen Sie diese erneut mit dem Namen "einsatzplan2" und den Spalten "einplan_id", "fahrt_id", "fahrzeug_id", "mita_id" und "tag".\n    Der Primärschlüssel liegt auf "einplan_id" und außer "tag" welcher im DATE-Format sein soll, sind alle 9-stelligen Zahlen ohne Kommastellen.\n    Es soll überprüft werden ob die "fahrt_id" größer als 0 ist und eine "fahrzeug_id" muss auch immer eingegeben werden.',
     solutionQuery:
-      'CREATE TABLE EINSATZPLAN (\n      "EINPLAN_ID" NUMBER(9,0) PRIMARY KEY,\n      "TAG" DATE,\n     "FAHRT_ID" NUMBER(9,0) CONSTRAINT "POS_ID41" CHECK ("FAHRT_ID">= 0),\n     "FAHRZEUG_ID" NUMBER(9,0) NOT NULL,\n     "MITA_ID" NUMBER(9,0)\n     ) ;',
+      'CREATE TABLE EINSATZPLAN2 (\n      "EINPLAN_ID" NUMBER(9,0) PRIMARY KEY,\n      "TAG" DATE,\n     "FAHRT_ID" NUMBER(9,0) CONSTRAINT "POS_ID41" CHECK ("FAHRT_ID">= 0),\n     "FAHRZEUG_ID" NUMBER(9,0) NOT NULL,\n     "MITA_ID" NUMBER(9,0)\n     ) ;',
     taskType: 1,
   },
 ]
