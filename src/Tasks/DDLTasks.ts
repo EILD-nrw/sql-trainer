@@ -242,7 +242,7 @@ export const ddlTasks: Task[] = [
     text:
       'Schreiben Sie den Befehl zum Erstellen einer View mit dem Namen "v_inspektion" auf den Attributen "am" und "fahrzeug_id" auf der Tabelle "Inspektionen", wo die Firma = VeServ ist.',
     solutionQuery:
-      "CREATE VIEW Inspektion AS SELECT am, fahrzeug_id FROM Inspektionen WHERE firma = 'VeServ';",
+      "CREATE VIEW v_inspektion AS SELECT am, fahrzeug_id FROM Inspektionen WHERE firma = 'VeServ';",
     taskType: 1,
   },
   {
