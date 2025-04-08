@@ -966,7 +966,7 @@ export const dqlTasks: Task[] = [
     schema: 'busse',
     difficulty: 'mittel',
     text: 'Geben Sie das durchschnittliche Gehalt aller Mitarbeiter aus incl. Busfahrer und Nichtbusfahrer! Das Gehalt der Busfahrer kann mit Stundenlohn*160 berechnet werden.',
-    solutionQuery: 'SELECT avg(gehalt) FROM (SELECT stundenlohn*160 as gehalt FROM busfahrer UNION SELECT gehalt FROM nichtbusfahrer)',
+    solutionQuery: 'SELECT avg(gehalt) FROM (SELECT stundenlohn*160 as gehalt FROM busfahrer UNION ALL SELECT gehalt FROM nichtbusfahrer)',
     taskType: 11
   },
   {
