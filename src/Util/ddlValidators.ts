@@ -101,8 +101,6 @@ export function validateCreate(
   const type = splitQuery[1] === 'unique' ? splitQuery[2] : splitQuery[1]
   const name = splitQuery[1] === 'unique' ? splitQuery[3] : splitQuery[2]
 
-  console.log(type)
-
   if (type === 'table' || type === 'view') {
     try {
       // Wrap queries in transaction to rollback later
