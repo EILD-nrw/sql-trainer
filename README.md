@@ -16,6 +16,7 @@ Es gibt verschiedene Möglichkeiten den Trainer zu benutzen. Am einfachsten ist 
 
 Alternativ lässt sich diese Version aus dem `gh-pages`-Branch als .zip-Datei herunterladen und anschließend auf Ilias, Moodle oder ähnliche Plattformen hochladen. Dort muss diese lediglich entpackt werden. Ilias erkennt die `index.html` automatisch als Startpunkt der Anwendung, auf anderen Plattformen muss dies eventuell noch manuell passieren.
 
+Um die Software zu bauen wird `npm` verwendet. Dazu muss noch `npm install craco` installiert werden.
 Als letzte Alternative kann die Anwendung auch aus dem Sourcecode generiert werden. Das entsprechende Build-Skript aus der Package.json lässt sich mit `npm run build` ausführen. Der generierte Ordner ist dann identisch zu dem, der auch im `gh-pages`-Branch liegt.
 
 ## Lizenz
