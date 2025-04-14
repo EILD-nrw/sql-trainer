@@ -8,7 +8,7 @@ export const dmlTasks: Task[] = [
     text:
       'Löschen Sie den Mitarbeiter, der die meisten Fahrten im Einsatzplan hatte!',
     solutionQuery:
-      'DELETE FROM mitarbeiter WHERE mita_id = (SELECT mita_id FROM einsatzplan GROUP BY mita_id HAVING COUNT(*) >= ALL(SELECT COUNT(*) FROM einsatzplan GROUP BY mita_id))',
+      'DELETE FROM mitarbeiter WHERE mita_id = (SELECT mita_id FROM einsatzplan GROUP BY mita_id ORDER BY COUNT(*) DESC LIMIT 1)',
     taskType: 2,
   },
   {
@@ -18,7 +18,7 @@ export const dmlTasks: Task[] = [
     text:
       'Löschen Sie den Mitarbeiter, der im Einsatzplan alle Fahrzeuge gefahren ist!',
     solutionQuery:
-      'DELETE FROM mitarbeiter m WHERE NOT EXISTS (SELECT * FROM busse b WHERE NOT EXISTS (SELECT * FROM einsatzplan e WHERE e.mita_id = m.mita_id AND b.fahrzeug_id = e.fahrzeug_id))',
+      'DELETE FROM mitarbeiter AS m WHERE NOT EXISTS (SELECT * FROM busse b WHERE NOT EXISTS (SELECT * FROM einsatzplan e WHERE e.mita_id = m.mita_id AND b.fahrzeug_id = e.fahrzeug_id))',
     taskType: 2,
   },
   {
@@ -28,7 +28,7 @@ export const dmlTasks: Task[] = [
     text:
       'Löschen Sie die Linie, die eine Verbindung mit der größten Fahrstrecke gefahren ist!',
     solutionQuery:
-      'DELETE FROM linie l WHERE linien_id = (SELECT l.linien_id FROM linie l, bestehen b WHERE b.linien_id = l.linien_id AND b.kanten_id = (SELECT v.kanten_id FROM verbindung v WHERE v.fahrstrecke = (SELECT MAX(v2.fahrstrecke) FROM verbindung v2)))',
+      'DELETE FROM linie AS l WHERE linien_id = (SELECT l.linien_id FROM linie l, bestehen b WHERE b.linien_id = l.linien_id AND b.kanten_id = (SELECT v.kanten_id FROM verbindung v WHERE v.fahrstrecke = (SELECT MAX(v2.fahrstrecke) FROM verbindung v2)))',
     taskType: 2,
   },
   {
@@ -246,7 +246,7 @@ export const dmlTasks: Task[] = [
     difficulty: 'mittel',
     text: 'Löschen Sie alle Spieler, die kein Tor geschossen haben.',
     solutionQuery:
-      'DELETE FROM spieler WHERE NOT EXISTS (SELECT tore.spieler_id FROM tore WHERE spieler.spieler_id = tore.spieler_id',
+      'DELETE FROM spieler WHERE NOT EXISTS (SELECT tore.spieler_id FROM tore WHERE spieler.spieler_id = tore.spieler_id)',
     taskType: 2,
   },
   {
@@ -256,7 +256,31 @@ export const dmlTasks: Task[] = [
     text:
       'Ändern Sie den Trainernamen der Mannschaft, die in der Vorrunde die meisten Tore kassiert hat, auf "Kniggel".',
     solutionQuery:
-      "UPDATE nation SET trainername = 'Kniggel' WHERE nationname = (SELECT mannschaft FROM  (SELECT mannschaft_1 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_1   UNION  SELECT mannschaft_2 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_2 )  GROUP BY Mannschaft  having SUM(TORE) >=ALL (  SELECT sum (tore)   FROM  (SELECT mannschaft_1 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 3, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_1   UNION  SELECT mannschaft_2 as mannschaft,   SUM(SUBSTR(spiele.ERGEBNIS, 1, 1)) as tore  FROM spiele  WHERE Typ = 'Vorrunde'  GROUP BY Mannschaft_2 )  GROUP BY Mannschaft  ))",
+`WITH mannschaft_1_kassiert_tore AS (
+    SELECT mannschaft_1 AS mannschaft,
+          SUM(SUBSTR(spiele.ergebnis, 3, 1)) AS teil_kassiert_tore
+    FROM spiele WHERE Typ = 'Vorrunde' GROUP BY mannschaft_1
+),
+mannschaft_2_kassiert_tore AS (
+    SELECT mannschaft_2 AS mannschaft, 
+           SUM(SUBSTR(spiele.ergebnis, 1, 1)) AS teil_kassiert_tore
+    FROM spiele WHERE Typ = 'Vorrunde' GROUP BY mannschaft_2
+),
+mannschaft_kassiert_tore AS (
+    SELECT mannschaft, 
+           SUM(teil_kassiert_tore) AS kassiert_tore 
+    FROM (
+        SELECT * FROM mannschaft_1_kassiert_tore 
+        UNION SELECT * FROM mannschaft_2_kassiert_tore
+    ) 
+    GROUP BY mannschaft
+)
+UPDATE nation SET trainername = 'Kniggel' WHERE nationname = (
+    SELECT mannschaft 
+    FROM mannschaft_kassiert_tore 
+    GROUP BY mannschaft
+    ORDER BY kassiert_tore DESC LIMIT 1
+)`,
     taskType: 3,
   },
   {
@@ -296,7 +320,7 @@ export const dmlTasks: Task[] = [
     text:
       'Setzen Sie die Gehälter der Spieler, die am meisten verdienen, um 5% hoch.',
     solutionQuery:
-      'UPDATE spieler SET gehalt_in_euro = gehalt_in_euro * 1.05 WHERE gehalt_in_euro >= (SELECT MAX(gehalt_in_euro) FROM spieler',
+      'UPDATE spieler SET gehalt_in_euro = gehalt_in_euro * 1.05 WHERE gehalt_in_euro >= (SELECT MAX(gehalt_in_euro) FROM spieler)',
     taskType: 3,
   },
   {
@@ -325,7 +349,7 @@ export const dmlTasks: Task[] = [
     text:
       'Der Nachname des Spielers, der am meisten Tore geschossen hat, soll auf "Wagner" geändert werden.',
     solutionQuery:
-      "UPDATE spieler SET nachname = 'Wagner' WHERE nachname in (SELECT   Spieler.NACHNAME FROM   spieler, Tore     WHERE  spieler.SPIELER_ID = Tore.SPIELER_ID     GROUP BY Spieler.NACHNAME, Spieler.NATIONNAME      HAVING COUNT(*) >= all (SELECT COUNT(*)  FROM   spieler, Tore  WHERE spieler.SPIELER_ID = Tore.SPIELER_ID GROUP BY Spieler.NACHNAME, Spieler.NATIONNAME))",
+      "UPDATE spieler SET nachname = 'Wagner' WHERE spieler_id = (SELECT spieler_id FROM tore GROUP BY spieler_id ORDER BY COUNT(*) DESC LIMIT 1)",
     taskType: 3,
   },
   {
@@ -334,7 +358,7 @@ export const dmlTasks: Task[] = [
     difficulty: 'schwer',
     text: 'Löschen Sie alle Karten von dem Spiel mit dem meisten Toren.',
     solutionQuery:
-      'DELETE FROM karten WHERE spiel_id IN (SELECT spiel_id FROM tore GROUP BY spiel_id HAVING COUNT(*) >= (SELECT MAX(COUNT(*)) FROM tore GROUP BY spiel_id))',
+      'DELETE FROM karten WHERE spiel_id = (SELECT spiel_id FROM tore GROUP BY spiel_id ORDER BY COUNT(*) DESC LIMIT 1)',
     taskType: 2,
   },
   {
@@ -423,7 +447,7 @@ export const dmlTasks: Task[] = [
     text:
       'Löschen Sie alle Kunden, die ein Hotel gebucht haben, welches über mehr Einzelzimmer als Doppelzimmer verfügt!',
     solutionQuery:
-      'DELETE FROM kunden WHERE kundennr = (SELECT k.kundennr FROM kunde k, hotel h, buchung b WHERE h.anzahlez > h.anzahldz AND h.stadtname = b.stadtname AND b.kundennr = k.kundennr)',
+      'DELETE FROM kunde WHERE kundennr = (SELECT k.kundennr FROM kunde k, hotel h, buchung b WHERE h.anzahlez > h.anzahldz AND h.stadtname = b.stadtname AND b.kundennr = k.kundennr)',
     taskType: 2,
   },
   {
@@ -461,7 +485,7 @@ export const dmlTasks: Task[] = [
     difficulty: 'mittel',
     text: 'Löschen Sie alle Hotels, die in den USA stehen!',
     solutionQuery:
-      "DELETE FROM hotel WHERE stadtname IN (SELECT stadtname FROM stadt WHERE land LIKE 'USA%'",
+      "DELETE FROM hotel WHERE stadtname IN (SELECT stadtname FROM stadt WHERE land LIKE 'USA%')",
     taskType: 2,
   },
   {
@@ -511,7 +535,7 @@ export const dmlTasks: Task[] = [
     text:
       'Ändern Sie den flughafen1 bei der Reisezeit auf den einzigen Flughafen in der USA bei der Zeit, die am häufigsten gebucht wurde.',
     solutionQuery:
-      "UPDATE reisezeit SET flughafen1 = (SELECT flughafen FROM stadt WHERE land LIKE 'USA%') WHERE zeit = (SELECT zeit FROM buchung GROUP BY zeit HAVING COUNT(*) >= ALL(SELECT COUNT(*) FROM buchung GROUP BY zeit))",
+      "UPDATE reisezeit SET flughafen1 = (SELECT flughafen FROM stadt WHERE land LIKE 'USA%') WHERE zeit = (SELECT zeit FROM buchung GROUP BY zeit ORDER BY COUNT(*) DESC LIMIT 1)",
     taskType: 3,
   },
   {
@@ -531,7 +555,7 @@ export const dmlTasks: Task[] = [
     text:
       "Ändern Sie den flughafen1 bei der Reisezeit auf 'Düsseldorf Flughafen', bei der Zeit, die am meisten gebucht worden ist.",
     solutionQuery:
-      "UPDATE reisezeit SET flughafen1 = 'Düsseldorf Flughafen' WHERE zeit = (SELECT zeit FROM buchung GROUP BY zeit HAVING COUNT(*) >= ALL(SELECT COUNT(zeit) FROM buchung GROUP BY zeit))",
+      "UPDATE reisezeit SET flughafen1 = 'Düsseldorf Flughafen' WHERE zeit = (SELECT zeit FROM buchung GROUP BY zeit ORDER BY COUNT(*) DESC LIMIT 1)",
     taskType: 3,
   },
   {
@@ -639,7 +663,7 @@ export const dmlTasks: Task[] = [
     text:
       'Der Angestellte "Willi Brater" mit der Angestelltennummer 12 ist krank. Deswegen übernimmt "Susanne Bar" alle seine Aufträge. Bitte Ändern Sie dies in der Datenbank.',
     solutionQuery:
-      "UPDATE SET ang_nr = (SELECT ang_nr FROM angestellte WHERE vorname LIKE 'Susanne%' AND nachname LIKE 'Bar%') WHERE ang_nr = 12",
+      "UPDATE auftraege SET ang_nr = (SELECT ang_nr FROM angestellte WHERE vorname LIKE 'Susanne%' AND nachname LIKE 'Bar%') WHERE ang_nr = 12",
     taskType: 3,
   },
   {
@@ -649,7 +673,7 @@ export const dmlTasks: Task[] = [
     text:
       'Es steht eine Gehaltserhöhung an, aber nicht alle Angestellten sollen mehr Gehalt bekommen. Nur die Angestellten in der Gehaltsklasse 6 bekommen 10% mehr Lohn. Führen Sie diese Aktion durch.',
     solutionQuery:
-      'UPDATE SET gehalt = gehalt * 1.1 WHERE gehalt BETWEEN (SELECT min_gehalt FROM geh_klassen WHERE geh_klasse = 6) AND (SELECT max_gehalt FROM geh_klassen WHERE geh_klasse = 6)',
+      'UPDATE angestellte SET gehalt = gehalt * 1.1 WHERE gehalt BETWEEN (SELECT min_gehalt FROM geh_klassen WHERE geh_klasse = 6) AND (SELECT max_gehalt FROM geh_klassen WHERE geh_klasse = 6)',
     taskType: 3,
   },
   {
@@ -679,7 +703,7 @@ export const dmlTasks: Task[] = [
     text:
       'Bei allen Artikel, die weniger als der Durchschnitt an Jahresumsatz haben, soll der Preis um 5% gesenkt werden, um den Verkauf anzukurbeln.',
     solutionQuery:
-      'UPDATE artikel SET verkaufspreis = verkauspreis * 0.95 WHERE jahresumsatz < (SELECT AVG(jahresumsatz) FROM artikel)',
+      'UPDATE artikel SET verkaufspreis = verkaufspreis * 0.95 WHERE jahresumsatz < (SELECT AVG(jahresumsatz) FROM artikel)',
     taskType: 3,
   },
   {
@@ -688,7 +712,7 @@ export const dmlTasks: Task[] = [
     difficulty: 'mittel',
     text: 'Alle Artikel ohne einen Auftrag sollen gelöscht werden.',
     solutionQuery:
-      'DELETE FROM artikel a WHERE NOT EXISTS (SELECT * FROM auftragspositionen b WHERE a.tnr = b.tnr)',
+      'DELETE FROM artikel AS a WHERE NOT EXISTS (SELECT * FROM auftragspositionen b WHERE a.tnr = b.tnr)',
     taskType: 2,
   },
   {
@@ -728,7 +752,7 @@ export const dmlTasks: Task[] = [
     text:
       'Das Werk zur Vorfertigung wird geschlossen. Die Vorfertigung erfolgt nun auch im Werk mit der Montage. Setzen Sie in der Tabelle "teile_werke" dazu nun alle Werk-ID\'s auf das Werk mit der Montage.',
     solutionQuery:
-      "UPDATE SET wnr = (SELECT wnr FROM werke WHERE bezeichnung ='Montagewerk') WHERE wnr = (SELECT wnr FROM werke WHERE bezeichnung LIKE 'Vorfertigung%')",
+      "UPDATE teile_werke SET wnr = (SELECT wnr FROM werke WHERE bezeichnung = 'Montagewerk') WHERE wnr = (SELECT wnr FROM werke WHERE bezeichnung LIKE 'Vorfertigung%')",
     taskType: 3,
   },
   {
@@ -738,7 +762,7 @@ export const dmlTasks: Task[] = [
     text:
       'Der Lieferant, der alle Materialien liefern kann, soll gelöscht werden.',
     solutionQuery:
-      "DELETE FROM lieferanten WHERE lief_nr = (SELECT a.lief_nr, a.name FROM lieferanten a WHERE NOT EXISTS (SELECT * FROM teile t WHERE t.typ ='Material' AND NOT EXISTS (SELECT * FROM lieferprogramme b WHERE a.lief_nr = b.lief_nr AND t.tnr = b.tnr)))",
+      "DELETE FROM lieferanten WHERE lief_nr = (SELECT a.lief_nr FROM lieferanten a WHERE NOT EXISTS (SELECT * FROM teile t WHERE t.typ = 'Material' AND NOT EXISTS (SELECT * FROM lieferprogramme b WHERE a.lief_nr = b.lief_nr AND t.tnr = b.tnr)))",
     taskType: 2,
   },
   {
@@ -761,16 +785,20 @@ export const dmlTasks: Task[] = [
       'UPDATE lagerbestand SET bestand = 5000 WHERE tnr IN (SELECT DISTINCT tnr FROM lagerbestand l WHERE NOT EXISTS (SELECT * FROM lagerbestand l1 WHERE NOT EXISTS (SELECT * FROM lagerbestand l2 WHERE l.lanr != l2.lanr AND l.tnr = l2.tnr AND l1.lanr != l2.lanr)))',
     taskType: 3,
   },
-  {
-    id: 27,
-    schema: 'fahrrad',
-    difficulty: 'schwer',
-    text:
-      'Die Lieferzeit und Herstelldauer von allen Teilen, die ein Unterteil des "Scott ATACAMA TOUR" (tnr = 60) sind, beträgt jetzt 15 Tage. Ändern Sie dies in der Datenbank.',
-    solutionQuery:
-      'UPDATE teile SET lieferzeit = 15, herstelldauer = 15 WHERE tnr IN (SELECT uteil FROM struktur START WITH oteil = 60 CONNECT BY PRIOR uteil = oteil)',
-    taskType: 3,
-  },
+  // CONNECT BY is an Oracle SQL feature that doesn't exist in SQLite.
+  // While it's in theory possible to construct an SQLite query that will recursively gather descendants
+  // of a tree structure like this, it'd be pretty complicated.
+  //
+  // {
+  //   id: 27,
+  //   schema: 'fahrrad',
+  //   difficulty: 'schwer',
+  //   text:
+  //     'Die Lieferzeit und Herstelldauer von allen Teilen, die ein Unterteil des "Scott ATACAMA TOUR" (tnr = 60) sind, beträgt jetzt 15 Tage. Ändern Sie dies in der Datenbank.',
+  //   solutionQuery:
+  //     'UPDATE teile SET lieferzeit = 15, herstelldauer = 15 WHERE tnr IN (SELECT uteil FROM struktur START WITH oteil = 60 CONNECT BY PRIOR uteil = oteil)',
+  //   taskType: 3,
+  // },
   {
     id: 28,
     schema: 'fahrrad',
@@ -798,7 +826,7 @@ export const dmlTasks: Task[] = [
     text:
       'Durch eine Sonderaktion sollen für Artikel, für die momentan ein Auftrag vorliegt, der Verkaufspreis auf 1000 Euro gesetzt werden.',
     solutionQuery:
-      'UPDATE artikel SET verkauspreis = 1000 WHERE tnr IN (SELECT DISTINCT a.tnr FROM artikel a, (SELECT tnr FROM auftragspositionen) b WHERE a.tnr = b.tnr)',
+      'UPDATE artikel SET verkaufspreis = 1000 WHERE tnr IN (SELECT DISTINCT a.tnr FROM artikel a, (SELECT tnr FROM auftragspositionen) b WHERE a.tnr = b.tnr)',
     taskType: 3,
   },
   {
@@ -808,7 +836,7 @@ export const dmlTasks: Task[] = [
     text:
       'Die Teile, die nicht in allen Werken produziert werden, sollen gelöscht werden.',
     solutionQuery:
-      'DELETE FROM teile WHERE (SELECT * FROM teile_werke tw1 WHERE NOT EXISTS (SELECT * FROM teile_werke tw2 WHERE tw1.wnr != tw2.wnr AND tw1.tnr = tw2.tnr))',
+      'DELETE FROM teile WHERE tnr IN (SELECT tnr FROM teile_werke tw1 WHERE NOT EXISTS (SELECT tnr FROM teile_werke tw2 WHERE tw1.wnr != tw2.wnr AND tw1.tnr = tw2.tnr))',
     taskType: 2,
   },
   {
@@ -818,7 +846,7 @@ export const dmlTasks: Task[] = [
     text:
       'Bei allen Teilen, die der Lieferant 2, aber nicht der Lieferant 1 liefert, soll der Mindestbestand auf 50 gesetzt werden.',
     solutionQuery:
-      'UPDATE teile SET mindestbestand = 50 WHERE tnr IN (SELECT tnr FROM lieferprogramme WHERE lief_nr = 2 MINUS SELECT tnr FROM lieferprogramme WHERE lief_nr = 1)',
+      'UPDATE teile SET mindestbestand = 50 WHERE tnr IN (SELECT tnr FROM lieferprogramme WHERE lief_nr = 2) AND tnr NOT IN (SELECT tnr FROM lieferprogramme WHERE lief_nr = 1)',
     taskType: 3,
   },
   {
@@ -1001,7 +1029,7 @@ export const dmlTasks: Task[] = [
     text:
       'Setzen Sie den Preis vom Doppelzimmer bei dem Hotel um 30 Euro höher, dass bis jetzt die meisten gebuchten Doppelzimmer hat.',
     solutionQuery:
-      'UPDATE hotel SET preisdz = preisdz + 30 WHERE hotelname = (SELECT hotelname FROM buchung GROUP BY hotelname HAVING SUM(gebuchtedz) >= ALL(SELECT SUM(gebuchtedz) FROM buchung GROUP BY hotelname))',
+      'UPDATE hotel SET preisdz = preisdz + 30 WHERE hotelname = (SELECT hotelname FROM buchung GROUP BY hotelname ORDER BY SUM(gebuchtedz) DESC LIMIT 1)',
     taskType: 3,
   },
   {
@@ -1011,7 +1039,8 @@ export const dmlTasks: Task[] = [
     text:
       'Setzen Sie bei allen Buchungen die Kundennummer auf 4, wobei der Stadtname genau der ist, der am häufigsten in den Buchungen vorkommt.',
     solutionQuery:
-      'UPDATE buchung SET kundennr = 4 WHERE stadtname in (SELECT stadtname FROM buchung GROUP BY stadtname HAVING COUNT(*) >= ALL(SELECT COUNT(*) FROM buchung GROUP BY stadtname))',
+      'UPDATE buchung SET kundennr = 4 WHERE stadtname IN (SELECT stadtname FROM buchung GROUP BY stadtname HAVING COUNT(*) = (SELECT COUNT(*) FROM buchung GROUP BY stadtname ORDER BY COUNT(*) DESC LIMIT 1))',
+      
     taskType: 3,
   },
   {
@@ -1061,7 +1090,7 @@ export const dmlTasks: Task[] = [
     text:
       'Löschen Sie alle Schauspieler, denen keine Rolle zugeteilt worden ist.',
     solutionQuery:
-      'DELETE FROM schauspieler sch WHERE NOT EXISTS (SELECT * FROM stellt_dar st WHERE sch.pnr = st.pnr)',
+      'DELETE FROM schauspieler AS sch WHERE NOT EXISTS (SELECT * FROM stellt_dar st WHERE sch.pnr = st.pnr)',
     taskType: 2,
   },
   {
@@ -1118,7 +1147,7 @@ export const dmlTasks: Task[] = [
     text:
       'Löschen Sie alle Schauspieler, denen keine Rolle zugeteilt worden ist.',
     solutionQuery:
-      'DELETE FROM schauspieler sch WHERE NOT EXISTS (SELECT * FROM stellt_dar st WHERE sch.pnr = st.pnr)',
+      'DELETE FROM schauspieler AS sch WHERE NOT EXISTS (SELECT * FROM stellt_dar st WHERE sch.pnr = st.pnr)',
     taskType: 2,
   },
   {
@@ -1128,7 +1157,7 @@ export const dmlTasks: Task[] = [
     text:
       'Löschen Sie alle Dramen, in denen die Anzahl der Rollen am wenigsten ist.',
     solutionQuery:
-      'DELETE FROM drama WHERE titel IN (SELECT titel FROM rolle GROUP BY titel HAVING COUNT(*) = (SELECT MIN(COUNT(*)) FROM rolle GROUP BY titel))',
+      'DELETE FROM drama WHERE titel IN (SELECT titel FROM rolle GROUP BY titel HAVING COUNT(*) = (SELECT COUNT(*) FROM rolle GROUP BY titel ORDER BY COUNT(*) LIMIT 1))',
     taskType: 2,
   },
   {
@@ -1145,7 +1174,7 @@ export const dmlTasks: Task[] = [
     id: 163,
     schema: 'theater',
     difficulty: 'mittel',
-    text: 'Löschen Sie alle Theater, in denen es kein Engagement gibt.',
+    text: 'Löschen Sie alle Theater, in denen es kein Engament gibt.',
     solutionQuery:
       'DELETE FROM theater WHERE NOT EXISTS (SELECT * FROM engament WHERE theater.name = engament.name)',
     taskType: 2,
@@ -1157,7 +1186,7 @@ export const dmlTasks: Task[] = [
     text:
       'Alle Dichter, die kein Theaterstück(Drama) haben, sollen gelöscht werden.',
     solutionQuery:
-      'DELETE FROM dichter di WHERE NOT EXISTS (SELECT autor FROM drama dr WHERE di.autor = dr.autor',
+      'DELETE FROM dichter AS di WHERE NOT EXISTS (SELECT autor FROM drama dr WHERE di.autor = dr.autor)',
     taskType: 2,
   },
   {
@@ -1167,7 +1196,7 @@ export const dmlTasks: Task[] = [
     text:
       'Der älteste Dichter ist verstorben. Löschen Sie ihn aus der Datenbank.',
     solutionQuery:
-      'DELETE FROM dichter WHERE geburtsjahr <= ALL (SELECT geburtsjahr FROM dichter)',
+      'DELETE FROM dichter WHERE autor = (SELECT autor FROM dichter ORDER BY geburtsjahr LIMIT 1)',
     taskType: 2,
   },
   {
@@ -1214,7 +1243,7 @@ export const dmlTasks: Task[] = [
     text:
       'Der Dichter, der die meisten Dramen geschrieben hatte, ist leider verstorben und kann aus der Datenbank gelöscht werden.',
     solutionQuery:
-      'DELETE FROM dichter WHERE autor = (SELECT autor FROM drama GROUP BY autor HAVING COUNT(*) = (SELECT MAX(COUNT(autor)) FROM drama GROUP BY autor))',
+      'DELETE FROM dichter WHERE autor = (SELECT autor FROM drama GROUP BY autor ORDER BY COUNT(*) DESC LIMIT 1)',
     taskType: 2,
   },
   {
@@ -1224,7 +1253,7 @@ export const dmlTasks: Task[] = [
     text:
       'Beim Engagement, das im Star Theater stattfindet, ist der falsche Schauspieler eingetragen. Es war der Schauspieler mit den meisten Rollen. Ändern Sie dies!',
     solutionQuery:
-      "UPDATE engament SET pnr = (SELECT pnr FROM stellt_dar GROUP BY pnr HAVING COUNT(*) >= ALL(SELECT MAX(COUNT(*)) FROM stellt_dar GROUP BY pnr)) WHERE name = 'Star Theater'",
+      "UPDATE engament SET pnr = (SELECT pnr FROM stellt_dar GROUP BY pnr ORDER BY COUNT(*) DESC LIMIT 1) WHERE name = 'Star Theater'",
     taskType: 3,
   },
   {
@@ -1232,9 +1261,9 @@ export const dmlTasks: Task[] = [
     schema: 'theater',
     difficulty: 'schwer',
     text:
-      'Ändern Sie den Namen (Tabelle: stellt_dar, Spalte: name)  des Schauspielers, der die meisten Rollen hat, auf Jochen Blub.',
+      'Ändern Sie den Namen (Tabelle: stellt_dar, Spalte: name) des Schauspielers, der die meisten Rollen hat, auf Jochen Blub.',
     solutionQuery:
-      "UPDATE schauspieler SET name = 'Jochen Blub' WHERE pnr = (SELECT pnr FROM stellt_dar GROUP BY pnr HAVING COUNT(*) >= ALL(SELECT MAX(COUNT(*)) FROM stellt_dar GROUP BY pnr))",
+      "UPDATE schauspieler SET name = 'Jochen Blub' WHERE pnr = (SELECT pnr FROM stellt_dar GROUP BY pnr ORDER BY COUNT(*) DESC LIMIT 1)",
     taskType: 3,
   },
   {
@@ -1254,7 +1283,7 @@ export const dmlTasks: Task[] = [
     text:
       'Alle Dichter, die momentan keine Theaterstücke haben, sollen gelöscht werden.',
     solutionQuery:
-      'DELETE FROM dichter d WHERE NOT EXISTS (SELECT * FROM drama dr WHERE dr.autor = d.autor)',
+      'DELETE FROM dichter WHERE NOT EXISTS (SELECT * FROM drama dr WHERE dr.autor = dichter.autor)',
     taskType: 2,
   },
   {

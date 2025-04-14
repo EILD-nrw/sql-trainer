@@ -701,8 +701,8 @@ export const dqlTasks: Task[] = [
     id: 59,
     schema: 'fahrrad',
     difficulty: 'schwer',
-    text: 'In welchen Abteilungen (Abt_nr, Name) sind alle Berufe vertreten?',
-    solutionQuery: 'SELECT A1.Abt_Nr, A1.Name FROM Abteilungen A1 WHERE NOT EXISTS ( SELECT * FROM Angestellte A2 WHERE NOT EXISTS ( SELECT * FROM Angestellte A3 WHERE a2.Beruf = a3.Beruf AND a1.Abt_NR = a2.Abt_nr))',
+    text: 'In welchen Abteilungen (Abt_Nr, Name) sind alle Berufe vertreten?',
+    solutionQuery: 'SELECT a1.abt_nr, a1.name FROM abteilungen a1 WHERE NOT EXISTS (SELECT * FROM angestellte a2 WHERE NOT EXISTS (SELECT * FROM angestellte a3 WHERE a2.beruf = a3.beruf AND a1.abt_nr = a2.abt_nr))',
     taskType: 9
   },
   {
@@ -1005,8 +1005,8 @@ export const dqlTasks: Task[] = [
     id: 213,
     schema: 'busse',
     difficulty: 'schwer',
-    text: 'Welche Linien (linien_id, bezeichnung) befahren eine Haltestelle, die auf der X-Koordinate "51° 01 N" liegt? Unterdrücken Sie doppelte Datensätze!',
-    solutionQuery: "SELECT DISTINCT l.linien_id, l.bezeichnung FROM linie l, bestehen b, verbindung v, haltestelle h WHERE l.linien_id = b.linien_id AND b.kanten_id = v.kanten_id AND (v.bis = h.haltestellen_id OR v.von = h.haltestellen_id) AND h.x_koordinate ='51° 01_ N'",
+    text: 'Welche Linien (linien_id, bezeichnung) befahren eine Haltestelle, die auf der X-Koordinate "51° 01’ N" liegt? Unterdrücken Sie doppelte Datensätze!',
+    solutionQuery: "SELECT DISTINCT l.linien_id, l.bezeichnung FROM linie l, bestehen b, verbindung v, haltestelle h WHERE l.linien_id = b.linien_id AND b.kanten_id = v.kanten_id AND (v.bis = h.haltestellen_id OR v.von = h.haltestellen_id) AND h.x_koordinate ='51° 01’ N'",
     taskType: 4
   },
   {

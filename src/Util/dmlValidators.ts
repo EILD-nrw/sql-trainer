@@ -44,18 +44,23 @@ export function validateDMLInput(
   selectedTask: Task,
   database: Database
 ): ValidationResult {
-  const splitSolutionQuery = selectedTask.solutionQuery
-    .split(' ')
-    .map((word) => word.toLowerCase())
-
-  // insert, update or delete
-  const type = splitSolutionQuery[0]
-
-  // Extract TableName from solutionQuery
-  const tableName =
-    type === 'update'
-      ? splitSolutionQuery[1] // 'UPDATE X' -> TableName in SECOND position
-      : splitSolutionQuery[2] // 'INSERT INTO X' or 'DELETE FROM X' -> TableName in THIRD position
+  // Get table name from solution query
+  let tableName: string
+  const updateMatch = selectedTask.solutionQuery.match(/UPDATE\s+(\w+)\s+SET/i)
+  const insertMatch = selectedTask.solutionQuery.match(/INSERT\s+INTO\s+(\w+)/i)
+  const deleteMatch = selectedTask.solutionQuery.match(/DELETE\s+FROM\s+(\w+)/i)
+  if (updateMatch) {
+    tableName = updateMatch[1].toLowerCase()
+  } else if (insertMatch) {
+    tableName = insertMatch[1].toLowerCase()
+  } else if (deleteMatch) {
+    tableName = deleteMatch[1].toLowerCase()
+  } else {
+    return {
+      isValid: false,
+      feedback: 'Die Frage ist kaputt: Lösung ist von unbekanntem Typ'
+    }
+  }
 
   try {
     // Wrap queries in transaction to rollback later
