@@ -6,7 +6,7 @@ export const dqlTasks: Task[] = [
     schema: 'fahrrad',
     difficulty: 'schwer',
     text: 'Welches Teil (Ausgabe: OTeil, Bezeichnung, Typ) benötigt in der Stückliste (Struktur-Tabelle) die Silberfarbe mit der TNr = 3? Listen Sie diejenigen Teile auf, die dieses Teil (TNr = 3) direkt oder indirekt in der zweiten Stufe verwenden!',
-    solutionQuery: 'SELECT s.oteil, t.bezeichnung, t.typ FROM struktur s, teile t WHERE t.tnr = s.oteil AND s.uteil = 3 UNION SELECT ober.oteil, t.bezeichnung, t.typ FROM struktur ober, struktur unter, teile t WHERE t.tnr = ober.oteil AND unter.uteil = ober.oteil AND unter.uteil = 3',
+    solutionQuery: 'SELECT s.oteil, t.bezeichnung, t.typ FROM struktur s JOIN teile t ON s.oteil = t.tnr WHERE s.uteil = 3 UNION SELECT s0.oteil, t.bezeichnung, t.typ FROM struktur s0 JOIN struktur s1 ON s0.uteil = s1.oteil JOIN teile t ON s0.oteil = t.tnr WHERE s1.uteil = 3',
     taskType: 11
   },
   {
